@@ -16,7 +16,7 @@ This repository contains information about our robot and the building process.
 
 **Age:**
 
-**Achievments:**
+**Achievements:**
 
 ### Walter Wu
 
@@ -27,7 +27,7 @@ This repository contains information about our robot and the building process.
 
 **Age:**
 
-**Achievments:**
+**Achievements:**
 
 ### Eric Huang
 
@@ -38,12 +38,12 @@ This repository contains information about our robot and the building process.
 
 **Age:**
 
-**Achievments:**
+**Achievements:**
 
 ## Our coach
 
 ### Coach Rice
 
-**Achievments:**
+**Achievements:**
 
 
