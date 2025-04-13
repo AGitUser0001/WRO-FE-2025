@@ -6,12 +6,40 @@ Team:
 This repository contains information about our robot and the building process. 
 
 
-
-# Lucas Zheng
-
-
+## Team Members
+### Lucas Zheng
 
 
 
 
-*Age:*
+
+
+**Age:**
+
+**Achievments:**
+
+### Walter Wu
+
+
+
+
+
+
+**Age:**
+
+**Achievments:**
+
+### Eric Huang
+
+
+
+
+
+
+**Age:**
+
+**Achievments:**
+
+
+
+
