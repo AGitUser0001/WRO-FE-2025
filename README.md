@@ -40,6 +40,10 @@ This repository contains information about our robot and the building process.
 
 **Achievments:**
 
+## Our coach
 
+### Coach Rice
+
+**Achievments:**
 
 
