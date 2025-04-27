@@ -47,3 +47,7 @@ This repository contains information about our robot and the building process.
 **Achievements:**
 
 
+
+
+
+## Group photo
