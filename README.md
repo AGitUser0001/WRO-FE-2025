@@ -51,3 +51,9 @@ This repository contains information about our robot and the building process.
 
 
 ## Group photo
+
+
+
+
+
+## Video of Lucas explaining our 3D printings
