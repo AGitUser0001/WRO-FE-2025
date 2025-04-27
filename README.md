@@ -14,7 +14,7 @@ This repository contains information about our robot and the building process.
 
 
 
-**Age:**
+**Age:** 14
 
 **Achievements:**
 
@@ -25,7 +25,7 @@ This repository contains information about our robot and the building process.
 
 
 
-**Age:**
+**Age:** 14
 
 **Achievements:**
 
@@ -36,7 +36,7 @@ This repository contains information about our robot and the building process.
 
 
 
-**Age:**
+**Age:** 15
 
 **Achievements:**
 
