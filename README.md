@@ -62,4 +62,11 @@ This repository contains information about our robot and the building process.
 The robot must complete three laps on the track after being placed randomly inside the walls of the track. The robot must have one button pressed to turn on the robot and one button pressed to run the program. After this, **no further interactions** with the robot are allowed.
 ## The Obstacle Challenge
 The robot must complete three laps on the track with randomly arranged traffic signs which are green and red. The robot must go around the **right** side of a **red** pillar, and the **left** side of a **green** pillar. 
-## Photos of our completed robot:
+## Photos of Our Completed Robot:
+
+## Video of Our 
+
+## Our Drive System:
+### Our Motor
+### Our Servo Motor
+## Our Sensor and Power Management
