@@ -64,8 +64,12 @@ The robot must complete three laps on the track after being placed randomly insi
 The robot must complete three laps on the track with randomly arranged traffic signs which are green and red. The robot must go around the **right** side of a **red** pillar, and the **left** side of a **green** pillar. 
 ## Photos of Our Completed Robot:
 
-## Video of Our 
+## Video of Our Robot
 
+## Challenges We Faced 
+
+### Short Circuit
+After we soldered the battery connector to the ESC and the extension board, we were ready to flip the switch. Unfortunately, we switched the positive and negative wires, resulting our extension board to be burned. This taught us to be more cautious before closing the circuit and helped us avoid similar situations along the way.
 ## Our Drive System:
 ### Our Motor
 ### Our Servo Motor
