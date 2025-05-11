@@ -74,3 +74,6 @@ After we soldered the battery connector to the ESC and the extension board, we w
 ### Our Motor
 ### Our Servo Motor
 ## Our Sensor and Power Management
+
+## Circuit Diagrams
+![Main](/circuits/wro_schematic_circuit_schem.png)
