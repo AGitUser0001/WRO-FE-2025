@@ -77,6 +77,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 ### Our Motor
 ### Our Servo Motor
 ## Our Sensor and Power Management
+## Obstacle Management
 ## Our Code Fully Explained
 ## Circuit Diagram
 ![Main](/circuits/wro_schematic_circuit_schem.png)
