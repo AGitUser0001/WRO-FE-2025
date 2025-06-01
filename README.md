@@ -80,3 +80,5 @@ After we soldered the battery connector to the ESC and the extension board, we w
 
 
 ## Total Price of the Robot
+
+## How We Built the Robot
