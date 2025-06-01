@@ -91,6 +91,9 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Raspberry Pi 5  | $  |
 | 3D Printings  | $  |
 | Raspberry Pi Expansion Board   | $  |
+| Metal Chassis  | $  |
+| Battery  | $  |
+| Shipping   | $  |
 ## How We Built the Robot
 
 ## Potential Future Improvements
