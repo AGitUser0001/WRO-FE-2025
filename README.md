@@ -83,7 +83,10 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 
 
 ## Total Price of the Robot
-
+| Component  | Cost |
+| ------------- | ------------- |
+| Motor  | $  |
+| Servo Motor  | $  |
 ## How We Built the Robot
 
 ## Potential Future Improvements
