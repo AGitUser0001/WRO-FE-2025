@@ -87,6 +87,10 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | ------------- | ------------- |
 | Motor  | $  |
 | Servo Motor  | $  |
+| Camera  | $  |
+| Raspberry Pi 5  | $  |
+| 3D Printings  | $  |
+| Raspberry Pi Expansion Board   | $  |
 ## How We Built the Robot
 
 ## Potential Future Improvements
