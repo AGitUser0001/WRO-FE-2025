@@ -67,9 +67,9 @@ The robot must complete three laps on the track with randomly arranged traffic s
 ## Video of Our Robot
 ## Breakdown Of Individual Responsibilities
 ## Challenges We Faced 
-## Speed and Reliability
 ### Short Circuit
 After we soldered the battery connector to the ESC and the extension board, we were ready to flip the switch. Unfortunately, we switched the positive and negative wires, resulting our extension board to be burned. This taught us to be more cautious before closing the circuit and helped us avoid similar situations along the way.
+## Speed and Reliability
 ## Our Drive System:
 ### Our Motor
 ### Our Servo Motor
