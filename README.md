@@ -86,7 +86,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 ## Total Price of the Robot
 | Component  | Cost |
 | ------------- | ------------- |
-| Motor  | $  |
+| Motor  | $110.51  |
 | Servo Motor  | $24.99  |
 | Camera  | $1.45  |
 | Raspberry Pi 5  | $113.95  |
@@ -96,7 +96,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Battery  | $  |
 | Wires  | $26.75  |
 | Wheels  | $9.13  |
-| Lidar  | $  |
+| Lidar  | $83.02  |
 | Switch  | $1.03  |
 | Velcro and Tape  | $21.30  |
 | Total Price Before Tax   | $  |
