@@ -87,14 +87,20 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Component  | Cost |
 | ------------- | ------------- |
 | Motor  | $  |
-| Servo Motor  | $  |
-| Camera  | $  |
-| Raspberry Pi 5  | $  |
-| 3D Printings  | $  |
+| Servo Motor  | $24.99  |
+| Camera  | $1.45  |
+| Raspberry Pi 5  | $113.95  |
+| 3D Printings  | $8  |
 | Raspberry Pi Expansion Board   | $  |
-| Metal Chassis  | $  |
+| Metal Chassis  | $86.38  |
 | Battery  | $  |
-| Shipping   | $  |
+| Wires  | $  |
+| Wheels  | $9.13  |
+| Lidar  | $  |
+| Switch  | $1.03  |
+| Velcro and Tape  | $21.30  |
+| Total Price Before Tax   | $  |
+| Total Price   | $  |
 ## How We Built the Robot
 
 ## Potential Future Improvements
