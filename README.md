@@ -94,7 +94,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Raspberry Pi Expansion Board   | $  |
 | Metal Chassis  | $86.38  |
 | Battery  | $  |
-| Wires  | $  |
+| Wires  | $26.75  |
 | Wheels  | $9.13  |
 | Lidar  | $  |
 | Switch  | $1.03  |
