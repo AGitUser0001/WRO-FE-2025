@@ -83,12 +83,11 @@ A new problem came up. It was hard to fully secure the servo motor in place.
     </td>
     <td width="50%" style="text-align: left; vertical-align: top;">
       <h3>Specifications:</h3>
-      Voltage: 12V
-      Gear Ratio: 1:50
-      Speed: 650 ± 31% rpm
-      Torque: 0.67 ± kg·cm
-      Weight: 9.5g
-      </li>
+      <p>Voltage: 12V</p>
+      <p>Gear Ratio: 1:50</p>
+      <p>Speed: 650 ± 31% rpm</p>
+      <p>Torque: 0.67 ± kg·cm</p>
+      <p>Weight: 9.5g</p>
     </td>
   </tr>
 </table>
