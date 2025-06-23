@@ -72,13 +72,12 @@ After we soldered the battery connector to the ESC and the extension board, we w
 ### Servo Motor
 We realized that we could not fit the battery and the servo motor under our 3D printed plate. We decided to raise the 3D printed plate to make more space. 
 A new problem came up. It was hard to fully secure the servo motor in place. 
-## Speed and Reliability
-## Our Drive System:
+
+## Mobility Management
 ### Our Motor
 ### Our Servo Motor
 ## Our Sensor and Power Management
 ## Obstacle Management
-## Our Code Fully Explained
 ## Circuit Diagram
 ![Main](/circuits/wro_schematic_circuit_schem.png)
 
