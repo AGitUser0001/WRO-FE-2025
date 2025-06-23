@@ -79,7 +79,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 <table>
   <tr>
     <td width="50%" style="text-align: left;">
-      <img src="./images/FuritekMotor.webp" width="100%">
+      <img src="./images/FuritekMotor.webp" width="100%"> 
     </td>
     <td width="50%" style="text-align: left; vertical-align: top;">
       <h3>Specifications:</h3>
@@ -90,6 +90,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
     </td>
   </tr>
 </table>
+
 ### Our Servo Motor
 ## Our Sensor and Power Management
 ## Obstacle Management
