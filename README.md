@@ -78,10 +78,10 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 ### Our Motor
 <table>
   <tr>
-    <td width="50%" style="text-align: left;  border: none !important;">
+    <td width="50%" style="text-align: left;">
       <img src="./images/FuritekMotor.webp" width="100%">
     </td>
-    <td width="50%" style="text-align: left; vertical-align: top; border: none !important;">
+    <td width="50%" style="text-align: left; vertical-align: top;">
       <h3>Specifications:</h3>
       <p>Voltage: 12V</p>
       <p>Gear Ratio: 1:50</p>
