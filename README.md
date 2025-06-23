@@ -74,7 +74,24 @@ We realized that we could not fit the battery and the servo motor under our 3D p
 A new problem came up. It was hard to fully secure the servo motor in place. 
 
 ## Mobility Management
+
 ### Our Motor
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="./images/FuritekMotor.webp" width="100%">
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Specifications:</h3>
+      <li>Voltage: 12V</li>
+      <li>Gear Ratio: 1:50</li>
+      <li>Speed: 650 ± 31% rpm</li>
+      <li>Torque: 0.67 ± kg·cm</li>
+      <li>Weight: 9.5g</li>
+      </li>
+    </td>
+  </tr>
+</table>
 ### Our Servo Motor
 ## Our Sensor and Power Management
 ## Obstacle Management
