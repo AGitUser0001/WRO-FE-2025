@@ -108,7 +108,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | 3D Printings  | $8  |
 | Raspberry Pi Expansion Board   | $  |
 | Metal Chassis  | $86.38  |
-| Battery  | $  |
+| Battery  | $29.99  |
 | Wires  | $26.75  |
 | Wheels  | $9.13  |
 | Lidar  | $83.02  |
