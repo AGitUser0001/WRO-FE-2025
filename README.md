@@ -59,6 +59,7 @@ This repository contains information about our robot and the building process.
     </td>
   </tr>
 </table>
+
 ## Group photo
 
 
