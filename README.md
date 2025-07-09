@@ -42,14 +42,23 @@ This repository contains information about our robot and the building process.
 
 ## Our coach
 
-### Coach Rice
-
-**Achievements:**
-
-
-
-
-
+### Rice Rao
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="https://explorer-robotics.com/images/users/CoachRice.png" width="100%"> 
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Achievements:</h3>
+      <ul>
+        <li>Head coach of Robotics Competitions including FLL (First LEGO League) Tournament and WRO (World Robotics Olympiad). Led teams in winning multiple national, international robotics and programming awards.</li>
+        <li>Over 20 years of IT industry experience as software engineer working internationally.</li>
+        <li>MSc in Eletrical & Computer Engineering from University of Alberta.</li>
+        <li>BSc in Mathematics from Peking University.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
 ## Group photo
 
 
