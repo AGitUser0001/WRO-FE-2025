@@ -116,7 +116,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Camera  | $1.45  |
 | Raspberry Pi 5  | $113.95  |
 | 3D Printings  | $8  |
-| Raspberry Pi Expansion Board   | $  |
+| Raspberry Pi Expansion Board   | $54.98  |
 | Metal Chassis  | $86.38  |
 | Battery  | $29.99  |
 | Wires  | $26.75  |
