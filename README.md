@@ -102,6 +102,21 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 </table>
 
 ### Our Servo Motor
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="./images/servo motor.png" width="100%"> 
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Specifications:</h3>
+      <p>Operating Voltage Range: 4.8V ~ 6.0V</p>
+      <p>Speed: 2.0 ~ 1.7</p>
+      <p>Maximum Torque Range kg. / cm.: 1.3 ~ 1.6</p>
+      <p>Weight: 9.5g</p>
+    </td>
+  </tr>
+</table>
+
 ## Our Sensor and Power Management
 ## Obstacle Management
 ## Circuit Diagram
