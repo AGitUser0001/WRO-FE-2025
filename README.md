@@ -28,7 +28,7 @@ This repository contains information about our robot and the building process.
 **Age:** 14
 
 **Achievements:**
-- 31st in WRO 2023 RoboMission Elementary
+- 31st in WRO 2023 International RoboMission Elementary
 ### Eric Huang
 
 
