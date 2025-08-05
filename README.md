@@ -117,7 +117,23 @@ A new problem came up. It was hard to fully secure the servo motor in place.
   </tr>
 </table>
 
-## Our Sensor and Power Management
+## Camera
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="./images/pi cam.png" width="100%"> 
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Specifications:</h3>
+      <p>Sensor Size: 1/4-inch optical format (approx. 3.674 mm × 2.760 mm)</p>
+      <p>Sensor Resolution: 3280 × 2464 pixels</p>
+      <p>Pixel Size: 1.12 µm × 1.12 µm</p>
+      <p>Lens Mount Type: M12 (S mount)</p>
+      <p>Autofocus support: None</p>
+    </td>
+  </tr>
+</table>
+
 ## Obstacle Management
 ## Circuit Diagram
 ![Main](/circuits/wro_schematic_circuit_schem.png)
