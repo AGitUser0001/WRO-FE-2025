@@ -128,7 +128,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | ------------- | ------------- |
 | Motor  | $110.51  |
 | Servo Motor  | $24.99  |
-| Camera  | $1.45  |
+| Camera  | $16.87  |
 | Raspberry Pi 5  | $113.95  |
 | 3D Printings  | $8  |
 | Raspberry Pi Expansion Board   | $54.98  |
