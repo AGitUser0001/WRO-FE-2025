@@ -152,11 +152,54 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Battery  | $29.99  |
 | Wires  | $26.75  |
 | Wheels  | $9.13  |
-| Lidar  | $83.02  |
 | Switch  | $1.03  |
 | Velcro and Tape  | $21.30  |
 | Total Price Before Tax   | $  |
 | Total Price   | $  |
 ## How We Built the Robot
+The construction of our robot will be split up into 7 steps, step zero being to first print our 3d prints which can be found in our 3d prints folder, step one being to modify the chasis, step two being to next gather all the required parts and components, step 3 is to attach the 3d prints ,step four is to start the build by attaching the movement parts, step five is to wire everything together, and finally step six which is to add the final parts, and step seven to finish the build with final touches.
+
+***Step Zero:***
+This step is purely dedicated to acquiring the 3d prints, you will need to find the prints in the 3d prints folder on our repository, next download them and print them out, if you are unsure on how to you can always use external help such as chatgt or youtube.
+
+***First step:***
+This step is to alter your chassis to become fit for our build with a series of modifications. These being first to take out the long beam on the top which is connected to the front and rear gear boxes as it is in the way, and then secondly to take out the servo housing
+
+**1.**
+![images](/images/chassis%20beam.png)
+**2.**
+![images](/images/servo%20housing.png)
+
+***Second step:***
+You need to gather all the parts and components for our robot, those which are listed before when we calculated the total cost of our robot, these components are a bldc motor, a servo motor, a camera, rasberry pi 5, all of our 3d prints, the expansion board, our chassis, battery, wires,  switch, velcro, tape, and electrical tape.
+
+***Third step:***
+Attaching the 3d prints, the baseplate is to be screwed in on top of the chassis with screws and extra long screw extensions, and the back part which should slide into the very back of the chassis along with the stopper that you put in through the top of the of the bottom of the backplate, there is a hole made for it.
+
+**Baseplate**
+![images](/images/baseplateAndScrews.png)
+
+**Back piece**
+![images](/images/BackPiece.png)
+
+
+***Fourth step:***
+This step will be to attach all the parts that are involved with moving these being the bldc motor, the servo motor, Rasberry pi 5, and the expansion board.
+
+**Part 1.**
+Attaching the servo and bldc motors. Attach the servo motor with velcro, and the bldc motor with the pregiven mount that came along with the chassis.
+![images](/images/ServoAnDBLDC.png)
+
+**Part 2.**
+Attaching the Raspberry Pi 5 and the expansion board.
+
+
+
+##Potential Future Imporvements##
+
+
+
+
+
 
 ## Potential Future Improvements
