@@ -160,7 +160,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 The construction of our robot will be split up into 8 steps, step zero being to first print our 3d prints which can be found in our 3d prints folder, step one being to modify the chasis and soldering, step two being to next gather all the required parts and components, step 3 is to attach the 3d prints ,step four is to start the build by attaching the movement parts, step five is to wire everything together, and finally step six which is to add the final parts, and step seven to finish the build with final touches.
 
 ***Step Zero:***
-This step is purely dedicated to acquiring the 3d prints, you will need to find the prints in the 3d prints folder on our repository, next download them and print them out, if you are unsure on how to you can always use external help such as chatgt or youtube.
+This step is purely dedicated to acquiring the 3d prints, you will need to find the prints in the 3d prints folder on our repository, next download them and print them out, if you are unsure on how to you can always use external help such as OpenAI like ChatGPT or Youtube.
 
 ***First step:***
 This step is to alter your chassis to become fit for our build with a series of modifications. These being first to take out the long beam on the top which is connected to the front and rear gear boxes as it is in the way, and then secondly to take out the servo housing.
@@ -170,10 +170,10 @@ This step is to alter your chassis to become fit for our build with a series of 
 **2.**
 ![images](/images/servo%20housing.png)
 
-Aswell this step includes soldering a wire and switch. You will need to solder a switch to a wire aswell as making it have one input and two outputs, the input will be form the battery and the outputs will be into the expansion board and into the esc for the bldc motor.
+Aswell this step includes soldering a wire and switch. You will need to solder a switch to a wire as well as making it have one input and two outputs, the input will be from the battery and the outputs will be into the expansion board and into the ESC for the BLDC motor.
 
 ***Second step:***
-You need to gather all the parts and components for our robot, those which are listed before when we calculated the total cost of our robot, these components are a bldc motor, a servo motor, a camera, rasberry pi 5, all of our 3d prints, the expansion board, our chassis, battery, wires,  switch, velcro, tape, and electrical tape.
+You need to gather all the parts and components for our robot, those which are listed before when we calculated the total cost of our robot, these components are a BLDC motor, a servo motor, a camera, Rasberry Pi 5, all of our 3d prints, the expansion board, our chassis, battery, wires,  switch, Velcro, tape, and electrical tape.
 
 ***Third step:***
 Attaching the 3d prints, the baseplate is to be screwed in on top of the chassis with screws and extra long screw extensions, and the back part which should slide into the very back of the chassis along with the stopper that you put in through the top of the of the bottom of the backplate, there is a hole made for it.
@@ -186,14 +186,14 @@ Attaching the 3d prints, the baseplate is to be screwed in on top of the chassis
 
 
 ***Fourth step:***
-This step will be to attach all the parts that are involved with moving these being the bldc motor, the servo motor, Rasberry pi 5, and the expansion board.
+This step will be to attach all the parts that are involved with moving these being the BLDC motor, the servo motor, Raspberry pi 5, and the expansion board.
 
 **Part 1.**
-Attaching the servo and bldc motors. Attach the servo motor with velcro, and the bldc motor with the pregiven mount that came along with the chassis.
+Attaching the servo and BLDC motors. Attach the servo motor with Velcro, and the BLDC motor with the pregiven mount that came along with the chassis.
 ![images](/images/ServoAnDBLDC.png)
 
 **Part 2.**
-Attaching the Raspberry Pi 5 and the expansion board. So both of these circuits will be screwed into place with screw extenders on each of the four corners in a relatively systematic fashion as each corner for their relative circuit will be the same. The images following will have the circuit encircled and each smaller screw circled aswell.
+Attaching the Raspberry Pi 5 and the expansion board. So both of these circuits will be screwed into place with screw extenders on each of the four corners in a relatively systematic fashion as each corner for their relative circuit will be the same. The images following will have the circuit encircled and each smaller screw circled also.
 
 **Raspberry Pi 5**
 ![images](/images/raspi.png)
@@ -202,16 +202,16 @@ Attaching the Raspberry Pi 5 and the expansion board. So both of these circuits 
 ![images](/images/expansionboard.png)
 
 ***Fifth Step:***
-This step will be to wire everything together, the servo motor goes to the pwm control on the expansion board and the bldc motor will be connected to an esc which will be velcroed to the side of the baseplate. This esc will then connect to the switch, the expansion board, and the battery. Next you will need a two usb cables one for data one for power, the data cable will be usb c to usb a, and the power cable will be usb c to usb c. Next just attach those cables. Finally aswell added a strip of velcro on the underside of the baseplate, this will be used to attach the battery.
+This step will be to wire everything together; the servo motor goes to the pwm control on the expansion board and the BLDC motor will be connected to an esc which will be Velcroed to the side of the baseplate. This esc will then connect to the switch, the expansion board, and the battery. Next you will need two USB cables, one for data, one for power, the data cable will be USB C to USB A, and the power cable will be USB C to USB C. Next just attach those cables. Finally as well add a strip of Velcro on the underside of the baseplate, this will be used to attach the battery.
 
 ***Sixth Step:***
-Step six, we will be adding the battery and the camera, the camera will be attached to the camera port on the raspberry pi 5 board and each battery that you decide to use will have a strip of velcro on its back. After you attach the battery, check all of the connections first before you plug it in, Safety first!!!
+Step six, we will be adding the battery and the camera, the camera will be attached to the camera port on the raspberry pi 5 board and each battery that you decide to use will have a strip of Velcro on its back. After you attach the battery, check all of the connections first before you plug it in, Safety first!!!
 
 ***Seventh Step:***
-For step seven you will need to tape the camera cable aswell as the camera in place, attach the servo to the servo arm on the chassis, and fix the cables in place with tape or if you have it, zipties.
+For step seven you will need to tape the camera cable aswell as the camera in place, attach the servo to the servo arm on the chassis, and fix the cables in place with tape or if you have it, zip ties.
 
 ***Eight Step:***
-Finally step eight is to jsut import our code and run it!
+Finally step eight is to just import our code and run it!
 
 
 
