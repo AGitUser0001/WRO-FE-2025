@@ -156,8 +156,8 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Velcro and Tape  | $21.30  |
 | Total Price Before Tax   | $  |
 | Total Price   | $  |
-## How We Built the Robot
-The construction of our robot will be split up into 8 steps, step zero being to first print our 3d prints which can be found in our 3d prints folder, step one being to modify the chasis and soldering, step two being to next gather all the required parts and components, step 3 is to attach the 3d prints ,step four is to start the build by attaching the movement parts, step five is to wire everything together, and finally step six which is to add the final parts, and step seven to finish the build with final touches.
+## How we Built the Robot
+The construction of our robot will be split up into 8 steps. Step zero being to first print our 3d prints which can be found in our 3d prints folder, step one being to modify the chassis and soldering, step two being to next gather all the required parts and components, step 3 is to attach the 3d prints, step four is to start the build by attaching the movement parts, step five is to wire everything together, and finally step six is to add the final parts, step seven to finish the build with final touches, and step eight to import the code and run it.
 
 ***Step Zero:***
 This step is purely dedicated to acquiring the 3d prints, you will need to find the prints in the 3d prints folder on our repository, next download them and print them out, if you are unsure on how to you can always use external help such as OpenAI like ChatGPT or Youtube.
@@ -202,13 +202,13 @@ Attaching the Raspberry Pi 5 and the expansion board. So both of these circuits 
 ![images](/images/expansionboard.png)
 
 ***Fifth Step:***
-This step will be to wire everything together; the servo motor goes to the pwm control on the expansion board and the BLDC motor will be connected to an esc which will be Velcroed to the side of the baseplate. This esc will then connect to the switch, the expansion board, and the battery. Next you will need two USB cables, one for data, one for power, the data cable will be USB C to USB A, and the power cable will be USB C to USB C. Next just attach those cables. Finally as well add a strip of Velcro on the underside of the baseplate, this will be used to attach the battery.
+This step will be to wire everything together; the servo motor goes to the pwm control on the expansion board and the BLDC motor will be connected to an esc which will be Velcroed to the side of the baseplate. This esc will then connect to the switch, the expansion board, and the battery. Next you will need two USB cables, one for data, one for power. The data cable will be USB C to USB A, and the power cable will be USB C to USB C. Next just attach those cables. Finally, as well add a strip of Velcro on the underside of the baseplate. This will be used to attach the battery.
 
 ***Sixth Step:***
-Step six, we will be adding the battery and the camera, the camera will be attached to the camera port on the raspberry pi 5 board and each battery that you decide to use will have a strip of Velcro on its back. After you attach the battery, check all of the connections first before you plug it in, Safety first!!!
+Step six, we will be adding the battery and the camera, the camera will be attached to the camera port on the raspberry pi 5 board and each battery that you decide to use will have a strip of Velcro on its back. After you attach the battery, check all of the connections first before you plug it in. Safety first!!!
 
 ***Seventh Step:***
-For step seven you will need to tape the camera cable aswell as the camera in place, attach the servo to the servo arm on the chassis, and fix the cables in place with tape or if you have it, zip ties.
+For step seven you will need to tape the camera cable aswell as the camera in place, attach the servo to the servo arm on the chassis, and fix the cables in place with tape or if you have them, zip ties.
 
 ***Eight Step:***
 Finally step eight is to just import our code and run it!
