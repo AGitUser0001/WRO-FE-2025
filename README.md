@@ -154,8 +154,8 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 | Wheels  | $9.13  |
 | Switch  | $1.03  |
 | Velcro and Tape  | $21.30  |
-| Total Price Before Tax   | $  |
-| Total Price   | $  |
+| Total Price Before Tax   | $503.88  |
+| Total Price   | $569.38  |
 ## How we Built the Robot
 The construction of our robot will be split up into 8 steps. Step zero being to first print our 3d prints which can be found in our 3d prints folder, step one being to modify the chassis and soldering, step two being to next gather all the required parts and components, step 3 is to attach the 3d prints, step four is to start the build by attaching the movement parts, step five is to wire everything together, and finally step six is to add the final parts, step seven to finish the build with final touches, and step eight to import the code and run it.
 
