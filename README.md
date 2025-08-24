@@ -19,7 +19,7 @@ This repository contains information about our robot and the building process.
 **Introduction:**
 
 ### Walter Wu
-Hi, my name is Walter and I'm from Canada, this is my second WRO season, two years ago I participated in WRO robomission and ended up on the international stage in Panama. This year since I was old enough for future engineers I decided to sign up for a comepletly different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
+
 
 
 
@@ -28,7 +28,7 @@ Hi, my name is Walter and I'm from Canada, this is my second WRO season, two yea
 **Age:** 14
 
 **Introduction:**
-Hello, I'm Eric, and I have already participated in two WRO competitions so far. Although I have not entered the international stage in any of them, I believe these competitions helped me better problem solve and gave me something to do. This is also why I am participating in Future Engineers this year. My interests are chess, badminton, and swimming. 
+Hi, my name is Walter and I'm from Canada, this is my second WRO season, two years ago I participated in WRO robomission and ended up on the international stage in Panama. This year since I was old enough for future engineers I decided to sign up for a comepletly different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
 ### Eric Huang
 
 
@@ -39,7 +39,7 @@ Hello, I'm Eric, and I have already participated in two WRO competitions so far.
 **Age:** 15
 
 **Introduction:**
-
+Hello, I'm Eric, and I have already participated in two WRO competitions so far. Although I have not entered the international stage in any of them, I believe these competitions helped me better problem solve and gave me something to do. This is also why I am participating in Future Engineers this year. My interests are chess, badminton, and swimming. 
 ## Our coach
 
 ### Rice Rao
