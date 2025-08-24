@@ -19,7 +19,7 @@ This repository contains information about our robot and the building process.
 **Introduction:**
 
 ### Walter Wu
-
+Hi, my name is Walter and im from Canada, this is my second WRO season, two years ago I participated in WRO robomission and ended up on the international stage in Panama. This year since I was old enough for future engineers i decided to sign up for a comepletly different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
 
 
 
