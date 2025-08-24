@@ -92,6 +92,7 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 ## Mobility Management
 Our motor powers the two back wheels. We removed the differential gear in the front of the car to increase the steering angle. Our mobility management is mainly made up of our motor, servo motor, wheels, and our differential gear at the back of the car.
 ### Our Motor
+Our DC brushless motor drives the back wheels thanks to the differential gear which ensures that the car can drive straight. Our motor is secured using a metal part of the chassis that is secured with screws. We chose motor because it is small, reliable, and the gear ratio matched with the chassis gears.
 <table>
   <tr>
     <td width="50%" style="text-align: left;">
