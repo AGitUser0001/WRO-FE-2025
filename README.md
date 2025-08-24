@@ -1,7 +1,7 @@
 # WRO-FE-2025
 Our repository for the 2025 World Robot Olympiad - Future Engineers.
 
-Team: Team Cucumber
+Team Name: Team Cucumber
 
 This repository contains information about our robot and the building process. 
 
@@ -105,6 +105,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 </table>
 
 ### Our Servo Motor
+
 <table>
   <tr>
     <td width="50%" style="text-align: left;">
