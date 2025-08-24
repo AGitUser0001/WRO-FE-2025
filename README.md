@@ -90,7 +90,7 @@ We realized that we could not fit the battery and the servo motor under our 3D p
 A new problem came up. It was hard to fully secure the servo motor in place. 
 
 ## Mobility Management
-
+Our motor powers the two back wheels. We removed the differential gear in the front of the car to increase the steering angle. Our mobility management is mainly made up of our motor, servo motor, wheels, and our differential gear at the back of the car.
 ### Our Motor
 <table>
   <tr>
