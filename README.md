@@ -28,7 +28,7 @@ Hi, my name is Walter and I'm from Canada, this is my second WRO season, two yea
 **Age:** 14
 
 **Introduction:**
-
+Hello, I'm Eric, and I have already participated in two WRO competitions so far. Although I have not entered the international stage in any of them, I believe these competitions helped me better problem solve and gave me something to do. This is also why I am participating in Future Engineers this year. My interests are chess, badminton, and swimming. 
 ### Eric Huang
 
 
