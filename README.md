@@ -189,7 +189,7 @@ Attaching the 3d prints, the baseplate is to be screwed in on top of the chassis
 
 **Back piece**
 
-<img src="/images/BackPiece.png" width="400" height="400">
+<img src="/images/backpiece.jpg" width="400" height="400">
 
 
 ***Fourth step:***
