@@ -163,7 +163,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 The construction of our robot will be split up into 10 steps. Step zero being to first print our 3d prints which can be found in our 3d prints folder, step one being to modify the chassis and soldering, step two being to next gather all the required parts and components, step 3 is to attach the 3d prints, step four is to start the build by attaching the movement parts, step five is to wire everything together, step six is to add the sensors, next, step seven is attaching the battery, step eight to finish the build with final touches, and step nine to import the code and run it.
 
 ***Step Zero:***
-This step is purely dedicated to acquiring the 3d prints, you will need to find the prints in the 3d prints folder on our repository, next download them and print them out, if you are unsure on how to you can always use external help such as OpenAI like ChatGPT or Youtube.
+This step is purely dedicated to acquiring the 3d prints, you will need to find the prints in the 3d prints folder on our repository, next download them and print them out, if you are unsure on how to you can always use external help such as Google or Youtube.
 
 ***First step:***
 This step is to alter your chassis to become fit for our build with a series of modifications. These being first to take out the long beam on the top which is connected to the front and rear gear boxes as it is in the way, and then secondly to take out the servo housing.
