@@ -217,6 +217,8 @@ This step will be to wire everything together; the servo motor goes to the pwm c
 ***Sixth Step:***
 Step six, we will be adding the lidar and the camera, the camera will be attached to the camera port on the raspberry pi 5 board, for the lidar you will add a piece of double sided tape to the bottom as we will flip it upside down and attach it a little under the camera on the back piece.
 
+<img src="/images/lidar.png" width="300" height="400">
+
 ***Seventh Step:***
 Step seven, attach the battery, beforehand add a strip of velcro to the back of each battery which will conjoin with the underside of the baseplate. After you attach the battery, check all of the connections first before you plug it in. Safety first!!!
 
