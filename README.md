@@ -61,10 +61,7 @@ Hello, I'm Eric, and I have already participated in two WRO competitions so far.
 </table>
 
 ## Group photo
-
-
-
-
+<img src="/images/IMG_5017.jpeg" width="300" height="400">
 
 ## Video of Lucas explaining our 3D printings
 
