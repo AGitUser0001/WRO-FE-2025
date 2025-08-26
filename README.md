@@ -7,6 +7,9 @@ This repository contains information about our robot and the building process.
 
 ## Links
 - [Building Instructions](/Building-Instructions.md)
+- [Software Documentation](/Software-Documentation.md)
+- [Open Challenge Documentation](/Open-Challenge.md)
+- [Obstacle Challenge Documentation](/Obstacle-Challenge.md)
 
 ## Table of Contents
 * [The Team](#team)
@@ -23,7 +26,8 @@ This repository contains information about our robot and the building process.
 * [Obstacle Management](#obstacle-management)
 * [Total Cost](#cost-report)
 
-## Team Members <a class="anchor" id="team"></a>
+## Team Members
+
 ### Lucas Zheng
 
 
