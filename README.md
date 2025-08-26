@@ -8,7 +8,22 @@ This repository contains information about our robot and the building process.
 ## Links
 - [Building Instructions](/Building-Instructions.md)
 
-## Team Members
+## Table of Contents
+* [The Team](#team)
+* [The Challenge](#challenge)
+* [The Robot](#robot-image)
+* [Performance Video](#video)
+* [Mobility Management](#mobility-management)
+* [Circuit Diagram](#circuit-diagram)
+* [Code for each component](#code-for-each-component)
+  * [Drive Motor](#drive-motor-code)
+  * [Servo Motor](#servo-motor-code)
+  * [Camera](#camera-code)
+  * [IMU](#gyro-sensor-code)
+* [Obstacle Management](#obstacle-management)
+* [Total Cost](#cost-report)
+
+## Team Members <a class="anchor" id="team"></a>
 ### Lucas Zheng
 
 
@@ -67,14 +82,14 @@ Hello, I'm Eric, and I have already participated in two WRO competitions so far.
 
 ## Video of Lucas explaining our 3D printings
 
-## The Open Challenge
+## The Open Challenge <a class="anchor" id="challenge"></a>
 The robot must complete three laps on the track after being placed randomly inside the walls of the track. The robot must have one button pressed to turn on the robot and one button pressed to run the program. After this, **no further interactions** with the robot are allowed.
 ## The Obstacle Challenge
 The robot must complete three laps on the track with randomly arranged traffic signs which are green and red. The robot must go around the **right** side of a **red** pillar, and the **left** side of a **green** pillar. 
 
 Learn about the challenges as well as the rules [here](https://wro-association.org/wp-content/uploads/WRO-2024-Future-Engineers-Self-Driving-Cars-General-Rules.pdf)
 
-## Photos of Our Completed Robot:
+## Photos of Our Completed Robot: <a class="anchor" id="robot-image"></a>
 
 | <img src="./images/robotfront.jpg" width="60%" height="10%" /> | <img src="./images/robotback.jpg" width="55%" height="50%" /> | 
 | :--: | :--: | 
@@ -84,7 +99,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 | <img src="./images/robottop.jpg" width="60%" height="50%" /> | <img src="./images/robotbottom.jpg" width="55%" height="50%" /> | 
 | *Top* | *Bottom* |
 
-## Our video of the open chllenge on [Youtube](https://youtu.be/EdWDk1boRc8) 
+## Our video of the open chllenge on [Youtube](https://youtu.be/EdWDk1boRc8)  <a class="anchor" id="video"></a>
 
 ## First design
 <img src="/images/first1.png" width="400" height="400"> <img src="/images/first2.png" width="400" height="400">
@@ -110,7 +125,7 @@ Our final design has many improvements and additions than the previous versions.
 <img src="/images/IMG_5055.jpeg" width="200" height="200"> <img src="/images/IMG_5056.jpeg" width="200" height="200">
 
 
-## Mobility Management
+## Mobility Management <a class="anchor" id="mobility-management"></a>
 Our motor powers the two back wheels. We removed the differential gear in the front of the car to increase the steering angle. Our mobility management is mainly made up of our motor, servo motor, wheels, and our differential gear at the back of the car.
 ### Our Motor
 Our DC brushless motor drives the back wheels thanks to the differential gear which ensures that the car can drive straight. Our motor is secured using a metal part of the chassis that is secured with screws. We chose motor because it is small, reliable, and the gear ratio matched with the chassis gears.
@@ -163,12 +178,12 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
   </tr>
 </table>
 
-## Obstacle Management
-## Circuit Diagram
+## Obstacle Management <a class="anchor" id="obstacle-mangement"></a>
+## Circuit Diagram <a class="anchor" id="circuit-diagram"></a>
 <img src="/images/wroschematic.png" width="1000" height="1000">
 
 
-## Total Price of the Robot
+## Total Price of the Robot <a class="anchor" id="cost report"></a>
 | Component  | Cost |
 | ------------- | ------------- |
 | Motor  | $110.51 |
