@@ -5,6 +5,8 @@ Team Name: Team Cucumber
 
 This repository contains information about our robot and the building process. 
 
+## Links
+- [Building Instructions](/Building-Instructions.md)
 
 ## Team Members
 ### Lucas Zheng
