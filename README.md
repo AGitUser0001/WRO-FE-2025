@@ -26,7 +26,7 @@ This repository contains information about our robot and the building process.
 * [Obstacle Management](#obstacle-management)
 * [Total Cost](#cost-report)
 
-## Team Members
+## Team Members <a class="anchor" id="team"></a>
 
 ### Lucas Zheng
 
