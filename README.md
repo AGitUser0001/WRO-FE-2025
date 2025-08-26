@@ -174,7 +174,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 | Wheels  | $9.13  |
 | Switch  | $1.03  |
 | Velcro and Tape  | $21.30  |
-| LiDAR sensor  | $----  |
+| LiDAR sensor  | $89.99  |
 | Total Price Before Tax   | $503.88  |
 | Total Price   | $569.38  |
 
