@@ -1,5 +1,5 @@
 # Building Instructions
-The construction of our robot is split up into 10 steps. Step zero being to first print our 3d prints which can be found in our 3d prints folder. Step one being to modify the chassis and soldering. Step two being to next gather all the required parts and components. Step 3 is to attach the 3d prints. Step four is to start the build by attaching the movement parts. Step five is to wire everything together. Step six is to add the sensors. Step seven is attaching the battery. Step eight to finish the build with final touches. Finally, step nine to import the code and run it.
+The construction of our robot is split up into 11 steps. Step zero being to first print our 3d prints which can be found in our 3d prints folder. Step one being to modify the chassis and soldering. Step two being to next gather all the required parts and components. Step 3 is to attach the 3d prints. Step four is to start the build by attaching the movement parts. Step five is to wire everything together. Step six is to add the sensors. Step seven is attaching the battery. Step eight is soldering the switch. Step nine to finish the build with final touches. Finally, step ten to import the code and run it.
 
 ***Step Zero:***
 This step is purely dedicated to acquiring the 3d prints. You will need to find the prints in the 3d prints folder on our repository, next download them and print them out, if you are unsure on how to you can always use external help such as Google or Youtube.
@@ -63,9 +63,14 @@ Step six, we will be adding the lidar and the camera, the camera will be attache
 ***Seventh Step:***
 Step seven, attach the battery, beforehand add a strip of velcro to the back of each battery which will conjoin with the underside of the baseplate. After you attach the battery, check all of the connections first before you plug it in. Safety first!!!
 
+***Eight Step:***
+Step eight, this step you will have to solder a switch onto the main power cables
 
-***Eighth Step:***
-For step eight you will need to tape the camera cable as well as the camera in place, attach the servo to the servo arm on the chassis, and fix the cables in place with tape or if you have them, zip ties.
+<img src="/images/IMG_5052.jpeg" width="300" height="400">
 
-***Ninth Step:***
-Finally step nine is to just import our code and run it!
+
+***Nineth Step:***
+For step nine you will need to tape the camera cable as well as the camera in place, attach the servo to the servo arm on the chassis, and fix the cables in place with tape or if you have them, zip ties.
+
+***Tenth Step:***
+Finally step ten is to just import our code and run it!
