@@ -89,7 +89,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 ## First design
 <img src="/images/first1.png" width="400" height="400"> <img src="/images/first2.png" width="400" height="400">
 
-Above are some pictures of our first design for our robot, as you can see there are many flaws and as well as components missing. These designs albeit not quite what we needed,  helped us find inspiration for our eventual final design. In fact we decided to keep alot of ideas from our earlier generations to incorporate in our robot, one of such is that we have the Raspi mounted on the back instead of the usual where it is found on top the chassis.
+Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis.
 
 
 ## Challenges We Faced 
