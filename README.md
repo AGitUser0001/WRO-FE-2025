@@ -101,6 +101,14 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 ### Processing Too Slow
 We overcame the problem of our program running too slowly by switching to a combination of multiprocessing and threading. Initially, our single-threaded approach caused delays, especially when handling tasks like image processing, motor control, and sensor feedback all at once. To solve this, we implemented multiprocessing to separate heavy tasks, such as camera frame processing, into their own processes, allowing them to run in parallel without blocking the main loop. At the same time, we used threading for lighter background tasks like logging data or checking sensors continuously. This made our program significantly faster and more responsive, allowing our robot to perform in real time without lag or missed inputs.
 ## Final Design
+
+<img src="/images/IMG_5054.jpeg" width="400" height="400">
+
+Our final design has many improvements and additions then the previous versions, our robot includes sensors, those being the lidar and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis.
+
+
+
+
 ## Mobility Management
 Our motor powers the two back wheels. We removed the differential gear in the front of the car to increase the steering angle. Our mobility management is mainly made up of our motor, servo motor, wheels, and our differential gear at the back of the car.
 ### Our Motor
