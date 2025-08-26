@@ -7,7 +7,9 @@ This repository contains information about our robot and the building process.
 
 ## Links
 - [Building Instructions](/Building-Instructions.md)
-- [Software Documentation](/Software_Documentation.md)
+- [Software Documentation](/Software-Documentation.md)
+- [Open Challenge Documentation](/Open-Challenge.md)
+- [Obstacle Challenge Documentation](/Obstacle-Challenge.md)
 ## Team Members
 ### Lucas Zheng
 
