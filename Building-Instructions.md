@@ -64,7 +64,7 @@ Step six, we will be adding the lidar and the camera, the camera will be attache
 Step seven, attach the battery, beforehand add a strip of velcro to the back of each battery which will conjoin with the underside of the baseplate. After you attach the battery, check all of the connections first before you plug it in. Safety first!!!
 
 ***Eight Step:***
-Step eight, this step you will have to solder a switch onto the main power cables
+Step eight, this step you will have to solder a switch onto the main power cables.
 
 <img src="/images/IMG_5052.jpeg" width="300" height="400">
 
