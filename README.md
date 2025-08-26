@@ -92,6 +92,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis. Our servo was mounted using tape at first, but we realized that it wasn't secure enough. We switched to velcro, but we realized that the servo motor still wiggled around a little. We switched to a type of velcro that snaps in place, but it was still moving. We never had much problem securing our motor, using a piece of metal that came with the metal chassis to secure it. Finally, our 3d printed mount was not stable enough and the plastic was not thick enough.
 
 
+
 ## Challenges We Faced 
 ### Short Circuit
 After we soldered the battery connector to the ESC and the extension board, we were ready to flip the switch. Unfortunately, we switched the positive and negative wires, resulting our extension board to be burned. This taught us to be more cautious before closing the circuit and helped us avoid similar situations along the way.
@@ -106,7 +107,7 @@ We overcame the problem of our program running too slowly by switching to a comb
 
 Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the lidar and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with velcro, finding that this was better than just tape or just velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LIDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LIDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
 
-
+<img src="/images/IMG_5055.jpeg" width="200" height="200"> <img src="/images/IMG_5056.jpeg" width="200" height="200">
 
 
 ## Mobility Management
