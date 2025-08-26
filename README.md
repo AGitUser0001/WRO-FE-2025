@@ -156,13 +156,13 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 
 ## Obstacle Management
 ## Circuit Diagram
-![Main](/circuits/wro_schematic_circuit_schem.png)
+<img src="/images/wroschematic.png" width="1000" height="1000">
 
 
 ## Total Price of the Robot
 | Component  | Cost |
 | ------------- | ------------- |
-| Motor  | $110.51  |
+| Motor  | $110.51 |
 | Servo Motor  | $24.99  |
 | Camera  | $16.87  |
 | Raspberry Pi 5  | $113.95  |
