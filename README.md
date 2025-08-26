@@ -7,7 +7,7 @@ This repository contains information about our robot and the building process.
 
 ## Links
 - [Building Instructions](/Building-Instructions.md)
-
+- [Software Documentation](/Software_Documentation.md)
 ## Team Members
 ### Lucas Zheng
 
