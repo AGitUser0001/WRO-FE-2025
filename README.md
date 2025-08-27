@@ -144,7 +144,7 @@ Our final design has many improvements and additions than the previous versions.
 # Mangement <a class="anchor" id="management"></a>
 
 
-## Obstacle Management <a class="anchor" id="obstacle-mangement"></a>
+## Obstacle Management <a class="anchor" id="obstacle-management"></a>
 
 
 
@@ -303,8 +303,11 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 ### Circuit Diagram <a class="anchor" id="circuit-diagram"></a> <a class="anchor" id="diagram"></a>
 <img src="/images/wroschematic.png" width="1000" height="1000">
 
+## Responsibility Management
 
-## Total Price of the Robot <a class="anchor" id="cost report"></a>
+
+
+## Total Price of the Robot <a class="anchor" id="cost-report"></a>
 | Component  | Cost |
 | ------------- | ------------- |
 | Motor  | $110.51 |
