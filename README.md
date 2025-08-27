@@ -44,7 +44,7 @@ This repository contains information about our robot and the building process.
 **Age:** 14
 
 **Introduction:**
-Hi, my name is Walter and I'm from Canada, this is my second WRO season, two years ago I participated in WRO robomission and ended up on the international stage in Panama. This year since I was old enough for future engineers I decided to sign up for a comepletly different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
+Hi, my name is Walter and I'm from Canada, this is my second WRO season, two years ago I participated in WRO Robo mission and ended up on the international stage in Panama. This year since I was old enough for future engineers I decided to sign up for a completly different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
 ### Eric Huang
 
 
@@ -69,7 +69,7 @@ Hello, I'm Eric, and I have already participated in two WRO competitions so far.
       <ul>
         <li>Head coach of Robotics Competitions including FLL (First LEGO League) Tournament and WRO (World Robotics Olympiad). Led teams in winning multiple national, international robotics and programming awards.</li>
         <li>Over 20 years of IT industry experience as software engineer working internationally.</li>
-        <li>MSc in Eletrical & Computer Engineering from University of Alberta.</li>
+        <li>MSc in Electrical & Computer Engineering from University of Alberta.</li>
         <li>BSc in Mathematics from Peking University.</li>
       </ul>
     </td>
@@ -103,7 +103,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 ## First design
 <img src="/images/first1.png" width="400" height="400"> <img src="/images/first2.png" width="400" height="400">
 
-Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis. Our servo was mounted using tape at first, but we realized that it wasn't secure enough. We switched to velcro, but we realized that the servo motor still wiggled around a little. We switched to a type of velcro that snaps in place, but it was still moving. We never had much problem securing our motor, using a piece of metal that came with the metal chassis to secure it. Finally, our 3d printed mount was not stable enough and the plastic was not thick enough.
+Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis. Our servo was mounted using tape at first, but we realized that it wasn't secure enough. We switched to Velcro, but we realized that the servo motor still wiggled around a little. We switched to a type of Velcro that snaps in place, but it was still moving. We never had much problem securing our motor, using a piece of metal that came with the metal chassis to secure it. Finally, our 3d printed mount was not stable enough and the plastic was not thick enough.
 
 
 
@@ -123,7 +123,7 @@ After the robot goes around this red pillar, it will only see the right wall. Be
 
 <img src="/images/IMG_5054.jpeg" width="400" height="500">
 
-Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the lidar and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with velcro, finding that this was better than just tape or just velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LIDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LIDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
+Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the lidar and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with Velcro, finding that this was better than just tape or just Velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LIDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LIDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
 
 <img src="/images/IMG_5055.jpeg" width="200" height="200"> <img src="/images/IMG_5056.jpeg" width="200" height="200">
 
