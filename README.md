@@ -22,12 +22,11 @@ This repository contains information about our robot and the building process.
       * [Servo Motor](#servo-motor)
       * [Wheels](#wheels)
   * [Power and Sense Management](#power-and-sense-management)
-    * [Li-Po Battery](#li-po-battery)
-    * [Arduino Nano ESP32](#arduino-nano-esp32)
-    * [IMU](#imu-sensor)
-    * [OpenMV Cam H7 R2](#openmv-cam-h7-r2)
-    * [Voltage Regulator](#voltage-regulator)
-    * [PCB Design](#pcb)
+    * [Battery](#battery)
+    * [Raspi Camera](#camera)
+    * [LiDAR](#lidar)
+    * [Raspberry Pi 5](#pi)
+    * [Expansion Board](#expansion-board)
     * [Circuit Diagram](#circuit-diagram)
 * [Obstacle Management](#obstacle-management)
 * [Total Cost](#cost-report)
@@ -141,18 +140,38 @@ Our final design has many improvements and additions than the previous versions.
 <img src="/images/IMG_5055.jpeg" width="200" height="200"> <img src="/images/IMG_5056.jpeg" width="200" height="200">
 
 
-##Mangement <a class="anchor" id="management"></a>
+# Mangement <a class="anchor" id="management"></a>
 
 
-### Obstacle Management <a class="anchor" id="obstacle-mangement"></a>
+## Obstacle Management <a class="anchor" id="obstacle-mangement"></a>
 
 
 
 
 
-### Power and Sense Management <a class="anchor" id="Power-management"></a>
+## Power and Sense Management <a class="anchor" id="Power-management"></a>
 
-### Our circuit schematic [here](#diagram)
+----------
+
+
+
+
+### Our battery <a class="anchor" id="battery"></a>
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="./images/battery.png" width="100%"> 
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Specifications:</h3>
+      <p>Voltage(V): 7.4V</p>
+      <p>Capacity(mAh: 1800mAh</p>
+      <p>Discharge rate(C): 90C</p>
+      <p>Weight: 100g</p>
+    </td>
+  </tr>
+</table>
+
 ### Our Camera <a class="anchor" id="camera"></a>
 <table>
   <tr>
@@ -170,13 +189,67 @@ Our final design has many improvements and additions than the previous versions.
   </tr>
 </table>
 
+### Our LiDAR <a class="anchor" id="lidar"></a>
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="./images/lidar.png" width="100%"> 
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Specifications:</h3>
+      <p>Typical measuring range: 0.03~12m</p>
+      <p>Scanning range:	360°</p>
+      <p>Sampling frequency:	5000 Hz</p>
+      <p>Scanning frequency:	10 Hz</p>
+      <p>Angular resolution:	≤0.72°</p>
+    </td>
+  </tr>
+</table>
+
+### Our Raspberry Pi 5 <a class="anchor" id="pi"></a>
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="./images/raspberrypi.png" width="100%"> 
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Specifications:</h3>
+      <p>Processor (SoC): Broadcom BCM2712</p>
+      <p>GPU: VideoCore VII</p>
+      <p>RAM: 16 GB LPDDR4X-4267 MHz</p>
+      <p>Storage: micro-SD (SDR104) + PCIe 2.0 x1 slot</p>
+      <p>Power supply: 5 V / 5 A via USB-C</p>
+    </td>
+  </tr>
+</table>
 
 
-### Mobility Management <a class="anchor" id="mobility-management"></a>
+### Our Expansion Board <a class="anchor" id="expansion-board"></a>
+<table>
+  <tr>
+    <td width="50%" style="text-align: left;">
+      <img src="./images/expansionboard.png" width="100%"> 
+    </td>
+    <td width="50%" style="text-align: left; vertical-align: top;">
+      <h3>Specifications:</h3>
+      <p>Main Control Chip: STM32F407VET6</p>
+      <p>PD Power Support: Raspberry Pi 5 protocol, up to 5 V / 5 A</p>
+      <p>IMU Sensor: 6-axis (gyro + accelerometer)</p>
+      <p>Connectivity: USB, I2C, sensor expansion, PWM/serial control</p>
+      <p>Motor Ports: 4-channel encoder motors with PID control</p>
+    </td>
+  </tr>
+</table>
+
+
+### Our circuit schematic [here](#diagram)
+
+
+## Mobility Management <a class="anchor" id="mobility-management"></a>
 Our mobility is made possible by a few different parts, these being the code that gets run through our raspberry pi and expansion board, the actual moving made possible through the BLDC motor and ESC, the steering which is controlled by our servo motor and can well, steer the front wheels, and our wheels. Firstly, our code is tuned so that the servo motor can steer precisely where we want it to, and so that the DC motor can move exactly as fast as we want it to. The next parts being our actual BLDC moto and ESC. The ESC is wired into our expansion board so that we can utilize PWM (pulse width modulation) to control how fast our BLDC motor is and our BLDC motor runs into a differential gear at the back of our car as we decided to use RWD instead of FWD or AWD because well, the servo is controlling the front wheels and AWD is banned. 
 Next is our servo motor. Our servo motor is wired directly into the PWM pins on our expansion board and the servo arm is attached to our front wheels, the servo motor required a lot of fine tuning as the servo_straight variable was hard to decide. Lastly our wheels went through many variations before finally settling on the one we are using currently. Before as the tires were too small we would add tire grips to increase the circumference of the tires as well as the grip as sometimes they would slip, but those tire grips would often fall off decreasing the consistency of our robot, so after careful consideration we landed on the current version of wheels which worked really well during testing.
 
-### Our Motor <a class="anchor" id="motor"></a>
+### Our BLDC Motor <a class="anchor" id="motor"></a>
 Our DC brushless motor drives the back wheels thanks to the differential gear which ensures that the car can drive straight. Our motor is secured using a metal part of the chassis that is secured with screws. We chose motor because it is small, reliable, and the gear ratio matched with the chassis gears.
 <table>
   <tr>
@@ -250,3 +323,14 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 | Total Price   | $685.53  |
 
 ## Potential Future Improvements
+
+
+## Sources
+LiDAR - [here](https://www.waveshare.com/wiki/D500_LiDAR_Kit)
+Battery - [here](https://www.amazon.ca/Gens-ace-Battery-Airplane-Helicopter/dp/B073RFHKWH)
+Servo Motor - [here](https://hitecrcd.com/hs-5055mg-economy-metal-gear-feather-servo/)
+BLDC Motor - [here](https://furitek.com/products/combo-of-furitek-lizard-pro-30a-50a-brushed-brushless-esc-for-axial-scx24-with-bluetooth)
+Camera - [here](https://www.aliexpress.com/item/1005007274396582.html?spm=a2g0o.order_list.order_list_main.11.74af1802IJ8jJV#nav-specification)
+Wheels - [here](https://www.aliexpress.com/item/1005004174366878.html?spm=a2g0o.detail.pcDetailBottomMoreOtherSeller.6.7e9bminTminTAI&gps-id=pcDetailBottomMoreOtherSeller&scm=1007.40196.394786.0&scm_id=1007.40196.394786.0&scm-url=1007.40196.394786.0&pvid=dbe58872-1796-4911-95bf-a4c5d060e85a&_t=gps-id:pcDetailBottomMoreOtherSeller,scm-url:1007.40196.394786.0,pvid:dbe58872-1796-4911-95bf-a4c5d060e85a,tpp_buckets:668%232846%238113%231998&pdp_ext_f=%7B%22order%22%3A%22162%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2230050%22%7D&pdp_npi=4%40dis!CAD!5.81!5.81!!!28.73!28.73!%402101c59817427507077044104ec0d6!12000028283974218!rec!CA!!ABX&utparam-url=scene%3ApcDetailBottomMoreOtherSeller%7Cquery_from%3A)
+Raspberry Pi 5 - [here](https://www.raspberrypi.com/products/raspberry-pi-5/)
+Expansion Board - [here](https://www.hiwonder.com/products/rrc-lite)
