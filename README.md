@@ -139,19 +139,21 @@ The robot sees this red pillar and tries to turn left, but as soon as it stops s
 Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the lidar and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with Velcro, finding that this was better than just tape or just Velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LIDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LIDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
 
 <img src="/images/IMG_5055.jpeg" width="200" height="200"> <img src="/images/IMG_5056.jpeg" width="200" height="200">
-#Mangement <a class="anchor" id="management"></a>
 
 
-## Obstacle Management <a class="anchor" id="obstacle-mangement"></a>
+##Mangement <a class="anchor" id="management"></a>
+
+
+### Obstacle Management <a class="anchor" id="obstacle-mangement"></a>
 
 
 
 
 
-## Power and Sense Management <a class="anchor" id="Power-management"></a>
+### Power and Sense Management <a class="anchor" id="Power-management"></a>
 
-## Our circuit schematic * [here](#diagram)
-## Our Camera <a class="anchor" id="camera"></a>
+### Our circuit schematic [here](#diagram)
+### Our Camera <a class="anchor" id="camera"></a>
 <table>
   <tr>
     <td width="50%" style="text-align: left;">
@@ -170,7 +172,7 @@ Our final design has many improvements and additions than the previous versions.
 
 
 
-## Mobility Management <a class="anchor" id="mobility-management"></a>
+### Mobility Management <a class="anchor" id="mobility-management"></a>
 Our mobility is made possible by a few different parts, these being the code that gets run through our raspberry pi and expansion board, the actual moving made possible through the BLDC motor and ESC, the steering which is controlled by our servo motor and can well, steer the front wheels, and our wheels. Firstly, our code is tuned so that the servo motor can steer precisely where we want it to, and so that the DC motor can move exactly as fast as we want it to. The next parts being our actual BLDC moto and ESC. The ESC is wired into our expansion board so that we can utilize PWM (pulse width modulation) to control how fast our BLDC motor is and our BLDC motor runs into a differential gear at the back of our car as we decided to use RWD instead of FWD or AWD because well, the servo is controlling the front wheels and AWD is banned. 
 Next is our servo motor. Our servo motor is wired directly into the PWM pins on our expansion board and the servo arm is attached to our front wheels, the servo motor required a lot of fine tuning as the servo_straight variable was hard to decide. Lastly our wheels went through many variations before finally settling on the one we are using currently. Before as the tires were too small we would add tire grips to increase the circumference of the tires as well as the grip as sometimes they would slip, but those tire grips would often fall off decreasing the consistency of our robot, so after careful consideration we landed on the current version of wheels which worked really well during testing.
 
@@ -209,7 +211,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 </table>
 
 
-## Our Wheels <a class="anchor" id="wheels"></a>
+### Our Wheels <a class="anchor" id="wheels"></a>
 <table>
   <tr>
     <td width="50%" style="text-align: left;">
@@ -224,7 +226,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
   </tr>
 </table>
 
-## Circuit Diagram <a class="anchor" id="circuit-diagram"></a> <a class="anchor" id="diagram"></a>
+### Circuit Diagram <a class="anchor" id="circuit-diagram"></a> <a class="anchor" id="diagram"></a>
 <img src="/images/wroschematic.png" width="1000" height="1000">
 
 
