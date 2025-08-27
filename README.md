@@ -22,7 +22,6 @@ This repository contains information about our robot and the building process.
   * [Drive Motor](#drive-motor-code)
   * [Servo Motor](#servo-motor-code)
   * [Camera](#camera-code)
-  * [IMU](#gyro-sensor-code)
 * [Obstacle Management](#obstacle-management)
 * [Total Cost](#cost-report)
 
