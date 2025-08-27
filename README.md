@@ -28,7 +28,8 @@ This repository contains information about our robot and the building process.
     * [Raspberry Pi 5](#pi)
     * [Expansion Board](#expansion-board)
     * [Circuit Diagram](#circuit-diagram)
-* [Obstacle Management](#obstacle-management)
+ * [Obstacle Management](#obstacle-management)
+ * [Responsibilties Management](#responsibilties)
 * [Total Cost](#cost-report)
 
 ## Team Members <a class="anchor" id="team"></a>
@@ -125,17 +126,17 @@ We realized that we could not fit the battery and the servo motor under our 3D p
 A new problem came up. It was hard to fully secure the servo motor in place. 
 ### Processing Too Slow
 We overcame the problem of our program running too slowly by switching to a combination of multiprocessing and threading. Initially, our single-threaded approach caused delays, especially when handling tasks like image processing, motor control, and sensor feedback all at once. To solve this, we implemented multiprocessing to separate heavy tasks, such as camera frame processing, into their own processes, allowing them to run in parallel without blocking the main loop. At the same time, we used threading for lighter background tasks like logging data or checking sensors continuously. This made our program significantly faster and more responsive, allowing our robot to perform in real time without lag or missed inputs.
-### LIDAR Was Unreliable
+### LiDAR Was Unreliable
 At first, we used our mounted camera to follow walls. This worked out great for the open challenge and seemed to work well for our obstacle challenge at first, but we soon found some cases in which the robot would completely go the wrong way with our camera wall following and pillar detection. Take this case for example.
 
 <img src="/images/ObstacleChallengeProblem.png" width="400" height="500">
 
-The robot sees this red pillar and tries to turn left, but as soon as it stops seeing it, the robot turns right. We thought using LIDAR for wall following would be a good solution since it can "see" very far. However, LIDAR was very unreliable, especially when the robot was in motion. This led to the robot wobbling around and sometimes just crashing into a wall. We went back to using our camera for wall following. 
+The robot sees this red pillar and tries to turn left, but as soon as it stops seeing it, the robot turns right. We thought using LiDAR for wall following would be a good solution since it can "see" very far. However, LiDAR was very unreliable, especially when the robot was in motion. This led to the robot wobbling around and sometimes just crashing into a wall. We went back to using our camera for wall following. 
 ## Final Design
 
 <img src="/images/IMG_5054.jpeg" width="400" height="500">
 
-Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the lidar and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with Velcro, finding that this was better than just tape or just Velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LIDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LIDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
+Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the LiDAR and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with Velcro, finding that this was better than just tape or just Velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LiDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LiDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
 
 <img src="/images/IMG_5055.jpeg" width="200" height="200"> <img src="/images/IMG_5056.jpeg" width="200" height="200">
 
@@ -152,7 +153,7 @@ Our final design has many improvements and additions than the previous versions.
 ## Power and Sense Management <a class="anchor" id="Power-management"></a>
 
 ----------
-
+Our power and sense management is made up of our battery, our camera, our LiDAR, Raspberry Pi 5, and our Hiwonder expansion board. The battery provides power to all of our componenets such as our motor, servo motor, camera, etc. We secured the battery using velcro. It is placed right under the baseplate. We thought this spot would be best since it is near the center of the robot. Our camera is one of the most important parts of our robot. We use it for wall follwing and detecting the pillars. Our camera is mounted high so that the bottom of the robot does not get in its way. Our camera is then secured using electrical tape. We made sure that our camera had a large enough FOV so that it could see both walls. Our LiDAR was recently implemented. It is secured under the mount with double-sided tape. We use it for parking and detecting the parking walls. We decided to use the Raspberry Pi 5 as our microcontroller because it is stable and has a good amount of processing power. It is mounted with screws on the back of the mount. Finally, our expansion board provides us with more ports. All these components help the robot navigate the open and obstacle challenge. 
 
 
 
