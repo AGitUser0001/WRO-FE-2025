@@ -125,7 +125,7 @@ At first, we used our mounted camera too follow walls. This worked out great for
 After the robot goes around this red pillar, it will only see the right wall. Because of this, it will turn left, but will never adjust back to the course because it will never be able to see the left wall (The camera can't see far enough). We though using LIDAR for wall following would be a good solution. However, LIDAR was very unreliable, especially when the robot was in motion. This led to the robot wobbling around and sometimes just crashing into a wall. We went back to using our camera for wall following. 
 ## Final Design
 
-<img src="/images/IMG_5054.jpeg" width="400" height="400">
+<img src="/images/IMG_5054.jpeg" width="400" height="500">
 
 Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the lidar and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with velcro, finding that this was better than just tape or just velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LIDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LIDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
 
