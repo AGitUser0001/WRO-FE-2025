@@ -303,7 +303,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 ### Circuit Diagram <a class="anchor" id="circuit-diagram"></a> <a class="anchor" id="diagram"></a>
 <img src="/images/wroschematic.png" width="1000" height="1000">
 
-## Responsibility Management </a> <a class="anchor" id="responsibilities"></a>
+## Responsibility Management </a> <a class="anchor" id="responsibilties"></a>
 Our responsibilities were split up so that each of us would have a main part to work toward but as well we would be able to help each other out with their respective area
 
 
