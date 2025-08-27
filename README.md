@@ -185,6 +185,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 </table>
 
 ## Obstacle Management <a class="anchor" id="obstacle-mangement"></a>
+## Power and Sense Management
 ## Circuit Diagram <a class="anchor" id="circuit-diagram"></a>
 <img src="/images/wroschematic.png" width="1000" height="1000">
 
