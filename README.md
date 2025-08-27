@@ -331,10 +331,17 @@ Our responsibilities were split up so that each of us would have a main part to 
 
 ## Sources
 LiDAR - [here](https://www.waveshare.com/wiki/D500_LiDAR_Kit)
+
 Battery - [here](https://www.amazon.ca/Gens-ace-Battery-Airplane-Helicopter/dp/B073RFHKWH)
+
 Servo Motor - [here](https://hitecrcd.com/hs-5055mg-economy-metal-gear-feather-servo/)
+
 BLDC Motor - [here](https://furitek.com/products/combo-of-furitek-lizard-pro-30a-50a-brushed-brushless-esc-for-axial-scx24-with-bluetooth)
+
 Camera - [here](https://www.aliexpress.com/item/1005007274396582.html?spm=a2g0o.order_list.order_list_main.11.74af1802IJ8jJV#nav-specification)
+
 Wheels - [here](https://www.aliexpress.com/item/1005004174366878.html?spm=a2g0o.detail.pcDetailBottomMoreOtherSeller.6.7e9bminTminTAI&gps-id=pcDetailBottomMoreOtherSeller&scm=1007.40196.394786.0&scm_id=1007.40196.394786.0&scm-url=1007.40196.394786.0&pvid=dbe58872-1796-4911-95bf-a4c5d060e85a&_t=gps-id:pcDetailBottomMoreOtherSeller,scm-url:1007.40196.394786.0,pvid:dbe58872-1796-4911-95bf-a4c5d060e85a,tpp_buckets:668%232846%238113%231998&pdp_ext_f=%7B%22order%22%3A%22162%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2230050%22%7D&pdp_npi=4%40dis!CAD!5.81!5.81!!!28.73!28.73!%402101c59817427507077044104ec0d6!12000028283974218!rec!CA!!ABX&utparam-url=scene%3ApcDetailBottomMoreOtherSeller%7Cquery_from%3A)
+
 Raspberry Pi 5 - [here](https://www.raspberrypi.com/products/raspberry-pi-5/)
+
 Expansion Board - [here](https://www.hiwonder.com/products/rrc-lite)
