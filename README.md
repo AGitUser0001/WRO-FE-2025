@@ -102,7 +102,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 | <img src="./images/robottop.jpg" width="60%" height="50%" /> | <img src="./images/robotbottom.jpg" width="55%" height="50%" /> | 
 | *Top* | *Bottom* |
 
-## Our video of the open chllenge on [Youtube](https://youtu.be/EdWDk1boRc8)  <a class="anchor" id="video"></a>
+## Our video of the open challenge on [Youtube](https://youtu.be/EdWDk1boRc8)  <a class="anchor" id="video"></a>
 
 ## First design
 <img src="/images/first1.png" width="400" height="400"> <img src="/images/first2.png" width="400" height="400">
