@@ -18,10 +18,6 @@ This repository contains information about our robot and the building process.
 * [Performance Video](#video)
 * [Mobility Management](#mobility-management)
 * [Circuit Diagram](#circuit-diagram)
-* [Code for each component](#code-for-each-component)
-  * [Drive Motor](#drive-motor-code)
-  * [Servo Motor](#servo-motor-code)
-  * [Camera](#camera-code)
 * [Obstacle Management](#obstacle-management)
 * [Total Cost](#cost-report)
 
