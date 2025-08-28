@@ -143,11 +143,6 @@ Our final design has many improvements and additions than the previous versions.
 # Mangement <a class="anchor" id="management"></a>
 
 
-## Obstacle Management <a class="anchor" id="obstacle-management"></a>
-
-
-
-
 
 ## Power and Sense Management <a class="anchor" id="power-and-sense-management"></a>
 
