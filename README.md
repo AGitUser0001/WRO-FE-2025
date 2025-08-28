@@ -8,8 +8,8 @@ This repository contains information about our robot and the building process.
 ## Links
 - [Building Instructions](/Building-Instructions.md)
 - [Software Documentation](/Software-Documentation.md)
-- [Open Challenge Documentation](/Open-Challenge.md)
-- [Obstacle Challenge Documentation](/Obstacle-Challenge.md)
+- [Open Challenge Documentation](/Software-Documentation.md#open-challenge)
+- [Obstacle Challenge Documentation](/Software-Documentation.md#obstacle-management)
 
 ## Table of Contents
 * [The Team](#team)
