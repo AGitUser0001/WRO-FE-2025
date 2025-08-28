@@ -29,7 +29,6 @@ This repository contains information about our robot and the building process.
     * [Expansion Board](#expansion-board)
     * [Circuit Diagram](#circuit-diagram)
  * [Obstacle Management](#obstacle-management)
- * [Responsibilties Management](#responsibilties)
 * [Total Cost](#cost-report)
 
 ## Team Members <a class="anchor" id="team"></a>
