@@ -145,7 +145,6 @@ Our final design has many improvements and additions than the previous versions.
 
 ## Power and Sense Management <a class="anchor" id="power-and-sense-management"></a>
 
-----------
 Our power and sense management is made up of our battery, our camera, our LiDAR, Raspberry Pi 5, and our Hiwonder expansion board. The battery provides power to all of our componenets such as our motor, servo motor, camera, etc. We secured the battery using velcro. It is placed right under the baseplate. We thought this spot would be best since it is near the center of the robot. Our camera is one of the most important parts of our robot. We use it for wall follwing and detecting the pillars. Our camera is mounted high so that the bottom of the robot does not get in its way. Our camera is then secured using electrical tape. We made sure that our camera had a large enough FOV so that it could see both walls. Our LiDAR was recently implemented. It is secured under the mount with double-sided tape. We use it for parking and detecting the parking walls. We decided to use the Raspberry Pi 5 as our microcontroller because it is stable and has a good amount of processing power. It is mounted with screws on the back of the mount. Finally, our expansion board provides us with more ports. All these components help the robot navigate the open and obstacle challenge. 
 
 
