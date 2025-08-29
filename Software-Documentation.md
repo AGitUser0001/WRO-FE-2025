@@ -48,3 +48,48 @@ def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 500, draw_i
     return cntList, MaxCnt, MaxCntArea, approx, bounding_box, center_x, center_y, bottom_y
 ```
 ### Parking Wall Detection
+
+```ino
+  lower_magenta = np.array([0, 155, 63])
+  upper_magenta = np.array([140, 255, 130])
+```
+
+```ino
+def parking(self, ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar, stopped, parking_detected, parking_side, last_parking_detect):
+    limit = 500
+    magenta1center_x = rw / 2
+    magenta1center_y = rh / 2
+    magenta1bottom_y = rh / 2
+    magenta2center_x = rw / 2
+    magenta2center_y = rh / 2
+    magenta2bottom_y = rh / 2
+    current_error = 0
+```
+```ino
+    cntList, _, _, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_magenta, self.upper_magenta, limit, draw_image=display_ROI_front, draw=2)
+    maxCnts = getMaxContours(cntList, 2)
+    (maxCnt1, MaxMagentaArea1) = maxCnts[0] if len(maxCnts) > 0 else (None, 0)
+    if maxCnt1 is not None:
+      _approx, (x, y, w, h) = getBoundingBox(maxCnt1)
+      magenta1center_x = x + w / 2
+      magenta1center_y = y + h / 2
+      magenta1bottom_y = y + h
+    (maxCnt2, MaxMagentaArea2) = maxCnts[1] if len(maxCnts) > 1 else (None, 0)
+    if maxCnt2 is not None:
+      MaxMagentaArea2 = cv2.contourArea(maxCnt2)
+      _approx, (x, y, w, h) = getBoundingBox(maxCnt2)
+      magenta2center_x = x + w / 2
+      magenta2center_y = y + h / 2
+      magenta2bottom_y = y + h
+```
+
+
+
+
+
+
+
+
+
+
+
