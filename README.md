@@ -28,7 +28,6 @@ This repository contains information about our robot and the building process.
     * [Raspberry Pi 5](#pi)
     * [Expansion Board](#expansion-board)
     * [Circuit Diagram](#circuit-diagram)
- * [Obstacle Management](#obstacle-management)
 * [Total Cost](#cost-report)
 
 ## Team Members <a class="anchor" id="team"></a>
