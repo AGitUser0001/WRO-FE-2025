@@ -96,14 +96,12 @@ ctypes  numpy  picamera3  time  ros_robot_controller_sdk  cv2  multprocessing  t
 
 
 ### LiDAR
+### Camera
 ### Steering
 ### Moving
-### Parking
-### Start Section
-### 3 laps
 ### Blue line detection
 ### Wall follow
-### Emergency stop
+
 
 
 
