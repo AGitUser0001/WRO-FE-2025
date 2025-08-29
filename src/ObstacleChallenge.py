@@ -77,7 +77,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   def setServo(servoPos):
     board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPos]])
 
-  def parking(n = 7, exiting = True):
+  def parking(n = 6, exiting = True):
     s_error = last_error / (abs(last_error) + 1e-8)
     OUT = servoStraight + 400 if s_error > 0 else servoStraight - 400
     IN = servoStraight - 400 if s_error > 0 else servoStraight + 400

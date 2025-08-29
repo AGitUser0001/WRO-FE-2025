@@ -2,6 +2,7 @@ import cv2
 from picamera2 import Picamera2 # pyright: ignore[reportMissingImports]
 from lidar import LiDAR
 import queue
+from imu_scan import imu_value
 
 lidar = LiDAR()
 visualizer, lidar_roi_queue = lidar.get_visualizer()
@@ -25,6 +26,7 @@ while True:
         cv2.imshow("Visualizer", visualizer_image)
     except queue.Empty:
         pass
+    print(imu_value.value)
     if cv2.waitKey(1)==ord('q'):
         break
 lidar.stop()

@@ -44,7 +44,7 @@ class ObstacleChallengeProcess():
       ROI_front_LAB = cv2.cvtColor(ROI_front, cv2.COLOR_BGR2LAB)
 
       # Red Detection
-      _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
+      _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, 460, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
 
       red_timer_res, red_timer_high = get_timer(red_obs_timer, 0.1, 0.15)
       if MaxRedArea > 0 and not red_timer_high:
@@ -55,7 +55,7 @@ class ObstacleChallengeProcess():
         MaxRedArea = 0
       
       # Green Detection
-      _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, draw_image=display_ROI_front, c_colour=(0, 255, 0))
+      _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, 460, draw_image=display_ROI_front, c_colour=(0, 255, 0))
       
       green_timer_res, green_timer_high = get_timer(red_obs_timer, 0.1, 0.15)
       if MaxGreenArea > 0 and not green_timer_high:
@@ -65,11 +65,11 @@ class ObstacleChallengeProcess():
       elif not green_timer_res and not green_timer_high:
         MaxGreenArea = 0
 
+      _, _, MaxBlueArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_blue, self.upper_blue, draw_image=display_ROI_front)
       # Blue Line Detection
       cur_time = time.time()
       if turnCount < self.turn_limit and cur_time - last_turn_detection > (1 if detected_turn else 3):
-        _, _, MaxBlueArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_blue, self.upper_blue, draw_image=display_ROI_front, c_colour=(255, 0, 0))
-        if MaxBlueArea:
+        if MaxBlueArea != 0:
           if not detected_turn:
             if MaxBlueArea > 500 and MaxBlueArea < 800:
               detected_turn = True
@@ -165,7 +165,7 @@ class ObstacleChallengeProcess():
     else:
       return solidity > 0.4 and rectangularity > 0.3
 
-  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 460, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
+  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)
     if conditional is not None:
       mask = cv2.bitwise_and(mask, conditional.astype(np.uint8) * 255)
