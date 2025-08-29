@@ -7,7 +7,7 @@ from utils import processContours, getMaxContours, getBoundingBox
 
 class ObstacleChallengeProcess():
   lower_red = np.array([35, 150, 124])
-  upper_red = np.array([140, 255, 165])
+  upper_red = np.array([140, 255, 255])
   lower_green = np.array([80, 0, 124])
   upper_green = np.array([190, 107, 255])
   lower_blue = np.array([35, 110, 0])
@@ -39,9 +39,9 @@ class ObstacleChallengeProcess():
       ROI_front_LAB = cv2.cvtColor(ROI_front, cv2.COLOR_BGR2LAB)
 
       # Red Detection
-      _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, draw_image=display_ROI_front, c_colour=(0, 0, 255))
+      _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
       
-      # Green Detcetion
+      # Green Detection
       _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, draw_image=display_ROI_front, c_colour=(0, 255, 0))
 
       # Blue Line Detection
@@ -80,17 +80,18 @@ class ObstacleChallengeProcess():
           obs_y = green_y
           offset = -1
 
-        distance = math.dist((0, 480), (x_relative, obs_y))
-        K_max = 6
+        distance = math.dist((0, 480 - 140), (x_relative, obs_y))
+        K_max = 12.8
         d_min = 120
         d_max = 466.9
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
 
-        offset *= 150 + (K_obs * 200)
-        current_error = x_relative + offset
-        current_error = current_error * -K_obs
+        offset *= 150
+        offset *= K_obs
+        current_error = x_relative * K_obs
+        current_error += offset
       if parking_detected < 2.5 and False:
         if (MaxRedArea > 6000 and abs(red_x_relative) < offset) or (MaxGreenArea > 6000 and abs(green_x_relative) < offset):
           status.value = b"BACKWARD"
@@ -138,8 +139,10 @@ class ObstacleChallengeProcess():
     else:
       return solidity > 0.4 and rectangularity > 0.3
 
-  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
+  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)
+    if conditional is not None:
+      mask = cv2.bitwise_and(mask, conditional.astype(np.uint8) * 255)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if filterSolids: contours = list(filter(self.filterSolids, contours))
     center_x = 0

@@ -97,16 +97,13 @@ class LiDAR:
 
     dists = values[:, 1]
 
-    # Compute quartiles
     q1 = np.percentile(dists, q1_percent)
     q3 = np.percentile(dists, q3_percent)
     iqr = q3 - q1
 
-    # Compute bounds (1.5*IQR is typical; adjust if needed)
     lower_bound = q1 - 1.5 * iqr
     upper_bound = q3 + 1.5 * iqr
 
-    # Keep rows where distance is inside IQR bounds
     mask = (dists >= lower_bound) & (dists <= upper_bound)
     masked_values = values[mask]
     masked_values = masked_values if masked_values.size != 0 else filtered_values

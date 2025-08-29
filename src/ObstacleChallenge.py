@@ -63,15 +63,16 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   board = rrc.Board()
   motorPW = 1620
   parkMotorPW = 1630
-  servoStraight = 1800
+  servoStraight = 1825
   servoPW = servoStraight
-  steer = servoStraight
+  steer = 0
   rate_limit = 1/60
   last_time = -1
   last_servoPW = -1
   
   def setMotor(motorPos):
     board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPos]])
+    #pass
 
   def setServo(servoPos):
     board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPos]])
@@ -171,29 +172,31 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       else:
         if was_obstacle:
           was_obstacle = False
-        error = MaxRightArea - MaxLeftArea
+        error = MaxLeftArea - MaxRightArea
+
+      cv2.putText(img, f"Left area: {MaxLeftArea}", (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+      cv2.putText(img, f"Right area: {MaxRightArea}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+      cv2.putText(img, f"Error (-left +right): {error}", (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+      
+      error = -error
 
       if not stMode:
         i_error += error * dt
-      cv2.putText(img, f"Left area: {MaxLeftArea}", (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-      cv2.putText(img, f"Right area: {MaxRightArea}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-      cv2.putText(img, f"Error: {error}", (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
       derivative = error - last_error
       last_error = error
+      
+      cv2.putText(img, f"Error (-right +left): {error}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+      cv2.putText(img, f"Derivative: {derivative}", (10, 125), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+      cv2.putText(img, f"Last error: {last_error}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-      steering_correction = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
-      steer = servoStraight + int(steering_correction)
-
-      if steer > servoStraight + 300:
-        steer = servoStraight + 300
-      if steer < servoStraight - 300:
-        steer = servoStraight - 300
+      steer = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
       if stMode and current_error_pillar == 0:
-        steer = servoStraight + (150 * stMode_dir)
-      cv2.putText(img, f"Steer: {steer - servoStraight}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+        steer = 200 * stMode_dir
+      steer = min(300, max(-300, steer))
+      cv2.putText(img, f"Steer: {steer}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-      servoPW = steer
+      servoPW = servoStraight + int(steer)
       if servoPW != last_servoPW:
         setServo(servoPW)
       last_servoPW = servoPW
@@ -202,7 +205,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       if (MaxLeftArea == 0) ^ (MaxRightArea == 0) and max(MaxLeftArea, MaxRightArea) > 1000 and not stMode:
         stMode = True
         stMode_time = time.time()
-        stMode_dir = 1 if MaxLeftArea == 0 else -1
+        stMode_dir = -1 if MaxLeftArea == 0 else 1
         print("Steering Mode ON")
       if stMode and time.time() > stMode_time + 0.5 and \
         MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 500 or (abs(error) * -stMode_dir == error and abs(error) > 500)):

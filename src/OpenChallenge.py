@@ -31,9 +31,9 @@ picam2.configure(
 picam2.start()
 board = rrc.Board()
 motorPW = 1620
-servoStraight = 1800
+servoStraight = 1825
 servoPW = servoStraight
-steer = servoStraight
+steer = 0
 rate_limit = 1/60
 last_time = -1
 last_servoPW = -1
@@ -114,19 +114,15 @@ while True:
 
   derivative = error - last_error
   last_error = error
-    
-  steering_correction = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
-  steer = servoStraight + int(steering_correction)
 
-  if steer > servoStraight + 300:
-    steer = servoStraight + 300
-  if steer < servoStraight - 300:
-    steer = servoStraight - 300
+  steer = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
+  steer = min(300, max(-300, steer))
   if stMode:
-    steer = servoStraight + (150 * stMode_dir)
-  cv2.putText(img, f"Steer: {steer - servoStraight}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+    steer = 200 * stMode_dir
 
-  servoPW = steer
+  cv2.putText(img, f"Steer: {steer}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+  servoPW = servoStraight + int(steer)
   if servoPW != last_servoPW:
     board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPW]])
   last_servoPW = servoPW
@@ -135,7 +131,7 @@ while True:
   if (MaxLeftArea == 0) ^ (MaxRightArea == 0) and max(MaxLeftArea, MaxRightArea) > 1000 and not stMode:
     stMode = True
     stMode_time = time.time()
-    stMode_dir = 1 if MaxLeftArea == 0 else -1
+    stMode_dir = -1 if MaxLeftArea == 0 else 1
     print("Steering Mode ON")
   if stMode and time.time() > stMode_time + 0.5 and \
      MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 500 or (abs(error) * -stMode_dir == error and abs(error) > 500)):
