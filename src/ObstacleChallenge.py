@@ -164,7 +164,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       RightLiDAR = LiDAR.get_roi_median(lidar_array, *lidar_roi_right, min_points=6)
       FrontDist = LiDAR.get_angle_median(lidar_array, 0 - 5, 0 + 5)[4]
 
-      current_error_pillar = error_pillar.value
+      current_error_pillar = -error_pillar.value
       if current_error_pillar != 0:
         if not was_obstacle:
           was_obstacle = True
@@ -209,7 +209,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       if (MaxLeftArea == 0) ^ (MaxRightArea == 0) and max(MaxLeftArea, MaxRightArea) > 1000 and not stMode:
         stMode = True
         stMode_time = time.time()
-        stMode_dir = -1 if MaxLeftArea == 0 else 1
+        stMode_dir = -1 if MaxRightArea == 0 else 1
         print("Steering Mode ON")
       if stMode and time.time() > stMode_time + 0.5 and \
         MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 500 or (abs(error) * -stMode_dir == error and abs(error) > 500)):

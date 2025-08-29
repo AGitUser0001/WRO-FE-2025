@@ -81,14 +81,14 @@ class ObstacleChallengeProcess():
           offset = -1
 
         distance = math.dist((0, 480 - 140), (x_relative, obs_y))
-        K_max = 3
+        K_max = 2.8
         d_min = 120
         d_max = 466.9
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
 
-        offset *= 150
+        offset *= 100
         offset *= K_obs
         current_error = x_relative * K_obs
         current_error += offset
@@ -139,7 +139,7 @@ class ObstacleChallengeProcess():
     else:
       return solidity > 0.4 and rectangularity > 0.3
 
-  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
+  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 500, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)
     if conditional is not None:
       mask = cv2.bitwise_and(mask, conditional.astype(np.uint8) * 255)
@@ -158,11 +158,9 @@ class ObstacleChallengeProcess():
   
   def parking(self, ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar, stopped, parking_detected, parking_side, last_parking_detect):
     limit = 500
-    MaxMagentaArea1 = 0
     magenta1center_x = rw / 2
     magenta1center_y = rh / 2
     magenta1bottom_y = rh / 2
-    MaxMagentaArea2 = 0
     magenta2center_x = rw / 2
     magenta2center_y = rh / 2
     magenta2bottom_y = rh / 2
@@ -170,14 +168,13 @@ class ObstacleChallengeProcess():
     
     cntList, _, _, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_magenta, self.upper_magenta, limit, draw_image=display_ROI_front, draw=2)
     maxCnts = getMaxContours(cntList, 2)
-    maxCnt1 = maxCnts[0] if len(maxCnts) > 0 else None
+    (maxCnt1, MaxMagentaArea1) = maxCnts[0] if len(maxCnts) > 0 else (None, 0)
     if maxCnt1 is not None:
-      MaxMagentaArea1 = cv2.contourArea(maxCnt1)
       _approx, (x, y, w, h) = getBoundingBox(maxCnt1)
       magenta1center_x = x + w / 2
       magenta1center_y = y + h / 2
       magenta1bottom_y = y + h
-    maxCnt2 = maxCnts[1] if len(maxCnts) > 1 else None
+    (maxCnt2, MaxMagentaArea2) = maxCnts[1] if len(maxCnts) > 1 else (None, 0)
     if maxCnt2 is not None:
       MaxMagentaArea2 = cv2.contourArea(maxCnt2)
       _approx, (x, y, w, h) = getBoundingBox(maxCnt2)

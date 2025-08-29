@@ -131,7 +131,7 @@ while True:
   if (MaxLeftArea == 0) ^ (MaxRightArea == 0) and max(MaxLeftArea, MaxRightArea) > 1000 and not stMode:
     stMode = True
     stMode_time = time.time()
-    stMode_dir = -1 if MaxLeftArea == 0 else 1
+    stMode_dir = -1 if MaxRightArea == 0 else 1
     print("Steering Mode ON")
   if stMode and time.time() > stMode_time + 0.5 and \
      MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 500 or (abs(error) * -stMode_dir == error and abs(error) > 500)):
