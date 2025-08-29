@@ -3,7 +3,7 @@ import math
 import cv2
 import time
 import queue
-from utils import processContours, getMaxContours, getBoundingBox
+from utils import processContours, getMaxContours, getBoundingBox, get_timer, set_timer
 
 class ObstacleChallengeProcess():
   lower_red = np.array([35, 150, 124])
@@ -19,10 +19,15 @@ class ObstacleChallengeProcess():
     turnCount = 0
     last_turn_detection = -1
     last_parking_detect = -1
+    red_obs_timer = {}
+    green_obs_timer = {}
     detected_turn = False
     parking = False
     parking_side = 0
     parking_detected = 0
+    Kp = 0.8
+    Kd = 0.15
+    last_error = 0
     
     while not stopped.value:
       try:
@@ -40,9 +45,25 @@ class ObstacleChallengeProcess():
 
       # Red Detection
       _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
+
+      red_timer_res, red_timer_high = get_timer(red_obs_timer, 0.1, 0.15)
+      if MaxRedArea > 0 and not red_timer_high:
+        set_timer(red_obs_timer, True)
+      if red_timer_res and red_timer_high:
+        set_timer(red_obs_timer, False, MaxRedArea > 0)
+      elif not red_timer_res and not red_timer_high:
+        MaxRedArea = 0
       
       # Green Detection
       _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, draw_image=display_ROI_front, c_colour=(0, 255, 0))
+      
+      green_timer_res, green_timer_high = get_timer(red_obs_timer, 0.1, 0.15)
+      if MaxGreenArea > 0 and not green_timer_high:
+        set_timer(green_obs_timer, True)
+      if green_timer_res and green_timer_high:
+        set_timer(green_obs_timer, False, MaxGreenArea > 0)
+      elif not green_timer_res and not green_timer_high:
+        MaxGreenArea = 0
 
       # Blue Line Detection
       cur_time = time.time()
@@ -88,10 +109,15 @@ class ObstacleChallengeProcess():
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
 
-        offset *= 100
+        offset *= 110
         offset *= K_obs
         current_error = x_relative * K_obs
         current_error += offset
+
+      derivative = current_error - last_error
+      last_error = current_error
+      
+      current_error = Kp * current_error + Kd * derivative
       if parking_detected < 2.5 and False:
         if (MaxRedArea > 6000 and abs(red_x_relative) < offset) or (MaxGreenArea > 6000 and abs(green_x_relative) < offset):
           status.value = b"BACKWARD"
@@ -139,7 +165,7 @@ class ObstacleChallengeProcess():
     else:
       return solidity > 0.4 and rectangularity > 0.3
 
-  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 500, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
+  def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 460, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)
     if conditional is not None:
       mask = cv2.bitwise_and(mask, conditional.astype(np.uint8) * 255)

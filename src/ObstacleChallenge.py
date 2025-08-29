@@ -289,8 +289,8 @@ if __name__ == "__main__":
   # --- Main Display Loop ---
   last_display_time = 0
   display_interval = 1 / 30  # 30 FPS
-  #front_coords = (70, 140, 570, 360)
-  front_coords = (0, 140, 640, 360)
+  front_coords = (70, 140, 570, 360)
+  #front_coords = (0, 140, 640, 360)
   orig_front_coords = front_coords
   
   visualizer, lidar_roi_queue = lidar.get_visualizer()

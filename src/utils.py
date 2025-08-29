@@ -1,4 +1,5 @@
 import cv2
+import time
 
 def drawContour(contour, image, *, bounding_box=True, c_colour=(0, 0, 0), b_colour=(255, 0, 255)):
   cv2.drawContours(image, [contour], 0, c_colour, 2)
@@ -31,3 +32,17 @@ def getBoundingBox(contour):
   approx = cv2.approxPolyDP(contour, 0.01*cv2.arcLength(contour, True), True)
   bounding_box = cv2.boundingRect(approx)
   return approx, bounding_box
+
+def get_timer(timer_dict: dict, low_timer: float, high_timer: float):
+  prev_time = timer_dict.get("time", -1)
+  value = timer_dict.get("value", False)
+  cur_time = time.time()
+  result = cur_time - prev_time > (low_timer if value else high_timer)
+  return result, value
+
+def set_timer(timer_dict: dict, new_value: bool | None = None, skip_time = False):
+  value = not timer_dict.get("value", False) if new_value is None else new_value
+  cur_time = -1 if skip_time else time.time()
+  timer_dict["value"] = value
+  timer_dict["time"] = cur_time
+  return value
