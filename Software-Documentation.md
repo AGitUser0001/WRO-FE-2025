@@ -85,6 +85,17 @@ def parking(self, ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar
 
 
 
+## Our code explained
+
+### LiDAR
+### Steering
+### Moving
+### Parking
+### Start Section
+### 3 laps
+### Blue line detection
+### Wall follow
+### Emergency stop
 
 
 
