@@ -10,5 +10,22 @@ The goal of the obstacle challenge is roughly the same as the open challenge wit
 
 We finished the obstacle challenge by first making a wall follow code so that our robot would be able to run through the circuit, next we made it so that our camera would be able to tell what colour each traffic light was and therefore what side to pass it on, after our robot figures out what colour each traffic light is, it then turns so that the traffic light is far enough on the left or right side of the camera so that the robot wouldn't ram into it. After this it then tries to go back to the centre of the track and occasionally turns depending on if the traffic light is on the corner or not. Since wall follow with just a camera isn't very reliable on obstacle challenge due to the added traffic lights, we implemented a LiDAR sensor which helps keep track of walls put also helps with parking. The logic behind how we figure out the three laps are up is the same, we count how many blue lines we pass thus connecting to how many corners we've passed. 
 ### Pillar Detection
-
+'''ino
+def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 500, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
+    mask = cv2.inRange(img_lab, lower_lab, upper_lab)
+    if conditional is not None:
+      mask = cv2.bitwise_and(mask, conditional.astype(np.uint8) * 255)
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    if filterSolids: contours = list(filter(self.filterSolids, contours))
+    center_x = 0
+    center_y = 0
+    bottom_y = 0
+    cntList, MaxCnt, MaxCntArea, approx, bounding_box = processContours(contours, threshold, draw_image, draw_bounding_box=draw_bounding_box, draw=draw, c_colour=c_colour, b_colour=b_colour)
+    if MaxCnt is not None:
+      x, y, w, h = bounding_box
+      center_x = x + w / 2
+      center_y = y + h / 2
+      bottom_y = y + h
+    return cntList, MaxCnt, MaxCntArea, approx, bounding_box, center_x, center_y, bottom_y
+'''
 ### Parking Wall Detection
