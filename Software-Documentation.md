@@ -87,6 +87,14 @@ def parking(self, ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar
 
 ## Our code explained
 
+### Python libraries
+For open challenge:
+cv2  ros_robot_controller_sdk  time  numpy  picamera2  utils
+
+For obstacle challenge:
+ctypes  numpy  picamera3  time  ros_robot_controller_sdk  cv2  multprocessing  threading  queue  lidar  ObstacleChallengeProcess  utils
+
+
 ### LiDAR
 ### Steering
 ### Moving
