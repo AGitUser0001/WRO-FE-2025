@@ -81,7 +81,7 @@ class ObstacleChallengeProcess():
           offset = -1
 
         distance = math.dist((0, 480 - 140), (x_relative, obs_y))
-        K_max = 12.8
+        K_max = 3
         d_min = 120
         d_max = 466.9
 

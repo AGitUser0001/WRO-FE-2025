@@ -190,9 +190,13 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       cv2.putText(img, f"Derivative: {derivative}", (10, 125), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
       cv2.putText(img, f"Last error: {last_error}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
-      steer = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
-      if stMode and current_error_pillar == 0:
-        steer = 200 * stMode_dir
+      if current_error_pillar == 0:
+        steer = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
+        if stMode:
+          steer = 200 * stMode_dir
+      else:
+        steer = current_error_pillar
+
       steer = min(300, max(-300, steer))
       cv2.putText(img, f"Steer: {steer}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
