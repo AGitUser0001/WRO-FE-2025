@@ -5,3 +5,7 @@ The goal of the open challenge is to make three laps around the track without to
 
 To make sure we stop after three laps, the robot detects the blue line. We use an ROI located in the middle of the screen to detect the blue line. For a complete detection, the robot first must see the blue line from a distance, then up close, and finally, the blue line must be out of the camera's sight. After twelve detections, the robot waits and then stops. 
 ## Obstacle Management
+
+### Pillar Detection
+
+### Parking Wall Detection
