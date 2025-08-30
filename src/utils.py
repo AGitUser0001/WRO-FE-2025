@@ -1,5 +1,6 @@
 import cv2
 import time
+import numpy as np
 
 def drawContour(contour, image, *, bounding_box=True, c_colour=(0, 0, 0), b_colour=(255, 0, 255)):
   cv2.drawContours(image, [contour], 0, c_colour, 2)
@@ -46,3 +47,13 @@ def set_timer(timer_dict: dict, new_value: bool | None = None, skip_time = False
   timer_dict["value"] = value
   timer_dict["time"] = cur_time
   return value
+
+def posToDegrees(servoPos):
+  return (servoPos if servoPos < 1000 else servoPos - 1800) / 10.2
+
+def getCollisions(mask: np.ndarray, pt1: tuple[int, int], pt2: tuple[int, int]):
+  line_img = np.zeros_like(mask)
+  cv2.line(line_img, pt1, pt2, 255, 1)
+
+  collision_pixels = cv2.bitwise_and(line_img, mask)
+  return cv2.countNonZero(collision_pixels)

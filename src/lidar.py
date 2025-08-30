@@ -200,8 +200,8 @@ class LiDAR:
 MIN_DIST = 50
 MAX_DIST = 4200
 MIN_CONF = 60
-AGE_THRESHOLD = 150
-AGE_THRESHOLD_NEAR = int(10 * DATA_RES)
+AGE_THRESHOLD = 200
+AGE_THRESHOLD_NEAR = int(4 * DATA_RES)
 INDEX_DISTS = np.minimum(
   np.abs(np.arange(NUM_POINTS)[:, np.newaxis] - np.arange(NUM_POINTS)),
   NUM_POINTS - np.abs(np.arange(NUM_POINTS)[:, np.newaxis] - np.arange(NUM_POINTS))

@@ -50,7 +50,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   MaxRightArea = 0
   MaxLeftArea = 0
   Kp = 0.1
-  Kd = 0.05
+  Kd = 0.03
   Ki = 0
   i_error = 0
   stMode = False

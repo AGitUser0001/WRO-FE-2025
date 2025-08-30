@@ -3,12 +3,12 @@ import math
 import cv2
 import time
 import queue
-from utils import processContours, getMaxContours, getBoundingBox, get_timer, set_timer
+from utils import getCollisions, processContours, getMaxContours, getBoundingBox, get_timer, set_timer
 
 class ObstacleChallengeProcess():
   lower_red = np.array([35, 150, 124])
   upper_red = np.array([140, 255, 255])
-  lower_green = np.array([80, 0, 124])
+  lower_green = np.array([60, 0, 124])
   upper_green = np.array([190, 107, 255])
   lower_blue = np.array([35, 110, 0])
   upper_blue = np.array([160, 255, 108])
@@ -42,6 +42,7 @@ class ObstacleChallengeProcess():
       # Create display ROI for visualization
       display_ROI_front = ROI_front.copy()
       ROI_front_LAB = cv2.cvtColor(ROI_front, cv2.COLOR_BGR2LAB)
+      ROI_front_grey = cv2.cvtColor(ROI_front, cv2.COLOR_BGR2GRAY)
 
       # Red Detection
       _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, 460, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
@@ -81,10 +82,12 @@ class ObstacleChallengeProcess():
       offset = 0
       red_x_relative = red_x - (rw / 2)
       green_x_relative = green_x - (rw / 2)
+      obs_y = rh - 1
+      robot_pos_absolute = (int(rw / 2), 480 - 140)
+      robot_pos_relative = (0, robot_pos_absolute[1])
       if MaxRedArea > 0 or MaxGreenArea > 0:
         MaxArea = 0
         x_relative = 0
-        obs_y = 0
         if MaxRedArea > MaxGreenArea:
           MaxArea = MaxRedArea
           x_relative = red_x_relative
@@ -94,18 +97,20 @@ class ObstacleChallengeProcess():
           MaxArea = MaxGreenArea
           x_relative = green_x_relative
           obs_y = green_y
-          offset = -1.6
+          offset = -1
 
-        distance = math.dist((0, 480 - 140 + 20), (x_relative, obs_y))
-        K_max = 2.4
-        d_min = 120
-        d_max = 466.9
+        distance = math.dist(robot_pos_relative, (x_relative, obs_y))
+        K_max = 2.7
+        d_min = 120               # math.dist((0, 480 - 140), (0, 220))
+        d_max = 422.0189569201839 # math.dist((0, 480 - 140), (250, 0))
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
+        K_obs **= 0.6
         K_obs = max(0, min(K_max, K_obs))
 
-        offset *= 130
+        offset *= 200
         offset *= K_obs
+
         current_error = x_relative * K_obs
         current_error += offset
 
@@ -113,6 +118,14 @@ class ObstacleChallengeProcess():
       last_error = current_error
       
       current_error = Kp * current_error + Kd * derivative if abs(current_error) > 0 else 0
+      target_pos = (int(current_error + rw / 2), obs_y)
+      num_collisions = getCollisions(cv2.threshold(ROI_front_grey, 60, 255, cv2.THRESH_BINARY_INV)[1], robot_pos_absolute, target_pos)
+      if num_collisions > 14:
+        current_error = 0
+      
+      if current_error != 0:
+        cv2.line(display_ROI_front, robot_pos_absolute, target_pos, (255, 0, 0), thickness=1)
+        cv2.circle(display_ROI_front, target_pos, radius=3, color=(255, 0, 0), thickness=-1)
       
       cur_time = time.time()
       if parking_detected < 2.5 and cur_time - last_backup > 0.5 and False:
@@ -160,10 +173,12 @@ class ObstacleChallengeProcess():
     _x, _y, w, h = cv2.boundingRect(contour)
     rectangularity = float(contourArea) / (w * h + 1e-8)
     solidity = float(contourArea) / (convexHullArea + 1e-8)
-    if contourArea < 900:
+    if contourArea < 1000:
       return solidity > 0.5 and rectangularity > 0.2
-    else:
+    elif contourArea < 2000:
       return solidity > 0.4 and rectangularity > 0.3
+    else:
+      return True
 
   def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)
