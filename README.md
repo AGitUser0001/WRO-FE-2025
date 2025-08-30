@@ -55,7 +55,7 @@ This repository contains information about our robot and the building process.
 **Age:** 14
 
 **Introduction:**
-Hi, my name is Walter and I'm from Canada, this is my second WRO season, two years ago I participated in WRO Robo mission and ended up on the international stage in Panama. This year since I was old enough for future engineers I decided to sign up for a completly different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
+Hi, my name is Walter and I'm from Canada, this is my second WRO season, two years ago I participated in WRO Robo mission and ended up on the international stage in Panama. This year since I was old enough for future engineers I decided to sign up for a completely different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
 ### Eric Huang
 
 
@@ -114,7 +114,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 ## First design <a class="anchor" id="first"></a>
 <img src="/images/first1.png" width="350" height="350"> <img src="/images/first2.png" width="350" height="350"> <img src="/images/IMG_5116.jpeg" width="350" height="350"> 
 
-Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis. Our servo was mounted using tape at first, but we realized that it wasn't secure enough. We switched to Velcro, but we realized that the servo motor still wiggled around a little. We switched to a type of Velcro that snaps in place, but it was still moving. We never had much problem securing our motor, using a piece of metal that came with the metal chassis to secure it. Finally, our 3d printed mount was not stable enough and the plastic was not thick enough. Another thing we tried in the first design were adding tire grips, these grips ended up being too high maintenence and weren't able to properly do their job so we switched to finding better wheels.
+Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis. Our servo was mounted using tape at first, but we realized that it wasn't secure enough. We switched to Velcro, but we realized that the servo motor still wiggled around a little. We switched to a type of Velcro that snaps in place, but it was still moving. We never had much problem securing our motor, using a piece of metal that came with the metal chassis to secure it. Finally, our 3d printed mount was not stable enough and the plastic was not thick enough. Another thing we tried in the first design were adding tire grips, these grips ended up being too high maintenance and couldn't properly do their job so we switched to finding better wheels.
 
 
 ## Final Design <a class="anchor" id="final"></a>
@@ -147,7 +147,7 @@ The robot sees this red pillar and tries to turn left, but as soon as it stops s
 
 ## Power and Sense Management <a class="anchor" id="power-and-sense-management"></a>
 
-Our power and sense management is made up of our battery, our camera, our LiDAR, Raspberry Pi 5, and our Hiwonder expansion board. The battery provides power to all of our componenets such as our motor, servo motor, camera, etc. We secured the battery using velcro. It is placed right under the baseplate. We thought this spot would be best since it is near the center of the robot. Our camera is one of the most important parts of our robot. We use it for wall follwing and detecting the pillars. Our camera is mounted high so that the bottom of the robot does not get in its way. Our camera is then secured using electrical tape. We made sure that our camera had a large enough FOV so that it could see both walls. Our LiDAR was recently implemented. It is secured under the mount with double-sided tape. We use it for parking and detecting the parking walls. We decided to use the Raspberry Pi 5 as our microcontroller because it is stable and has a good amount of processing power. It is mounted with screws on the back of the mount. Finally, our expansion board provides us with more ports. All these components help the robot navigate the open and obstacle challenge. 
+Our power and sense management is made up of our battery, our camera, our LiDAR, Raspberry Pi 5, and our Hiwonder expansion board. The battery provides power to all of our components such as our motor, servo motor, camera, etc. We secured the battery using Velcro. It is placed right under the baseplate. We thought this spot would be best since it is near the center of the robot. Our camera is one of the most important parts of our robot. We use it for wall following and detecting the pillars. Our camera is mounted high so that the bottom of the robot does not get in its way. Our camera is then secured using electrical tape. We made sure that our camera had a large enough FOV so that it could see both walls. Our LiDAR was recently implemented. It is secured under the mount with double-sided tape. We use it for parking and detecting the parking walls. We decided to use the Raspberry Pi 5 as our microcontroller because it is stable and has a good amount of processing power. It is mounted with screws on the back of the mount. Finally, our expansion board provides us with more ports. All these components help the robot navigate the open and obstacle challenge. 
 
 
 
@@ -160,7 +160,7 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
     <td width="50%" style="text-align: left; vertical-align: top;">
       <h3>Specifications:</h3>
       <p>Voltage(V): 7.4V</p>
-      <p>Capacity(mAh: 1800mAh</p>
+      <p>Capacity(mAh): 1800mAh</p>
       <p>Discharge rate(C): 90C</p>
       <p>Weight: 100g</p>
     </td>
