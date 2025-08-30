@@ -19,14 +19,14 @@ class ObstacleChallengeProcess():
     turnCount = 0
     last_turn_detection = -1
     last_parking_detect = -1
-    red_obs_timer = {}
-    green_obs_timer = {}
+    last_backup = -1
+    obs_timer = {}
     detected_turn = False
     parking = False
     parking_side = 0
     parking_detected = 0
-    Kp = 0.8
-    Kd = 0.15
+    Kp = 0.6
+    Kd = 0.5
     last_error = 0
     
     while not stopped.value:
@@ -45,25 +45,20 @@ class ObstacleChallengeProcess():
 
       # Red Detection
       _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, 460, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
-
-      red_timer_res, red_timer_high = get_timer(red_obs_timer, 0.1, 0.15)
-      if MaxRedArea > 0 and not red_timer_high:
-        set_timer(red_obs_timer, True)
-      if red_timer_res and red_timer_high:
-        set_timer(red_obs_timer, False, MaxRedArea > 0)
-      elif not red_timer_res and not red_timer_high:
-        MaxRedArea = 0
       
       # Green Detection
       _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, 460, draw_image=display_ROI_front, c_colour=(0, 255, 0))
       
-      green_timer_res, green_timer_high = get_timer(red_obs_timer, 0.1, 0.15)
-      if MaxGreenArea > 0 and not green_timer_high:
-        set_timer(green_obs_timer, True)
-      if green_timer_res and green_timer_high:
-        set_timer(green_obs_timer, False, MaxGreenArea > 0)
-      elif not green_timer_res and not green_timer_high:
+      obs_timer_res, obs_timer_high = get_timer(obs_timer, 0.15, 0.1)
+      if max(MaxGreenArea, MaxRedArea) > 0 and not obs_timer_high:
+        set_timer(obs_timer, True)
+      if obs_timer_res and obs_timer_high:
+        set_timer(obs_timer, False, max(MaxGreenArea, MaxRedArea) > 0)
         MaxGreenArea = 0
+        MaxRedArea = 0
+      elif not obs_timer_res and not obs_timer_high:
+        MaxGreenArea = 0
+        MaxRedArea = 0
 
       _, _, MaxBlueArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_blue, self.upper_blue, draw_image=display_ROI_front)
       # Blue Line Detection
@@ -99,17 +94,17 @@ class ObstacleChallengeProcess():
           MaxArea = MaxGreenArea
           x_relative = green_x_relative
           obs_y = green_y
-          offset = -1
+          offset = -1.6
 
-        distance = math.dist((0, 480 - 140), (x_relative, obs_y))
-        K_max = 2.8
+        distance = math.dist((0, 480 - 140 + 20), (x_relative, obs_y))
+        K_max = 2.4
         d_min = 120
         d_max = 466.9
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
 
-        offset *= 110
+        offset *= 130
         offset *= K_obs
         current_error = x_relative * K_obs
         current_error += offset
@@ -117,11 +112,16 @@ class ObstacleChallengeProcess():
       derivative = current_error - last_error
       last_error = current_error
       
-      current_error = Kp * current_error + Kd * derivative
-      if parking_detected < 2.5 and False:
-        if (MaxRedArea > 6000 and abs(red_x_relative) < offset) or (MaxGreenArea > 6000 and abs(green_x_relative) < offset):
+      current_error = Kp * current_error + Kd * derivative if abs(current_error) > 0 else 0
+      
+      cur_time = time.time()
+      if parking_detected < 2.5 and cur_time - last_backup > 0.5 and False:
+        if (MaxRedArea > 7000 and abs(red_x_relative) < (offset * 1.1)) or (MaxGreenArea > 7000 and abs(green_x_relative) < (offset * 1.1)):
           status.value = b"BACKWARD"
-          current_error *= -2
+          current_error *= -1
+          error_pillar.value = current_error
+          time.sleep(1)
+          last_backup = time.time()
         else:
           status.value = b"FORWARD"
       

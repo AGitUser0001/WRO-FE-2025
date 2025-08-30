@@ -109,6 +109,8 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   was_obstacle = False
   first_frame = True
   last_status = b"FORWARD"
+  
+  last_detect_front = -1
 
   lidar_array, lidar_shm = lidar.get_array_copy()
   lidar_roi_left = ((-750, -25), (-100, 25))
@@ -160,9 +162,16 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       #cv2.imshow("threshold", imgThresh)
       rightCntList, MaxRightCnt, MaxRightArea = findContours(imgThresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
         
-      LeftLiDAR = -LiDAR.get_roi_median(lidar_array, *lidar_roi_left, min_points=6)
-      RightLiDAR = LiDAR.get_roi_median(lidar_array, *lidar_roi_right, min_points=6)
+      LeftDist = -LiDAR.get_angle_median(lidar_array, 270 - 4, 270 + 5)[3]
+      RightDist = LiDAR.get_angle_median(lidar_array, 90 - 5, 90 + 4)[3]
       FrontDist = LiDAR.get_angle_median(lidar_array, 0 - 5, 0 + 5)[4]
+
+      if FrontDist != 0 and FrontDist < 400 and False:
+        obstacle_status.value = b"BACKWARD"
+        last_detect_front = time.time()
+      else:
+        if time.time() - last_detect_front > 1:
+          obstacle_status.value = b"FORWARD"
 
       current_error_pillar = -error_pillar.value
       if current_error_pillar != 0:
@@ -178,7 +187,8 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       cv2.putText(img, f"Right area: {MaxRightArea}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
       cv2.putText(img, f"Error (-left +right): {error}", (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
       
-      error = -error
+      if obstacle_status.value.startswith(b"FORWARD"):
+        error = -error
 
       if not stMode:
         i_error += error * dt
@@ -196,6 +206,11 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
           steer = 200 * stMode_dir
       else:
         steer = current_error_pillar
+
+      if LeftDist != 0 and LeftDist < 100 and current_error_pillar == 0 and False:
+        steer = 0
+      if RightDist != 0 and RightDist < 100 and current_error_pillar == 0 and False:
+        steer = 0
 
       steer = min(300, max(-300, steer))
       cv2.putText(img, f"Steer: {steer}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
