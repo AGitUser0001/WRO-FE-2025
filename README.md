@@ -15,6 +15,8 @@ This repository contains information about our robot and the building process.
 * [The Team](#team)
 * [The Challenge](#challenge)
 * [The Robot](#robot-image)
+  * [First Design](#First-design)
+  * [Final Design](#Final-design)
 * [Performance Video](#video)
 * [Management](#management)
   * [Mobility Management](#mobility-management)
@@ -109,11 +111,17 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 
 ## Our video of the open challenge on [Youtube](https://youtu.be/EdWDk1boRc8)  <a class="anchor" id="video"></a>
 
-## First design
+## First design <a class="anchor" id="First-design"></a>
 <img src="/images/first1.png" width="350" height="350"> <img src="/images/first2.png" width="350" height="350"> <img src="/images/IMG_5116.jpeg" width="350" height="350"> 
 
-Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis. Our servo was mounted using tape at first, but we realized that it wasn't secure enough. We switched to Velcro, but we realized that the servo motor still wiggled around a little. We switched to a type of Velcro that snaps in place, but it was still moving. We never had much problem securing our motor, using a piece of metal that came with the metal chassis to secure it. Finally, our 3d printed mount was not stable enough and the plastic was not thick enough.
+Above are some pictures of our first design for our robot. As you can see there are many flaws and as well as components missing. Although these designs not quite what we needed, they helped us find inspiration for our eventual final design. In fact, we decided to keep a lot of ideas from our earlier generations to incorporate into our robot. One of such is that we have the Raspberry Pi mounted on the back instead of the usual where it is found on top the chassis. Our servo was mounted using tape at first, but we realized that it wasn't secure enough. We switched to Velcro, but we realized that the servo motor still wiggled around a little. We switched to a type of Velcro that snaps in place, but it was still moving. We never had much problem securing our motor, using a piece of metal that came with the metal chassis to secure it. Finally, our 3d printed mount was not stable enough and the plastic was not thick enough. Another thing we tried in the first design were adding tire grips, these grips ended up being too high maintenence and weren't able to properly do their job so we switched to finding better wheels.
 
+
+## Final Design <a class="anchor" id="Final-design"></a>
+
+<img src="/images/IMG_5054.jpeg" width="400" height="500">
+
+Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the LiDAR and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with Velcro, finding that this was better than just tape or just Velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LiDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LiDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
 
 
 ## Challenges We Faced 
@@ -130,12 +138,6 @@ At first, we used our mounted camera to follow walls. This worked out great for 
 <img src="/images/ObstacleChallengeProblem.png" width="400" height="500">
 
 The robot sees this red pillar and tries to turn left, but as soon as it stops seeing it, the robot turns right. We thought using LiDAR for wall following would be a good solution since it can "see" very far. However, LiDAR was very unreliable, especially when the robot was in motion. This led to the robot wobbling around and sometimes just crashing into a wall. We went back to using our camera for wall following. 
-## Final Design
-
-<img src="/images/IMG_5054.jpeg" width="400" height="500">
-
-Our final design has many improvements and additions than the previous versions. Our robot includes sensors, those being the LiDAR and a camera, motors; being the servo and BLDC motors, a raspberry pi 5 and expansion board, as well as wheels and a battery. Our robot has been made to be compact so that we can be efficient with our limited space on the 1/28 scale chassis. We raised the baseplate to make space for the battery and the servo motor. To secure the servo motor, we used tape with Velcro, finding that this was better than just tape or just Velcro. We also added triangular supports to the mount so that it can hold the extra weight of the LiDAR. We made the plastic of the mount thicker as well to support the camera, Raspberry Pi, and the LiDAR. We changed the pin so that it was more stable and better connected the mount to the metal chassis.
-
 <img src="/images/IMG_5055.jpeg" width="200" height="200"> <img src="/images/IMG_5056.jpeg" width="200" height="200">
 
 
