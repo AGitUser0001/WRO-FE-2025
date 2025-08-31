@@ -264,6 +264,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
     </td>
   </tr>
 </table>
+
 ### Potential Improvements
 Our BLDC motor is connected to a standard gear but, the gears we are using are made out of plastic and are easily brocken, as this has happened if the past and it caused our robot to stutter or stop moving completly. We definetly coudl've found an alternative to plastic gears such as a lightweight metal or even just a stronger plastic alternative as in nylon.
 
@@ -301,6 +302,7 @@ Our servo motor is slighty prone to moving from a lot of wear. This can offset t
     </td>
   </tr>
 </table>
+
 ### Potential Improvements
 Our wheels are small and it causes our chassis to be lower to the ground causing it to occasionally brush against the mat, in more severe cases getting stuck. We could've browsed for bigger and more grippy wheels which would in turn solve this problem. 
 
