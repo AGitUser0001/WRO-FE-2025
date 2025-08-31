@@ -31,6 +31,7 @@ This repository contains information about our robot and the building process.
     * [Expansion Board](#expansion-board)
     * [Circuit Diagram](#circuit-diagram)
 * [Total Cost](#cost-report)
+* [Future Potential Improvements](#potential-improvements)
 
 ## Team Members <a class="anchor" id="team"></a>
 
@@ -318,7 +319,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 | Total Price Before Tax   | $606.66  |
 | Total Price   | $685.53  |
 
-## Potential Future Improvements
+## Potential Future Improvements <a class="anchor" id="potential-improvements"></a>
 
 
 ## Sources
