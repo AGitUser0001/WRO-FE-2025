@@ -171,6 +171,9 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
   </tr>
 </table>
 
+### Potential Improvements
+- We could have bought a battery with higher density energy cells to extend the operating time while generally having the same weight. 
+- We could have made a special compartment to mount the battery instead of it hanging on the bottom of the baseplate. This would reduce the stress on the robot and prevent the battery from falling down.
 ### Our Camera <a class="anchor" id="camera"></a>
 <table>
   <tr>
