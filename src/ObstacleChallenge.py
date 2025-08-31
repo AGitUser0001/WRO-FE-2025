@@ -286,198 +286,195 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
     setMotor(1500)
     print("WallFollow Thread Stopped")
 
-# --- Process 1: Obstacle Detection ---
+# --- Shared Memory and Flags ---
+# For communication between processes
+stopped = multiprocessing.Value("b", False)
+error_pillar = multiprocessing.Value("d", 0.0)
+obstacle_status = multiprocessing.Value(ctypes.c_char_p, b"FORWARD")
+roi_queue = multiprocessing.Queue(maxsize=1)  # Queue to send ROI
+obstacle_display_queue = multiprocessing.Queue(maxsize=1)  # Queue to receive display data
 
-if __name__ == "__main__":
-  # --- Shared Memory and Flags ---
-  # For communication between processes
-  stopped = multiprocessing.Value("b", False)
-  error_pillar = multiprocessing.Value("d", 0.0)
-  obstacle_status = multiprocessing.Value(ctypes.c_char_p, b"FORWARD")
-  roi_queue = multiprocessing.Queue(maxsize=1)  # Queue to send ROI
-  obstacle_display_queue = multiprocessing.Queue(maxsize=1)  # Queue to receive display data
+# For communication between threads
+global_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+frame_lock = threading.Lock()
+wallFollow_display = np.zeros((480, 640, 3), dtype=np.uint8)
 
-  # For communication between threads
-  global_frame = np.zeros((480, 640, 3), dtype=np.uint8)
-  frame_lock = threading.Lock()
-  wallFollow_display = np.zeros((480, 640, 3), dtype=np.uint8)
+print("Initializing...")
 
-  print("Initializing...")
+lidar = LiDAR()
+# --- Create and Start Threads and Processes ---
+p_obstacle = multiprocessing.Process(
+  target=ObstacleChallengeProcess,
+  args=(stopped, error_pillar, roi_queue, obstacle_display_queue, obstacle_status),
+  daemon=True
+)
+t_camera = threading.Thread(target=cameraThread, args=(stopped, roi_queue))
+t_wallFollow = threading.Thread(
+  target=wallFollowThread,
+  args=(stopped, error_pillar, obstacle_status),
+)
 
-  lidar = LiDAR()
-  # --- Create and Start Threads and Processes ---
-  p_obstacle = multiprocessing.Process(
-    target=ObstacleChallengeProcess,
-    args=(stopped, error_pillar, roi_queue, obstacle_display_queue, obstacle_status),
-    daemon=True
-  )
-  t_camera = threading.Thread(target=cameraThread, args=(stopped, roi_queue))
-  t_wallFollow = threading.Thread(
-    target=wallFollowThread,
-    args=(stopped, error_pillar, obstacle_status),
-  )
+print("Starting Process and Threads...")
+p_obstacle.start()
+t_camera.start()
+t_wallFollow.start()
 
-  print("Starting Process and Threads...")
-  p_obstacle.start()
-  t_camera.start()
-  t_wallFollow.start()
+# --- Main Display Loop ---
+last_display_time = 0
+display_interval = 1 / 30  # 30 FPS
+#front_coords = (70, 140, 570, 360)
+front_coords = (0, 140, 640, 360)
+orig_front_coords = front_coords
 
-  # --- Main Display Loop ---
-  last_display_time = 0
-  display_interval = 1 / 30  # 30 FPS
-  #front_coords = (70, 140, 570, 360)
-  front_coords = (0, 140, 640, 360)
-  orig_front_coords = front_coords
-  
-  visualizer, lidar_roi_queue = lidar.get_visualizer()
-  try:
-    while True:
-      now = time.time()
-      if (now - last_display_time) >= display_interval:
-        with frame_lock:
-          # Make copies for safe display
-          wf_image = wallFollow_display.copy()
+visualizer, lidar_roi_queue = lidar.get_visualizer()
+try:
+  while True:
+    now = time.time()
+    if (now - last_display_time) >= display_interval:
+      with frame_lock:
+        # Make copies for safe display
+        wf_image = wallFollow_display.copy()
 
-          # Create obstacle display image
-          oc_image = global_frame.copy()
-        
-        try:
-          visualizer_image = visualizer.get_nowait()
-          imshow("Visualizer", visualizer_image)
-        except queue.Empty:
-          pass
+        # Create obstacle display image
+        oc_image = global_frame.copy()
+      
+      try:
+        visualizer_image = visualizer.get_nowait()
+        imshow("Visualizer", visualizer_image)
+      except queue.Empty:
+        pass
 
-        # Try to get obstacle display data
-        try:
-          display_data = obstacle_display_queue.get_nowait()
-          # Update the front ROI with obstacle detection visualization
-          roi_display = display_data["roi"]
-          oc_image[
-            front_coords[1] : front_coords[3],
-            front_coords[0] : front_coords[2],
-          ] = roi_display
+      # Try to get obstacle display data
+      try:
+        display_data = obstacle_display_queue.get_nowait()
+        # Update the front ROI with obstacle detection visualization
+        roi_display = display_data["roi"]
+        oc_image[
+          front_coords[1] : front_coords[3],
+          front_coords[0] : front_coords[2],
+        ] = roi_display
 
-          # Add text overlay with detection info
+        # Add text overlay with detection info
+        cv2.putText(
+          oc_image,
+          f"Red Area: {display_data['MaxRedArea']:.0f}",
+          (10, 30),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (0, 0, 255),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"Green Area: {display_data['MaxGreenArea']:.0f}",
+          (10, 60),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (0, 255, 0),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"Error: {display_data['error_pillar']:.1f}",
+          (10, 90),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (255, 0, 255),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"Steer Count: {display_data['steerCount']:.0f}",
+          (480, 30),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (255, 0, 0),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"Distance: {display_data['distance']:.2f}",
+          (480, 60),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (255, 255, 0),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"Offset: {display_data['offset']:.2f}",
+          (480, 90),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (0, 255, 255),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"FPS: {1/display_data['avg_dt']:.2f}",
+          (480, 120),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (255, 255, 255),
+          2,
+        )
+
+        if display_data['parking']:
           cv2.putText(
             oc_image,
-            f"Red Area: {display_data['MaxRedArea']:.0f}",
-            (10, 30),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
-            (0, 0, 255),
-            2,
-          )
-          cv2.putText(
-            oc_image,
-            f"Green Area: {display_data['MaxGreenArea']:.0f}",
-            (10, 60),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
-            (0, 255, 0),
-            2,
-          )
-          cv2.putText(
-            oc_image,
-            f"Error: {display_data['error_pillar']:.1f}",
-            (10, 90),
+            f"Parking State: {display_data['parking_detected']:.1f}",
+            (10, 420),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (255, 0, 255),
             2,
           )
-          cv2.putText(
-            oc_image,
-            f"Steer Count: {display_data['steerCount']:.0f}",
-            (480, 30),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
-            (255, 0, 0),
-            2,
-          )
-          cv2.putText(
-            oc_image,
-            f"Distance: {display_data['distance']:.2f}",
-            (480, 60),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
-            (255, 255, 0),
-            2,
-          )
-          cv2.putText(
-            oc_image,
-            f"Offset: {display_data['offset']:.2f}",
-            (480, 90),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
-            (0, 255, 255),
-            2,
-          )
-          cv2.putText(
-            oc_image,
-            f"FPS: {1/display_data['avg_dt']:.2f}",
-            (480, 120),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
-            (255, 255, 255),
-            2,
-          )
 
-          if display_data['parking']:
-            cv2.putText(
-              oc_image,
-              f"Parking State: {display_data['parking_detected']:.1f}",
-              (10, 420),
-              cv2.FONT_HERSHEY_SIMPLEX,
-              0.6,
-              (255, 0, 255),
-              2,
-            )
-
-          cv2.rectangle(
+        cv2.rectangle(
+          oc_image,
+          (front_coords[0], front_coords[1]),
+          (front_coords[2], front_coords[3]),
+          (0, 255, 0),
+          2,
+          )
+        # Draw center lines for reference
+        if display_data["redcenter_x"] > 0:
+          center_x = front_coords[0] + int(display_data["redcenter_x"])
+          cv2.line(
             oc_image,
-            (front_coords[0], front_coords[1]),
-            (front_coords[2], front_coords[3]),
+            (center_x, front_coords[1]),
+            (center_x, front_coords[3]),
+            (0, 0, 255),
+            2,
+          )
+        if display_data["greencenter_x"] > 0:
+          center_x = front_coords[0] + int(display_data["greencenter_x"])
+          cv2.line(
+            oc_image,
+            (center_x, front_coords[1]),
+            (center_x, front_coords[3]),
             (0, 255, 0),
             2,
-            )
-          # Draw center lines for reference
-          if display_data["redcenter_x"] > 0:
-            center_x = front_coords[0] + int(display_data["redcenter_x"])
-            cv2.line(
-              oc_image,
-              (center_x, front_coords[1]),
-              (center_x, front_coords[3]),
-              (0, 0, 255),
-              2,
-            )
-          if display_data["greencenter_x"] > 0:
-            center_x = front_coords[0] + int(display_data["greencenter_x"])
-            cv2.line(
-              oc_image,
-              (center_x, front_coords[1]),
-              (center_x, front_coords[3]),
-              (0, 255, 0),
-              2,
-            )
+          )
 
-          imshow("Obstacle Challenge", oc_image)
-        except queue.Empty:
-          # No obstacle data available
-          pass
+        imshow("Obstacle Challenge", oc_image)
+      except queue.Empty:
+        # No obstacle data available
+        pass
 
-        imshow("Wall Following", wf_image)
+      imshow("Wall Following", wf_image)
 
-        last_display_time = now
+      last_display_time = now
 
-      if waitKey(1) == ord("q") or stopped.value:
-        print("Stopping...")
-        stopped.value = True
-        break
-  finally:
-    # --- Cleanup ---
-    p_obstacle.join()
-    t_wallFollow.join()
-    t_camera.join()
-    lidar.stop()
-    destroyAllWindows()
-    print("All threads and processes stopped. Exiting.")
+    if waitKey(1) == ord("q") or stopped.value:
+      print("Stopping...")
+      stopped.value = True
+      break
+finally:
+  # --- Cleanup ---
+  p_obstacle.join()
+  t_wallFollow.join()
+  t_camera.join()
+  lidar.stop()
+  destroyAllWindows()
+  print("All threads and processes stopped. Exiting.")

@@ -1,6 +1,7 @@
 import cv2
 import time
 import numpy as np
+import os
 
 def drawContour(contour, image, *, bounding_box=True, c_colour=(0, 0, 0), b_colour=(255, 0, 255)):
   cv2.drawContours(image, [contour], 0, c_colour, 2)
@@ -62,23 +63,16 @@ def sign(num):
   return int(np.sign(num))
 
 def imshow(winname, mat):
-  if imshow_enabled:
+  if has_display:
     cv2.imshow(winname, mat)
 
 def waitKey(delay):
-  if imshow_enabled:
+  if has_display:
     return cv2.waitKey(delay)
   return -1
 
 def destroyAllWindows():
-  if imshow_enabled:
+  if has_display:
     cv2.destroyAllWindows()
 
-imshow_enabled = False
-try:
-  cv2.imshow("imshow_test", np.zeros((10, 10, 3), dtype=np.uint8))
-  cv2.destroyWindow("imshow_test")
-  imshow_enabled = True
-#pylint: disable=bare-except
-except:
-  pass
+has_display = os.environ.get("DISPLAY", "NONE") != "NONE"
