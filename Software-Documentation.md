@@ -95,7 +95,7 @@ For obstacle challenge:
 ctypes  numpy  picamera3  time  ros_robot_controller_sdk  cv2  multprocessing  threading  queue  lidar  ObstacleChallengeProcess  utils
 
 
-### LiDAR
+### LiDAR  [lidar code](/src/lidar.py)
 ### Camera
 ### Steering
 ### Moving
