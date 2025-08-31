@@ -322,6 +322,9 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 ## Potential Future Improvements <a class="anchor" id="potential-improvements"></a>
 We should have added an automatic color correction calibration, as our camera has some problem adapting to different environments. Sometimes we would have to manually fine-tune the color correction for different lighting environments. Sometimes our environments would be too dark, leading the robot to wrongly detect certain things such as missing some green or red pillars. We could callibrate the color correction by holding up the red and green pillars, and recording and automatically adjusting the CIELAB values. 
 
+We could add a voltage regulator to see when our robot is at low battery. Many of the problems in our obstacle and open challenge is caused by low battery and the readings from our sensors are less reliable when we have low battery. With this voltage regulator, we could avoid spending too much time trying to fix problems when instead they could be fixed by using a battery with full power. 
+
+
 ## Sources
 LiDAR - [here](https://www.waveshare.com/wiki/D500_LiDAR_Kit)
 
