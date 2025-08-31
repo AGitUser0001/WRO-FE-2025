@@ -99,8 +99,7 @@ ctypes  numpy  picamera3  time  ros_robot_controller_sdk  cv2  multprocessing  t
 ### Camera
 ### Steering
 ### Moving
-### Blue line detection
-### Wall follow
+
 
 
 
