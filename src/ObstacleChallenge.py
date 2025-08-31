@@ -11,7 +11,7 @@ from lidar import LiDAR
 from ObstacleChallengeProcess import ObstacleChallengeProcess
 from utils import processContours, getCollisions, get_timer, set_timer
 from imu_scan import imu_value
-#pylint: disable=unused-variable,redefined-outer-name
+#pylint: disable=redefined-outer-name
 # --- Thread 1: Camera Capture ---
 def cameraThread(stopped, roi_queue):
   global global_frame
@@ -147,14 +147,14 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
 
       #cv2.imshow("threshold", ROI_left_thresh)
-      leftCntList, MaxLeftCnt, MaxLeftArea = findContours(ROI_left_thresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
+      _leftCntList, _MaxLeftCnt, MaxLeftArea = findContours(ROI_left_thresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
 
       #cv2.imshow("threshold", ROI_right_thresh)
-      rightCntList, MaxRightCnt, MaxRightArea = findContours(ROI_right_thresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
+      _rightCntList, _MaxRightCnt, MaxRightArea = findContours(ROI_right_thresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
         
-      LeftDist = -LiDAR.get_angle_median(lidar_array, 270 - 4, 270 + 5)[3]
-      RightDist = LiDAR.get_angle_median(lidar_array, 90 - 5, 90 + 4)[3]
-      FrontDist = LiDAR.get_angle_median(lidar_array, 0 - 5, 0 + 5)[4]
+      _LeftDist = -LiDAR.get_angle_median(lidar_array, 270 - 4, 270 + 5)[3]
+      _RightDist = LiDAR.get_angle_median(lidar_array, 90 - 5, 90 + 4)[3]
+      _FrontDist = LiDAR.get_angle_median(lidar_array, 0 - 5, 0 + 5)[4]
 
       current_error_pillar = -error_pillar.value
       if current_error_pillar != 0:
@@ -206,11 +206,6 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
           steer = 200 * direction
       else:
         steer = current_error_pillar
-
-      if LeftDist != 0 and LeftDist < 100 and current_error_pillar == 0 and False:
-        steer = 0
-      if RightDist != 0 and RightDist < 100 and current_error_pillar == 0 and False:
-        steer = 0
 
       steer = min(300, max(-300, steer))
       cv2.putText(img, f"Steer: {steer}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)

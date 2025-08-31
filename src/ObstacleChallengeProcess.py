@@ -19,7 +19,6 @@ class ObstacleChallengeProcess():
     turnCount = 0
     last_turn_detection = -1
     last_parking_detect = -1
-    last_backup = -1
     obs_timer = {}
     obs_collision_timer = {}
     detected_turn = False
@@ -94,15 +93,12 @@ class ObstacleChallengeProcess():
       robot_pos_absolute = (int(rw / 2), 480 - 140)
       robot_pos_relative = (0, robot_pos_absolute[1])
       if MaxRedArea > 0 or MaxGreenArea > 0:
-        MaxArea = 0
         x_relative = 0
         if MaxRedArea > MaxGreenArea:
-          MaxArea = MaxRedArea
           x_relative = red_x_relative
           obs_y = red_y
           offset = 1
         else:
-          MaxArea = MaxGreenArea
           x_relative = green_x_relative
           obs_y = green_y
           offset = -1
@@ -148,18 +144,7 @@ class ObstacleChallengeProcess():
       else:
         status.value = b"FORWARD"
         cv2.line(display_ROI_front, *obs_detect_line, (200, 200, 200) if will_collide_with_obs else (255, 255, 255), thickness=1)
-      
-      cur_time = time.time()
-      if parking_detected < 2.5 and cur_time - last_backup > 0.5 and False:
-        if (MaxRedArea > 7000 and abs(red_x_relative) < (offset * 1.1)) or (MaxGreenArea > 7000 and abs(green_x_relative) < (offset * 1.1)):
-          status.value = b"BACKWARD"
-          current_error *= -1
-          error_pillar.value = current_error
-          time.sleep(1)
-          last_backup = time.time()
-        else:
-          status.value = b"FORWARD"
-      
+
       if parking:
         parking_detected, current_error, parking_side, last_parking_detect = self.parking(ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar, stopped, parking_detected, parking_side, last_parking_detect)
         

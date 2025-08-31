@@ -17,7 +17,7 @@ def check_topic_exists():
   )
   return TOPIC in r.stdout
 
-def listen_to_imu_z(imu_value):
+def listen_to_imu_z():
   # Stream the topic and parse only the 'vector.z' line
   cmd = f"{ENV_SRC} && ros2 topic echo {TOPIC}"
   p = subprocess.Popen(
@@ -53,7 +53,7 @@ def listen_to_imu_z(imu_value):
 
 if check_topic_exists():
   print("IMU topic detected; listening for yaw (z)…")
-  t = threading.Thread(target=listen_to_imu_z, args=(imu_value,), daemon=True)
+  t = threading.Thread(target=listen_to_imu_z, daemon=True)
   t.start()
 else:
   print(f"Topic {TOPIC} not found.")
