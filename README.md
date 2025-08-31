@@ -320,7 +320,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 | Total Price   | $685.53  |
 
 ## Potential Future Improvements <a class="anchor" id="potential-improvements"></a>
-
+We should have added an automatic color correction calibration, as our camera has some problem adapting to different environments. Sometimes we would have to manually fine-tune the color correction for different lighting environments. Sometimes our environments would be too dark, leading the robot to wrongly detect certain things such as missing some green or red pillars. We could callibrate the color correction by holding up the red and green pillars, and recording and automatically adjusting the CIELAB values. 
 
 ## Sources
 LiDAR - [here](https://www.waveshare.com/wiki/D500_LiDAR_Kit)
