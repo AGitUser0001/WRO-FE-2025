@@ -1,7 +1,7 @@
 # WRO-FE-2025
 Our repository for the 2025 World Robot Olympiad - Future Engineers.
 
-<img src="/images/Untitled_design__8_-removebg-preview.png" width="300" height="400">
+<img src="/images/Team_Cucumber__1_-removebg-preview.png" width="300" height="400">
 
 
 Team Name: Team Cucumber
