@@ -57,3 +57,28 @@ def getCollisions(mask: np.ndarray, pt1: tuple[int, int], pt2: tuple[int, int], 
 
   collision_pixels = cv2.bitwise_and(line_img, mask)
   return cv2.countNonZero(collision_pixels)
+
+def sign(num):
+  return int(np.sign(num))
+
+def imshow(winname, mat):
+  if imshow_enabled:
+    cv2.imshow(winname, mat)
+
+def waitKey(delay):
+  if imshow_enabled:
+    return cv2.waitKey(delay)
+  return -1
+
+def destroyAllWindows():
+  if imshow_enabled:
+    cv2.destroyAllWindows()
+
+imshow_enabled = False
+try:
+  cv2.imshow("imshow_test", np.zeros((10, 10, 3), dtype=np.uint8))
+  cv2.destroyWindow("imshow_test")
+  imshow_enabled = True
+#pylint: disable=bare-except
+except:
+  pass

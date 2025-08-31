@@ -1,7 +1,7 @@
 import threading
 import multiprocessing
 import cv2
-import ros_robot_controller_sdk as rrc # pyright: ignore[reportMissingImports]
+import lib.ros_robot_controller_sdk as rrc
 import time
 from picamera2 import Picamera2 # pyright: ignore[reportMissingImports]
 import numpy as np
@@ -9,7 +9,7 @@ import ctypes
 import queue
 from lidar import LiDAR
 from ObstacleChallengeProcess import ObstacleChallengeProcess
-from utils import processContours, getCollisions, get_timer, set_timer
+from utils import processContours, getCollisions, get_timer, set_timer, sign, imshow, waitKey, destroyAllWindows
 from imu_scan import imu_value
 #pylint: disable=redefined-outer-name
 # --- Thread 1: Camera Capture ---
@@ -77,9 +77,8 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   def setServo(servoPos):
     board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPos]])
 
-  def parking(n = 3):
-    s_error = last_error / (abs(last_error) + 1e-8)
-    direction = int(s_error / abs(s_error))
+  def parking(n = 2):
+    direction = sign(last_error)
     OUT = servoStraight + (400 * direction)
     IN = servoStraight - (400 * direction)
     setServo(servoStraight)
@@ -91,7 +90,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       time.sleep(0.4)
       setServo(IN)
       setMotor(1500 + (1500 - parkMotorPW))
-      time.sleep(0.4)
+      time.sleep(0.3)
       if i == n - 1: break
     return direction
 
@@ -146,10 +145,10 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       cv2.rectangle(img, (0, 230), (300, 250), (255, 0, 0), 2)
       cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
 
-      #cv2.imshow("threshold", ROI_left_thresh)
+      #imshow("threshold", ROI_left_thresh)
       _leftCntList, _MaxLeftCnt, MaxLeftArea = findContours(ROI_left_thresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
 
-      #cv2.imshow("threshold", ROI_right_thresh)
+      #imshow("threshold", ROI_right_thresh)
       _rightCntList, _MaxRightCnt, MaxRightArea = findContours(ROI_right_thresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
         
       _LeftDist = -LiDAR.get_angle_median(lidar_array, 270 - 4, 270 + 5)[3]
@@ -185,7 +184,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
 
       cv2.putText(img, f"Left area: {MaxLeftArea}", (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
       cv2.putText(img, f"Right area: {MaxRightArea}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-      cv2.putText(img, f"Error (-left +right): {error}", (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+      cv2.putText(img, f"Error (-left +right): {error:.2f}", (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
       
       if obstacle_status.value.startswith(b"FORWARD"):
         error = -error
@@ -196,9 +195,9 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       derivative = error - last_error
       last_error = error
       
-      cv2.putText(img, f"Error (-right +left): {error}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
-      cv2.putText(img, f"Derivative: {derivative}", (10, 125), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
-      cv2.putText(img, f"Last error: {last_error}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+      cv2.putText(img, f"Error (-right +left): {error:.2f}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+      cv2.putText(img, f"Derivative: {derivative:.2f}", (10, 125), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
+      cv2.putText(img, f"Last error: {last_error:.2f}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
 
       if current_error_pillar == 0:
         steer = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
@@ -207,9 +206,36 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       else:
         steer = current_error_pillar
 
+      imu_turn_threshold = 30
+      base_correction_strength = 2
+      max_correction_strength = 5
+
+      heading = imu_value.value
+      heading_straight = round(heading / 90) * 90
+      deviation = heading - heading_straight
+      current_direction = sign(deviation)
+      imu_correction_enabled = abs(deviation) > imu_turn_threshold
+      if abs(error) > 1000 and current_direction == direction: imu_correction_enabled = False
+      imu_correction_enabled = False
+
+      excess_deviation = abs(deviation) - imu_turn_threshold
+      correction_strength = base_correction_strength + (excess_deviation / 10)
+      correction_strength = min(max_correction_strength, correction_strength)
+
+      cv2.putText(img, f"Heading: {heading}", (450, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+      cv2.putText(img, f"Deviation: {deviation}", (450, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+      cv2.putText(img, f"Straight: {heading_straight}", (450, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (210, 200, 200), 2)
+      cv2.putText(img, f"Direction: {direction}", (450, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+      cv2.putText(img, f"Current direction: {current_direction}", (450, 125), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+      cv2.putText(img, f"IMU Correction: {int(imu_correction_enabled)}", (450, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 127, 255), 2)
+      cv2.putText(img, f"Correction Strengh: {correction_strength}", (450, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+
+      if imu_correction_enabled:
+        steer = (imu_turn_threshold * current_direction - deviation) * correction_strength
+
       steer = min(300, max(-300, steer))
-      cv2.putText(img, f"Steer: {steer}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-      cv2.putText(img, f"FPS: {1 / avg_dt}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+      cv2.putText(img, f"Steer: {steer:.2f}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+      cv2.putText(img, f"FPS: {1 / avg_dt:.2f}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
       servoPW = servoStraight + int(steer)
       if servoPW != last_servoPW:
@@ -317,7 +343,7 @@ if __name__ == "__main__":
         
         try:
           visualizer_image = visualizer.get_nowait()
-          cv2.imshow("Visualizer", visualizer_image)
+          imshow("Visualizer", visualizer_image)
         except queue.Empty:
           pass
 
@@ -362,7 +388,7 @@ if __name__ == "__main__":
           cv2.putText(
             oc_image,
             f"Steer Count: {display_data['steerCount']:.0f}",
-            (493, 30),
+            (480, 30),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (255, 0, 0),
@@ -371,7 +397,7 @@ if __name__ == "__main__":
           cv2.putText(
             oc_image,
             f"Distance: {display_data['distance']:.2f}",
-            (493, 60),
+            (480, 60),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (255, 255, 0),
@@ -380,7 +406,7 @@ if __name__ == "__main__":
           cv2.putText(
             oc_image,
             f"Offset: {display_data['offset']:.2f}",
-            (493, 90),
+            (480, 90),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (0, 255, 255),
@@ -389,7 +415,7 @@ if __name__ == "__main__":
           cv2.putText(
             oc_image,
             f"FPS: {1/display_data['avg_dt']:.2f}",
-            (493, 120),
+            (480, 120),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (255, 255, 255),
@@ -406,10 +432,6 @@ if __name__ == "__main__":
               (255, 0, 255),
               2,
             )
-            if display_data['parking_detected'] >= 1:
-              front_coords = (0, front_coords[1], 640, front_coords[3])
-            else:
-              front_coords = orig_front_coords
 
           cv2.rectangle(
             oc_image,
@@ -438,16 +460,16 @@ if __name__ == "__main__":
               2,
             )
 
-          cv2.imshow("Obstacle Challenge", oc_image)
+          imshow("Obstacle Challenge", oc_image)
         except queue.Empty:
           # No obstacle data available
           pass
 
-        cv2.imshow("Wall Following", wf_image)
+        imshow("Wall Following", wf_image)
 
         last_display_time = now
 
-      if cv2.waitKey(1) == ord("q") or stopped.value:
+      if waitKey(1) == ord("q") or stopped.value:
         print("Stopping...")
         stopped.value = True
         break
@@ -457,5 +479,5 @@ if __name__ == "__main__":
     t_wallFollow.join()
     t_camera.join()
     lidar.stop()
-    cv2.destroyAllWindows()
+    destroyAllWindows()
     print("All threads and processes stopped. Exiting.")

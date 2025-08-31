@@ -1,9 +1,9 @@
 import cv2
-import ros_robot_controller_sdk as rrc # pyright: ignore[reportMissingImports]
+import lib.ros_robot_controller_sdk as rrc
 import time
 import numpy as np
 from picamera2 import Picamera2 # pyright: ignore[reportMissingImports]
-from utils import processContours
+from utils import processContours, imshow, waitKey, destroyAllWindows
 
 ServoChannel = 4
 MotorChannel = 1
@@ -76,18 +76,18 @@ while True:
   cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
   cv2.rectangle(img, (70, 150), (570, 480), (255, 0, 255), 2)
 
-  #cv2.imshow("gray", ROI_left_grey)
+  #imshow("gray", ROI_left_grey)
   ret, imgThresh = cv2.threshold(ROI_left_grey, threshold, 255, cv2.THRESH_BINARY_INV)
-  #cv2.imshow("threshold", imgThresh)
+  #imshow("threshold", imgThresh)
   leftCntList, MaxLeftCnt, MaxLeftArea = findContours(imgThresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
 
-  #cv2.imshow("gray", ROI_right_grey)
+  #imshow("gray", ROI_right_grey)
   ret, imgThresh = cv2.threshold(ROI_right_grey, threshold, 255, cv2.THRESH_BINARY_INV)
-  #cv2.imshow("threshold", imgThresh)
+  #imshow("threshold", imgThresh)
   rightCntList, MaxRightCnt, MaxRightArea = findContours(imgThresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
 
   mask_blue = cv2.inRange(ROI_front_lab, lower_blue, upper_blue)
-  cv2.imshow("Blue", mask_blue)
+  imshow("Blue", mask_blue)
   blueCntList, MaxBlueCnt, MaxBlueArea = findContours(mask_blue, ROI_front)
 
   if turnCount < turn_limit and cur_time - last_turn_detection > (1 if detected_turn else 3):
@@ -138,12 +138,12 @@ while True:
     stMode = False
     last_error = 0
     print("Steering Mode Off")
-  print("error:", error)
-  cv2.imshow("Camera", img)
-  if cv2.waitKey(1) == ord('q') or (turnCount == turn_limit and cur_time - last_turn_detection > 3):
+
+  imshow("Camera", img)
+  if waitKey(1) == ord('q') or (turnCount == turn_limit and cur_time - last_turn_detection > 3):
     motorPW = 1500
     board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPW]])
     break
      
-cv2.destroyAllWindows()
+destroyAllWindows()
 

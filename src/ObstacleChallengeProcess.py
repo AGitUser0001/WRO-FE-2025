@@ -3,7 +3,7 @@ import math
 import cv2
 import time
 import queue
-from utils import getCollisions, processContours, getMaxContours, getBoundingBox, get_timer, set_timer
+from utils import getCollisions, processContours, getMaxContours, getBoundingBox, get_timer, set_timer, sign
 
 class ObstacleChallengeProcess():
   lower_red = np.array([35, 150, 124])
@@ -130,7 +130,7 @@ class ObstacleChallengeProcess():
         cv2.line(display_ROI_front, robot_pos_absolute, target_pos, (255, 0, 0), thickness=2)
         cv2.circle(display_ROI_front, target_pos, radius=3, color=(255, 0, 0), thickness=-1)
 
-      obs_detect_line = (robot_pos_absolute, (int(rw / 2), rh - 75))
+      obs_detect_line = (robot_pos_absolute, (int(rw / 2), rh - 125))
       num_obs_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), *obs_detect_line)
       will_collide_with_obs = num_obs_collisions > 14
       obs_collision_timer_res, obs_collision_timer_high = get_timer(obs_collision_timer, 1, 0.2)
@@ -242,7 +242,7 @@ class ObstacleChallengeProcess():
     
     distance = (1 / math.log((MaxMagentaArea1 + MaxMagentaArea2) / 1.4)) * 10 if MaxMagentaArea1 > 0 else 0
     
-    parking_tracker = avg_x_diff - (avg_x_diff / abs(avg_x_diff) * max(-10 / distance, abs(avg_x_diff))) if avg_x_diff != 0 else 0
+    parking_tracker = avg_x_diff - (sign(avg_x_diff) * max(-10 / distance, abs(avg_x_diff))) if avg_x_diff != 0 else 0
 
     cur_time = time.time()
     if parking_detected == 0 and wall1:
@@ -265,8 +265,7 @@ class ObstacleChallengeProcess():
       if parking_detected == 1.5 and cur_time - last_parking_detect > 0.1:
         if wall1 and wall2:
           parking_detected += 0.5
-          #parking_side = avg_x_diff / abs(avg_x_diff) if avg_x_diff != 0 else 0
-          parking_side = 1
+          parking_side = sign(avg_x_diff)
         else:
           parking_detected -= 0.5
     
