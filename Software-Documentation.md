@@ -106,7 +106,40 @@ serial  struct  threading  multiprocessing  numpy  multiprocessing shared_memory
 For Utils:
 Cv2  numpy  time
 
-### LiDAR  [lidar code](/src/lidar.py)
+### LiDAR 
+```ino
+BAUD = 230400
+PACKET_HEADER = 0x54
+PACKET_LEN = 47
+
+DATA_TYPE = np.float32
+DATA_SIZE = np.dtype(DATA_TYPE).itemsize
+DATA_RES = 3
+
+NUM_POINTS = 360 * DATA_RES
+NUM_VALUES = 6
+
+class LiDAR:
+  def __init__(self, shm_name='lidar', port="/dev/ttyAMA0"):
+    self.shm_name = shm_name
+
+    try:
+      self.shared_memory = shared_memory.SharedMemory(create=True, size=NUM_POINTS*NUM_VALUES*DATA_SIZE, name=shm_name)
+    except FileExistsError:
+      self.shared_memory = shared_memory.SharedMemory(name=shm_name)
+
+    self.lidar_array = np.ndarray((NUM_POINTS, NUM_VALUES), dtype=DATA_TYPE, buffer=self.shared_memory.buf)
+    self.stopped = multiprocessing.Value('b', False)
+    self.lock = multiprocessing.Lock()
+
+    self.process = multiprocessing.Process(target=LiDARProcess, args=(\
+      port, self.stopped, shm_name, self.lock), daemon=True)
+    self.process.start()
+
+    self.__visualizer_display_queue = None
+    self.__visualizer_lidar_roi_queue = None
+    self.__visualizer_thread = None
+```
 
 
 
