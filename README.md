@@ -1,6 +1,9 @@
 # WRO-FE-2025
 Our repository for the 2025 World Robot Olympiad - Future Engineers.
 
+<img src="/images/Team Cucumber.png" width="300" height="400">
+
+
 Team Name: Team Cucumber
 
 This repository contains information about our robot and the building process. 
