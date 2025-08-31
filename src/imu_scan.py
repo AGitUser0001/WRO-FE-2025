@@ -42,6 +42,7 @@ def listen_to_imu_z(imu_value):
           if first_value == -1:
             first_value = z_deg
           z_deg -= first_value
+          z_deg %= 360
           imu_value.value = z_deg
         except ValueError:
           pass

@@ -38,7 +38,7 @@ def get_timer(timer_dict: dict, low_timer: float, high_timer: float):
   prev_time = timer_dict.get("time", -1)
   value = timer_dict.get("value", False)
   cur_time = time.time()
-  result = cur_time - prev_time > (low_timer if value else high_timer)
+  result = cur_time - prev_time > (high_timer if value else low_timer)
   return result, value
 
 def set_timer(timer_dict: dict, new_value: bool | None = None, skip_time = False):
@@ -51,9 +51,9 @@ def set_timer(timer_dict: dict, new_value: bool | None = None, skip_time = False
 def posToDegrees(servoPos):
   return (servoPos if servoPos < 1000 else servoPos - 1800) / 10.2
 
-def getCollisions(mask: np.ndarray, pt1: tuple[int, int], pt2: tuple[int, int]):
+def getCollisions(mask: np.ndarray, pt1: tuple[int, int], pt2: tuple[int, int], thickness = 1):
   line_img = np.zeros_like(mask)
-  cv2.line(line_img, pt1, pt2, 255, 1)
+  cv2.line(line_img, pt1, pt2, 255, thickness)
 
   collision_pixels = cv2.bitwise_and(line_img, mask)
   return cv2.countNonZero(collision_pixels)

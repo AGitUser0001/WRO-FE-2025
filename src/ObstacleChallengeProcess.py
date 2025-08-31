@@ -21,6 +21,7 @@ class ObstacleChallengeProcess():
     last_parking_detect = -1
     last_backup = -1
     obs_timer = {}
+    obs_collision_timer = {}
     detected_turn = False
     parking = False
     parking_side = 0
@@ -28,6 +29,8 @@ class ObstacleChallengeProcess():
     Kp = 0.6
     Kd = 0.5
     last_error = 0
+    last_time = -1
+    avg_dt = 1/30
     
     while not stopped.value:
       try:
@@ -35,6 +38,11 @@ class ObstacleChallengeProcess():
         ROI_front = roi_queue.get(timeout=1)
       except queue.Empty:
         continue
+      
+      cur_time = time.time()
+      dt = cur_time - last_time
+      last_time = cur_time
+      avg_dt = (avg_dt * 0.95) + (dt * 0.05)
 
       rw = ROI_front.shape[1]
       rh = ROI_front.shape[0]
@@ -45,13 +53,13 @@ class ObstacleChallengeProcess():
       ROI_front_grey = cv2.cvtColor(ROI_front, cv2.COLOR_BGR2GRAY)
 
       # Red Detection
-      _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, 460, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
+      red_mask, _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, 400, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
       
       # Green Detection
-      _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, 460, draw_image=display_ROI_front, c_colour=(0, 255, 0))
+      green_mask, _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, 400, draw_image=display_ROI_front, c_colour=(0, 255, 0))
       
       obs_timer_res, obs_timer_high = get_timer(obs_timer, 0.15, 0.1)
-      if max(MaxGreenArea, MaxRedArea) > 0 and not obs_timer_high:
+      if max(MaxGreenArea, MaxRedArea) > 0 and obs_timer_res and not obs_timer_high:
         set_timer(obs_timer, True)
       if obs_timer_res and obs_timer_high:
         set_timer(obs_timer, False, max(MaxGreenArea, MaxRedArea) > 0)
@@ -61,7 +69,7 @@ class ObstacleChallengeProcess():
         MaxGreenArea = 0
         MaxRedArea = 0
 
-      _, _, MaxBlueArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_blue, self.upper_blue, draw_image=display_ROI_front)
+      _, _, _, MaxBlueArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_blue, self.upper_blue, draw_image=display_ROI_front)
       # Blue Line Detection
       cur_time = time.time()
       if turnCount < self.turn_limit and cur_time - last_turn_detection > (1 if detected_turn else 3):
@@ -100,16 +108,15 @@ class ObstacleChallengeProcess():
           offset = -1
 
         distance = math.dist(robot_pos_relative, (x_relative, obs_y))
-        K_max = 2.7
+        K_max = 2.5
         d_min = 120               # math.dist((0, 480 - 140), (0, 220))
         d_max = 422.0189569201839 # math.dist((0, 480 - 140), (250, 0))
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
-        K_obs **= 0.6
         K_obs = max(0, min(K_max, K_obs))
 
-        offset *= 200
-        offset *= K_obs
+        offset *= 700
+        offset *= (K_obs / K_max) ** 2
 
         current_error = x_relative * K_obs
         current_error += offset
@@ -119,13 +126,28 @@ class ObstacleChallengeProcess():
       
       current_error = Kp * current_error + Kd * derivative if abs(current_error) > 0 else 0
       target_pos = (int(current_error + rw / 2), obs_y)
-      num_collisions = getCollisions(cv2.threshold(ROI_front_grey, 60, 255, cv2.THRESH_BINARY_INV)[1], robot_pos_absolute, target_pos)
-      if num_collisions > 14:
+      num_collisions = getCollisions(cv2.threshold(ROI_front_grey, 60, 255, cv2.THRESH_BINARY_INV)[1], robot_pos_absolute, target_pos, 2)
+      if num_collisions > 35:
         current_error = 0
       
       if current_error != 0:
-        cv2.line(display_ROI_front, robot_pos_absolute, target_pos, (255, 0, 0), thickness=1)
+        cv2.line(display_ROI_front, robot_pos_absolute, target_pos, (255, 0, 0), thickness=2)
         cv2.circle(display_ROI_front, target_pos, radius=3, color=(255, 0, 0), thickness=-1)
+
+      obs_detect_line = (robot_pos_absolute, (int(rw / 2), rh - 75))
+      num_obs_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), *obs_detect_line)
+      will_collide_with_obs = num_obs_collisions > 14
+      obs_collision_timer_res, obs_collision_timer_high = get_timer(obs_collision_timer, 1, 0.2)
+      if will_collide_with_obs and obs_collision_timer_res and not obs_collision_timer_high:
+        set_timer(obs_collision_timer, True)
+      if obs_collision_timer_res and obs_collision_timer_high:
+        set_timer(obs_collision_timer, False, will_collide_with_obs)
+      if not obs_collision_timer_res and not obs_collision_timer_high:
+        status.value = b"BACKWARD"
+        cv2.line(display_ROI_front, *obs_detect_line, (100, 100, 100), thickness=1)
+      else:
+        status.value = b"FORWARD"
+        cv2.line(display_ROI_front, *obs_detect_line, (200, 200, 200) if will_collide_with_obs else (255, 255, 255), thickness=1)
       
       cur_time = time.time()
       if parking_detected < 2.5 and cur_time - last_backup > 0.5 and False:
@@ -154,7 +176,8 @@ class ObstacleChallengeProcess():
         "distance": distance,
         "offset": offset,
         "parking_detected": parking_detected,
-        "parking": parking
+        "parking": parking,
+        "avg_dt": avg_dt
       }
 
       if not obstacle_display_queue.full():
@@ -195,7 +218,7 @@ class ObstacleChallengeProcess():
       center_x = x + w / 2
       center_y = y + h / 2
       bottom_y = y + h
-    return cntList, MaxCnt, MaxCntArea, approx, bounding_box, center_x, center_y, bottom_y
+    return mask, cntList, MaxCnt, MaxCntArea, approx, bounding_box, center_x, center_y, bottom_y
   
   def parking(self, ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar, stopped, parking_detected, parking_side, last_parking_detect):
     limit = 500
@@ -207,7 +230,7 @@ class ObstacleChallengeProcess():
     magenta2bottom_y = rh / 2
     current_error = 0
     
-    cntList, _, _, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_magenta, self.upper_magenta, limit, draw_image=display_ROI_front, draw=2)
+    _, cntList, _, _, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_magenta, self.upper_magenta, limit, draw_image=display_ROI_front, draw=2)
     maxCnts = getMaxContours(cntList, 2)
     (maxCnt1, MaxMagentaArea1) = maxCnts[0] if len(maxCnts) > 0 else (None, 0)
     if maxCnt1 is not None:

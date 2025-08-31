@@ -66,14 +66,14 @@ while True:
 
   img = picam2.capture_array()
   ROI_left = img[230:250, 0:300]
-  ROI_right = img[230:250, 320:640]
+  ROI_right = img[230:250, 340:640]
   ROI_front = img[150:480, 70:570]
 
   ROI_left_grey = cv2.cvtColor(ROI_left, cv2.COLOR_BGR2GRAY)
   ROI_right_grey = cv2.cvtColor(ROI_right, cv2.COLOR_BGR2GRAY)
   ROI_front_lab = cv2.cvtColor(ROI_front, cv2.COLOR_BGR2LAB)
   cv2.rectangle(img, (0, 230), (300, 250), (255, 0, 0), 2)
-  cv2.rectangle(img, (320, 230), (640, 250), (255, 0, 0), 2)
+  cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
   cv2.rectangle(img, (70, 150), (570, 480), (255, 0, 255), 2)
 
   #cv2.imshow("gray", ROI_left_grey)

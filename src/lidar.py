@@ -20,7 +20,7 @@ NUM_POINTS = 360 * DATA_RES
 NUM_VALUES = 6
 
 class LiDAR:
-  def __init__(self, shm_name='lidar', port="/dev/ttyUSB0"):
+  def __init__(self, shm_name='lidar', port="/dev/ttyAMA0"):
     self.shm_name = shm_name
 
     try:

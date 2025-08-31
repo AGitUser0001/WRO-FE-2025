@@ -9,7 +9,8 @@ import ctypes
 import queue
 from lidar import LiDAR
 from ObstacleChallengeProcess import ObstacleChallengeProcess
-from utils import processContours
+from utils import processContours, getCollisions, get_timer, set_timer
+from imu_scan import imu_value
 #pylint: disable=unused-variable,redefined-outer-name
 # --- Thread 1: Camera Capture ---
 def cameraThread(stopped, roi_queue):
@@ -55,62 +56,49 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   i_error = 0
   stMode = False
   stMode_time = -1
-  stMode_dir = 0
   error = 0
   last_error = 0
   threshold = 60
 
   board = rrc.Board()
-  motorPW = 1620
-  parkMotorPW = 1630
+  motorPW = 1615
+  parkMotorPW = 1625
   servoStraight = 1825
   servoPW = servoStraight
   steer = 0
   rate_limit = 1/60
+  avg_dt = rate_limit
   last_time = -1
   last_servoPW = -1
   
   def setMotor(motorPos):
     board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPos]])
-    #pass
 
   def setServo(servoPos):
     board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPos]])
 
-  def parking(n = 6, exiting = True):
+  def parking(n = 3):
     s_error = last_error / (abs(last_error) + 1e-8)
-    OUT = servoStraight + 400 if s_error > 0 else servoStraight - 400
-    IN = servoStraight - 400 if s_error > 0 else servoStraight + 400
+    direction = int(s_error / abs(s_error))
+    OUT = servoStraight + (400 * direction)
+    IN = servoStraight - (400 * direction)
     setServo(servoStraight)
-    setMotor(parkMotorPW)
+    setMotor(1500)
     time.sleep(0.15)
-    for i in range(n + 1):
-      setServo(servoStraight)
-      if i == n and exiting:
-        time.sleep(0.1)
-        setServo(IN)
-        time.sleep(0.2)
-        setServo(servoStraight)
-      if i == n: break
-      setMotor(1500)
-      time.sleep(0.04)
-        
-      setServo(IN)
-      offset = -2
-      setMotor(1500 + (1500 - parkMotorPW) + offset)
-      time.sleep(0.3)
-      setServo(servoStraight)
-      setMotor(1500)
-      time.sleep(0.04)
+    for i in range(n):
       setServo(OUT)
       setMotor(parkMotorPW)
-      time.sleep(0.3)
+      time.sleep(0.4)
+      setServo(IN)
+      setMotor(1500 + (1500 - parkMotorPW))
+      time.sleep(0.4)
+      if i == n - 1: break
+    return direction
 
+  direction = 0
   was_obstacle = False
   first_frame = True
   last_status = b"FORWARD"
-  
-  last_detect_front = -1
 
   lidar_array, lidar_shm = lidar.get_array_copy()
   lidar_roi_left = ((-750, -25), (-100, 25))
@@ -118,6 +106,9 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   _, lidar_roi_queue = lidar.get_visualizer()
   lidar.add_roi(lidar_roi_queue, (0, 255, 0), *lidar_roi_left)
   lidar.add_roi(lidar_roi_queue, (0, 255, 0), *lidar_roi_right)
+  
+  wall_detect_line = ((int(640 / 2), 220), (int(640 / 2), 360))
+  wall_detect_timer = {}
 
   def findContours(image, draw_image=None, *, draw=1, c_colour=None, b_colour=None):
     contours, _hierarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -128,7 +119,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   setServo(servoPW)
   time.sleep(1)
 
-  setMotor(motorPW)    
+  setMotor(motorPW)
   
   try:
     while not stopped.value:
@@ -140,38 +131,30 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       if global_frame is None:
         continue
       last_time = cur_time
+      avg_dt = (avg_dt * 0.95) + (dt * 0.05)
 
       with frame_lock:
         img = global_frame.copy()
 
       ROI_left = img[230:250, 0:300]
-      ROI_right = img[230:250, 320:640]
+      ROI_right = img[230:250, 340:640]
 
-      ROI_left_grey = cv2.cvtColor(ROI_left, cv2.COLOR_BGR2GRAY)
-      ROI_right_grey = cv2.cvtColor(ROI_right, cv2.COLOR_BGR2GRAY)
+      img_grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+      _, img_grey_thresh = cv2.threshold(img_grey, threshold, 255, cv2.THRESH_BINARY_INV)
+      ROI_left_thresh = img_grey_thresh[230:250, 0:300]
+      ROI_right_thresh = img_grey_thresh[230:250, 340:640]
       cv2.rectangle(img, (0, 230), (300, 250), (255, 0, 0), 2)
-      cv2.rectangle(img, (320, 230), (640, 250), (255, 0, 0), 2)
-      
-      #cv2.imshow("gray", ROI_left_grey)
-      ret, imgThresh = cv2.threshold(ROI_left_grey, threshold, 255, cv2.THRESH_BINARY_INV)
-      #cv2.imshow("threshold", imgThresh)
-      leftCntList, MaxLeftCnt, MaxLeftArea = findContours(imgThresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
+      cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
 
-      #cv2.imshow("gray", ROI_right_grey)
-      ret, imgThresh = cv2.threshold(ROI_right_grey, threshold, 255, cv2.THRESH_BINARY_INV)
-      #cv2.imshow("threshold", imgThresh)
-      rightCntList, MaxRightCnt, MaxRightArea = findContours(imgThresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
+      #cv2.imshow("threshold", ROI_left_thresh)
+      leftCntList, MaxLeftCnt, MaxLeftArea = findContours(ROI_left_thresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
+
+      #cv2.imshow("threshold", ROI_right_thresh)
+      rightCntList, MaxRightCnt, MaxRightArea = findContours(ROI_right_thresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
         
       LeftDist = -LiDAR.get_angle_median(lidar_array, 270 - 4, 270 + 5)[3]
       RightDist = LiDAR.get_angle_median(lidar_array, 90 - 5, 90 + 4)[3]
       FrontDist = LiDAR.get_angle_median(lidar_array, 0 - 5, 0 + 5)[4]
-
-      if FrontDist != 0 and FrontDist < 400 and False:
-        obstacle_status.value = b"BACKWARD"
-        last_detect_front = time.time()
-      else:
-        if time.time() - last_detect_front > 1:
-          obstacle_status.value = b"FORWARD"
 
       current_error_pillar = -error_pillar.value
       if current_error_pillar != 0:
@@ -182,6 +165,23 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
         if was_obstacle:
           was_obstacle = False
         error = MaxLeftArea - MaxRightArea
+        
+      num_collisions = getCollisions(img_grey_thresh, *wall_detect_line)
+      will_collide_with_wall = num_collisions > 20
+      
+      wall_detect_timer_res, wall_detect_timer_high = get_timer(wall_detect_timer, 3, 0.2)
+      if will_collide_with_wall and wall_detect_timer_res and not wall_detect_timer_high:
+        set_timer(wall_detect_timer, True)
+      if wall_detect_timer_res and wall_detect_timer_high:
+        set_timer(wall_detect_timer, False, will_collide_with_wall)
+        if will_collide_with_wall:
+          stMode = True
+          stMode_time = time.time()
+          print("Steering Mode ON")
+      if not wall_detect_timer_res and not wall_detect_timer_high:
+        cv2.line(img, *wall_detect_line, (0, 0, 255), thickness=1)
+      else:
+        cv2.line(img, *wall_detect_line, (255, 0, 0) if will_collide_with_wall else (0, 255, 0), thickness=1)
 
       cv2.putText(img, f"Left area: {MaxLeftArea}", (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
       cv2.putText(img, f"Right area: {MaxRightArea}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
@@ -203,7 +203,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       if current_error_pillar == 0:
         steer = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
         if stMode:
-          steer = 200 * stMode_dir
+          steer = 200 * direction
       else:
         steer = current_error_pillar
 
@@ -214,6 +214,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
 
       steer = min(300, max(-300, steer))
       cv2.putText(img, f"Steer: {steer}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+      cv2.putText(img, f"FPS: {1 / avg_dt}", (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
       servoPW = servoStraight + int(steer)
       if servoPW != last_servoPW:
@@ -222,12 +223,14 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       #print("servoPW =", servoPW)
       time.sleep(0.01)
       if (MaxLeftArea == 0) ^ (MaxRightArea == 0) and max(MaxLeftArea, MaxRightArea) > 1000 and not stMode:
-        stMode = True
-        stMode_time = time.time()
-        stMode_dir = -1 if MaxRightArea == 0 else 1
-        print("Steering Mode ON")
+        time.sleep(0.15)
+        if (MaxLeftArea == 0) ^ (MaxRightArea == 0) and max(MaxLeftArea, MaxRightArea) > 1000:
+          stMode = True
+          stMode_time = time.time()
+          print("Steering Mode ON")
       if stMode and time.time() > stMode_time + 0.5 and \
-        MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 500 or (abs(error) * -stMode_dir == error and abs(error) > 500)):
+         abs((imu_value.value % 90) - 45) <= 15:
+      #  MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 9999 or (abs(error) * -direction == error and abs(error) > 9999)):
         stMode = False
         last_error = 0
         print("Steering Mode Off")
@@ -247,15 +250,12 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
           setMotor(1500)
           time.sleep(0.05)
           setMotor(1500 + (1500 - motorPW) + 5)
-        elif status == b'PARKING':
-          parking(15, False)
-          stopped.value = True
         last_status = status
 
       with frame_lock:
         wallFollow_display = img
       if first_frame:
-        parking()
+        direction = parking()
         setMotor(motorPW)
         first_frame = False
 
@@ -304,8 +304,8 @@ if __name__ == "__main__":
   # --- Main Display Loop ---
   last_display_time = 0
   display_interval = 1 / 30  # 30 FPS
-  front_coords = (70, 140, 570, 360)
-  #front_coords = (0, 140, 640, 360)
+  #front_coords = (70, 140, 570, 360)
+  front_coords = (0, 140, 640, 360)
   orig_front_coords = front_coords
   
   visualizer, lidar_roi_queue = lidar.get_visualizer()
@@ -389,6 +389,15 @@ if __name__ == "__main__":
             cv2.FONT_HERSHEY_SIMPLEX,
             0.6,
             (0, 255, 255),
+            2,
+          )
+          cv2.putText(
+            oc_image,
+            f"FPS: {1/display_data['avg_dt']:.2f}",
+            (493, 120),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (255, 255, 255),
             2,
           )
 
