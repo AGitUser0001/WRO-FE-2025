@@ -94,8 +94,22 @@ cv2  ros_robot_controller_sdk  time  numpy  picamera2  utils
 For obstacle challenge:
 ctypes  numpy  picamera3  time  ros_robot_controller_sdk  cv2  multprocessing  threading  queue  lidar  ObstacleChallengeProcess  utils
 
+For ObstacleChallengeProcess:
+numpy  math  cv2  time  queue  utils
+
+For IMU:
+subprocess  threading  math  multiprocessing
+
+For LiDAR:
+serial  struct  threading  multiprocessing  numpy  multiprocessing shared_memory  queue  time  cv2
+
+For Utils:
+Cv2  numpy  time
 
 ### LiDAR  [lidar code](/src/lidar.py)
+
+
+
 ### Camera
 ### Steering
 ### Moving
