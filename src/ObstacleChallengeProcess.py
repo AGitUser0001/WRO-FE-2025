@@ -8,7 +8,7 @@ from utils import getCollisions, processContours, getMaxContours, getBoundingBox
 class ObstacleChallengeProcess():
   lower_red = np.array([35, 150, 124])
   upper_red = np.array([140, 255, 255])
-  lower_green = np.array([60, 0, 124])
+  lower_green = np.array([35, 0, 124])
   upper_green = np.array([190, 107, 255])
   lower_blue = np.array([0, 120, 0])
   upper_blue = np.array([255, 160, 110])
@@ -25,7 +25,7 @@ class ObstacleChallengeProcess():
     parking = False
     parking_side = 0
     parking_detected = 0
-    Kp = 0.6
+    Kp = 0.8
     Kd = 0.5
     last_error = 0
     last_time = -1
@@ -74,11 +74,11 @@ class ObstacleChallengeProcess():
       if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.2 if detected_turn else 3):
         if MaxBlueArea != 0:
           if not detected_turn:
-            if MaxBlueArea < 1000:
+            if MaxBlueArea > 300 and MaxBlueArea < 900:
               detected_turn = True
               last_turn_detection = cur_time
           else:
-            if MaxBlueArea > 800:
+            if MaxBlueArea > 700:
               detected_turn = False
               turnCount += 1
               last_turn_detection = cur_time
@@ -111,8 +111,8 @@ class ObstacleChallengeProcess():
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
 
-        offset *= 700
-        offset *= (K_obs / K_max) ** 2
+        offset *= 750
+        offset *= (K_obs / K_max) ** 2.1
 
         current_error = x_relative * K_obs
         current_error += offset
@@ -132,7 +132,7 @@ class ObstacleChallengeProcess():
 
       obs_detect_line = (robot_pos_absolute, (int(rw / 2), rh - 100))
       num_obs_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), *obs_detect_line)
-      will_collide_with_obs = num_obs_collisions > 14
+      will_collide_with_obs = num_obs_collisions > 20
       obs_collision_timer_res, obs_collision_timer_high = get_timer(obs_collision_timer, 1, 0.2)
       if will_collide_with_obs and obs_collision_timer_res and not obs_collision_timer_high:
         set_timer(obs_collision_timer, True)
@@ -169,7 +169,8 @@ class ObstacleChallengeProcess():
         obstacle_display_queue.put(display_data)
       
       if turnCount == self.turn_limit:
-        parking = True
+        #parking = True
+        stopped.value = True
 
     roi_queue.cancel_join_thread()
     obstacle_display_queue.cancel_join_thread()

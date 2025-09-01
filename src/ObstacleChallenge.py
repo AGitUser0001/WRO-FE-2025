@@ -157,14 +157,14 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
         mask_magenta = cv2.inRange(cv2.cvtColor(img, cv2.COLOR_BGR2LAB), lower_magenta, upper_magenta)
         num_collisions_left= getCollisions(mask_magenta, *parking_detect_line_left)
         num_collisions_right = getCollisions(mask_magenta, *parking_detect_line_right)
-        if num_collisions_left > 20:
+        if num_collisions_left > 17 and num_collisions_left >= num_collisions_right:
           cv2.line(img, *parking_detect_line_left, (0, 255, 0), thickness=1)
           direction = -1
           setMotor(motorPW)
           first_frame = False
         else:
           cv2.line(img, *parking_detect_line_left, (255, 0, 0), thickness=1)
-        if num_collisions_right > 20:
+        if num_collisions_right > 17 and num_collisions_right >= num_collisions_left:
           cv2.line(img, *parking_detect_line_right, (0, 255, 0), thickness=1)
           direction = 1
           setMotor(motorPW)
