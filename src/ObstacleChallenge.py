@@ -109,6 +109,14 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   wall_detect_line = ((int(640 / 2), 220), (int(640 / 2), 360))
   wall_detect_timer = {}
 
+  parking_detect_line_left = ((190, 190), (0, 320))
+  parking_detect_line_right = ((450, 190), (640, 320))
+
+  lower_magenta = np.array([35, 110, 0])
+  upper_magenta = np.array([160, 255, 108])
+  #lower_magenta = np.array([0, 155, 63])
+  #upper_magenta = np.array([140, 255, 130])
+
   def findContours(image, draw_image=None, *, draw=1, c_colour=None, b_colour=None):
     contours, _hierarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cntList, MaxCnt, MaxCntArea, _approx, _bounding_box = processContours(contours, 200, draw_image, draw=draw, c_colour=c_colour, b_colour=b_colour)
@@ -144,6 +152,26 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       ROI_right_thresh = img_grey_thresh[230:250, 340:640]
       cv2.rectangle(img, (0, 230), (300, 250), (255, 0, 0), 2)
       cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
+
+      if first_frame:
+        mask_magenta = cv2.inRange(cv2.cvtColor(img, cv2.COLOR_BGR2LAB), lower_magenta, upper_magenta)
+        num_collisions_left= getCollisions(mask_magenta, *parking_detect_line_left)
+        num_collisions_right = getCollisions(mask_magenta, *parking_detect_line_right)
+        if num_collisions_left > 20:
+          cv2.line(img, *parking_detect_line_left, (0, 255, 0), thickness=1)
+          direction = -1
+          setMotor(motorPW)
+          first_frame = False
+        else:
+          cv2.line(img, *parking_detect_line_left, (255, 0, 0), thickness=1)
+        if num_collisions_right > 20:
+          cv2.line(img, *parking_detect_line_right, (0, 255, 0), thickness=1)
+          direction = 1
+          setMotor(motorPW)
+          first_frame = False
+        else:
+          cv2.line(img, *parking_detect_line_right, (255, 0, 0), thickness=1)
+        cv2.imwrite("/home/pi/Desktop/parking_detect.png", img)
 
       #imshow("threshold", ROI_left_thresh)
       _leftCntList, _MaxLeftCnt, MaxLeftArea = findContours(ROI_left_thresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))

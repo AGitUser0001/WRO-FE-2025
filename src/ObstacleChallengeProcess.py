@@ -10,8 +10,8 @@ class ObstacleChallengeProcess():
   upper_red = np.array([140, 255, 255])
   lower_green = np.array([60, 0, 124])
   upper_green = np.array([190, 107, 255])
-  lower_blue = np.array([35, 110, 0])
-  upper_blue = np.array([160, 255, 108])
+  lower_blue = np.array([0, 120, 0])
+  upper_blue = np.array([255, 160, 110])
   lower_magenta = np.array([0, 155, 63])
   upper_magenta = np.array([140, 255, 130])
   turn_limit = 12
@@ -71,14 +71,14 @@ class ObstacleChallengeProcess():
       _, _, _, MaxBlueArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_blue, self.upper_blue, draw_image=display_ROI_front)
       # Blue Line Detection
       cur_time = time.time()
-      if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.5 if detected_turn else 3):
+      if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.2 if detected_turn else 3):
         if MaxBlueArea != 0:
           if not detected_turn:
-            if MaxBlueArea < 1000:
+            if MaxBlueArea < 10000:
               detected_turn = True
               last_turn_detection = cur_time
           else:
-            if MaxBlueArea > 500:
+            if MaxBlueArea > 300:
               detected_turn = False
               turnCount += 1
               last_turn_detection = cur_time
