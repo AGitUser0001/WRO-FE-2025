@@ -38,8 +38,8 @@ rate_limit = 1/60
 last_time = -1
 last_servoPW = -1
 
-lower_blue = np.array([0, 120, 0])
-upper_blue = np.array([255, 160, 110])
+lower_orange = np.array([0, 120, 0])
+upper_orange = np.array([255, 160, 110])
 
 turnCount = 0
 last_turn_detection = -1
@@ -86,24 +86,25 @@ while True:
   #imshow("threshold", imgThresh)
   rightCntList, MaxRightCnt, MaxRightArea = findContours(imgThresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
 
-  mask_blue = cv2.inRange(ROI_front_lab, lower_blue, upper_blue)
-  imshow("Blue", mask_blue)
-  blueCntList, MaxBlueCnt, MaxBlueArea = findContours(mask_blue, ROI_front)
+  mask_orange = cv2.inRange(ROI_front_lab, lower_orange, upper_orange)
+  mask_orange = cv2.bitwise_and(mask_orange, (ROI_front_lab[:, :, 2] >= ROI_front_lab[:, :, 1]).astype(np.uint8) * 255)
+  imshow("Orange", mask_orange)
+  orangeCntList, MaxOrangeCnt, MaxOrangeArea = findContours(mask_orange, ROI_front)
 
   if turnCount < turn_limit and cur_time - last_turn_detection > (1 if detected_turn else 3):
-    if MaxBlueCnt is not None:
+    if MaxOrangeCnt is not None:
       if not detected_turn:
-        if MaxBlueArea > 500 and MaxBlueArea < 800:
+        if MaxOrangeArea > 500 and MaxOrangeArea < 800:
           detected_turn = True
           last_turn_detection = cur_time
       else:
-        if MaxBlueArea > 1000:
+        if MaxOrangeArea > 1000:
           detected_turn = False
           turnCount += 1
           last_turn_detection = cur_time
   cv2.putText(img, f"Turn detect: {int(detected_turn)}", (490, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
   cv2.putText(img, f"Turn count: {turnCount}", (490, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-  cv2.putText(img, f"Blue area: {MaxBlueArea}", (470, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+  cv2.putText(img, f"Orange area: {MaxOrangeArea}", (470, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
 
   error = MaxRightArea - MaxLeftArea
   if not stMode:
