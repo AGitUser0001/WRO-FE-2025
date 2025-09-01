@@ -10,8 +10,8 @@ class ObstacleChallengeProcess():
   upper_red = np.array([140, 255, 255])
   lower_green = np.array([35, 0, 124])
   upper_green = np.array([190, 107, 255])
-  lower_orange = np.array([0, 120, 0])
-  upper_orange = np.array([255, 160, 110])
+  lower_orange = np.array([50, 140, 130])
+  upper_orange = np.array([200, 255, 255])
   lower_magenta = np.array([0, 155, 63])
   upper_magenta = np.array([140, 255, 130])
   turn_limit = 12

@@ -38,8 +38,8 @@ rate_limit = 1/60
 last_time = -1
 last_servoPW = -1
 
-lower_orange = np.array([0, 120, 0])
-upper_orange = np.array([255, 160, 110])
+lower_orange = np.array([50, 140, 130])
+upper_orange = np.array([200, 255, 255])
 
 turnCount = 0
 last_turn_detection = -1
