@@ -74,11 +74,11 @@ class ObstacleChallengeProcess():
       if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.2 if detected_turn else 3):
         if MaxBlueArea != 0:
           if not detected_turn:
-            if MaxBlueArea < 10000:
+            if MaxBlueArea < 1000:
               detected_turn = True
               last_turn_detection = cur_time
           else:
-            if MaxBlueArea > 300:
+            if MaxBlueArea > 800:
               detected_turn = False
               turnCount += 1
               last_turn_detection = cur_time
