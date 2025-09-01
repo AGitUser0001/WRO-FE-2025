@@ -77,7 +77,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   def setServo(servoPos):
     board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPos]])
 
-  def parking(n = 2):
+  def parking(n = 4):
     direction = sign(last_error)
     OUT = servoStraight + (400 * direction)
     IN = servoStraight - (400 * direction)
@@ -250,8 +250,8 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
           stMode_time = time.time()
           print("Steering Mode ON")
       if stMode and time.time() > stMode_time + 0.5 and \
-         abs((imu_value.value % 90) - 45) <= 15:
-      #  MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 9999 or (abs(error) * -direction == error and abs(error) > 9999)):
+         (abs((imu_value.value % 90) - 45) <= 15 or \
+         (MaxLeftArea > 100 and MaxRightArea > 100 and (abs(error) < 3000 or abs(error) * -direction == error))):
         stMode = False
         last_error = 0
         print("Steering Mode Off")

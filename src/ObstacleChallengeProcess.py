@@ -71,14 +71,14 @@ class ObstacleChallengeProcess():
       _, _, _, MaxBlueArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_blue, self.upper_blue, draw_image=display_ROI_front)
       # Blue Line Detection
       cur_time = time.time()
-      if turnCount < self.turn_limit and cur_time - last_turn_detection > (1 if detected_turn else 3):
+      if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.5 if detected_turn else 3):
         if MaxBlueArea != 0:
           if not detected_turn:
-            if MaxBlueArea > 500 and MaxBlueArea < 800:
+            if MaxBlueArea < 1000:
               detected_turn = True
               last_turn_detection = cur_time
           else:
-            if MaxBlueArea > 1000:
+            if MaxBlueArea > 500:
               detected_turn = False
               turnCount += 1
               last_turn_detection = cur_time
@@ -130,7 +130,7 @@ class ObstacleChallengeProcess():
         cv2.line(display_ROI_front, robot_pos_absolute, target_pos, (255, 0, 0), thickness=2)
         cv2.circle(display_ROI_front, target_pos, radius=3, color=(255, 0, 0), thickness=-1)
 
-      obs_detect_line = (robot_pos_absolute, (int(rw / 2), rh - 125))
+      obs_detect_line = (robot_pos_absolute, (int(rw / 2), rh - 100))
       num_obs_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), *obs_detect_line)
       will_collide_with_obs = num_obs_collisions > 14
       obs_collision_timer_res, obs_collision_timer_high = get_timer(obs_collision_timer, 1, 0.2)
@@ -168,7 +168,7 @@ class ObstacleChallengeProcess():
       if not obstacle_display_queue.full():
         obstacle_display_queue.put(display_data)
       
-      if turnCount == 12:
+      if turnCount == self.turn_limit:
         parking = True
 
     roi_queue.cancel_join_thread()
