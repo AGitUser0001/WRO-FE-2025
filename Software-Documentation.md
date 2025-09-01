@@ -10,14 +10,14 @@ The goal of the obstacle challenge is roughly the same as the open challenge wit
 
 We finished the obstacle challenge by first making a wall follow code so that our robot would be able to run through the circuit, next we made it so that our camera would be able to tell what colour each traffic light was and therefore what side to pass it on, after our robot figures out what colour each traffic light is, it then turns so that the traffic light is far enough on the left or right side of the camera so that the robot wouldn't ram into it. After this it then tries to go back to the centre of the track and occasionally turns depending on if the traffic light is on the corner or not. Since wall follow with just a camera isn't very reliable on obstacle challenge due to the added traffic lights, we implemented a LiDAR sensor which helps keep track of walls put also helps with parking. The logic behind how we figure out the three laps are up is the same, we count how many blue lines we pass thus connecting to how many corners we've passed. 
 ### Pillar Detection
-```ino
+```py
 class ObstacleChallengeProcess():
   lower_red = np.array([35, 150, 124])
   upper_red = np.array([140, 255, 255])
   lower_green = np.array([80, 0, 124])
   upper_green = np.array([190, 107, 255])
 ```
-```ino
+```py
       # Red Detection
       _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
       
@@ -29,7 +29,7 @@ class ObstacleChallengeProcess():
 
 
 
-```ino
+```py
 def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 500, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)
     if conditional is not None:
@@ -49,12 +49,12 @@ def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 500, draw_i
 ```
 ### Parking Wall Detection
 
-```ino
+```py
   lower_magenta = np.array([0, 155, 63])
   upper_magenta = np.array([140, 255, 130])
 ```
 
-```ino
+```py
 def parking(self, ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar, stopped, parking_detected, parking_side, last_parking_detect):
     limit = 500
     magenta1center_x = rw / 2
@@ -65,7 +65,7 @@ def parking(self, ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar
     magenta2bottom_y = rh / 2
     current_error = 0
 ```
-```ino
+```py
     cntList, _, _, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_magenta, self.upper_magenta, limit, draw_image=display_ROI_front, draw=2)
     maxCnts = getMaxContours(cntList, 2)
     (maxCnt1, MaxMagentaArea1) = maxCnts[0] if len(maxCnts) > 0 else (None, 0)
@@ -107,7 +107,7 @@ For Utils:
 Cv2  numpy  time
 
 ### LiDAR 
-```ino
+```py
 BAUD = 230400
 PACKET_HEADER = 0x54
 PACKET_LEN = 47
