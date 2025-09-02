@@ -71,14 +71,14 @@ class ObstacleChallengeProcess():
       _, _, _, MaxOrangeArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_orange, self.upper_orange, draw_image=display_ROI_front, conditional=ROI_front_LAB[:, :, 2] >= ROI_front_LAB[:, :, 1])
       # Orange Line Detection
       cur_time = time.time()
-      if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.2 if detected_turn else 3):
+      if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.2 if detected_turn else 5):
         if MaxOrangeArea != 0:
           if not detected_turn:
-            if MaxOrangeArea > 300 and MaxOrangeArea < 900:
+            if MaxOrangeArea > 450:
               detected_turn = True
               last_turn_detection = cur_time
           else:
-            if MaxOrangeArea > 700:
+            if (MaxOrangeArea < 450 and MaxOrangeArea > 200) or (MaxOrangeArea > 600):
               detected_turn = False
               turnCount += 1
               last_turn_detection = cur_time
@@ -154,6 +154,7 @@ class ObstacleChallengeProcess():
         "roi": display_ROI_front,
         "MaxRedArea": MaxRedArea,
         "MaxGreenArea": MaxGreenArea,
+        "MaxOrangeArea": MaxOrangeArea,
         "redcenter_x": red_x,
         "greencenter_x": green_x,
         "error_pillar": current_error,
@@ -170,7 +171,8 @@ class ObstacleChallengeProcess():
       
       if turnCount == self.turn_limit:
         #parking = True
-        stopped.value = True
+        if turnCount == turn_limit and cur_time - last_turn_detection > 5:
+          stopped.value = True
 
     roi_queue.cancel_join_thread()
     obstacle_display_queue.cancel_join_thread()

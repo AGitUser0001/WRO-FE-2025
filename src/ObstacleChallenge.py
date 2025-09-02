@@ -446,6 +446,15 @@ try:
           (255, 255, 255),
           2,
         )
+        cv2.putText(
+          oc_image,
+          f"Orange: {display_data['MaxOrangeArea']:.0f}",
+          (480, 150),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (0, 127, 255),
+          2,
+        )
 
         if display_data['parking']:
           cv2.putText(

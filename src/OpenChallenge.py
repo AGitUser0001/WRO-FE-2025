@@ -91,10 +91,10 @@ while True:
   imshow("Orange", mask_orange)
   orangeCntList, MaxOrangeCnt, MaxOrangeArea = findContours(mask_orange, ROI_front)
 
-  if turnCount < turn_limit and cur_time - last_turn_detection > (1 if detected_turn else 3):
+  if turnCount < turn_limit and cur_time - last_turn_detection > (0.4 if detected_turn else 2):
     if MaxOrangeCnt is not None:
       if not detected_turn:
-        if MaxOrangeArea > 500 and MaxOrangeArea < 800:
+        if MaxOrangeArea > 500 and MaxOrangeArea < 1000:
           detected_turn = True
           last_turn_detection = cur_time
       else:
