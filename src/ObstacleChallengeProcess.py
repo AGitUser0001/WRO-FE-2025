@@ -171,7 +171,7 @@ class ObstacleChallengeProcess():
       
       if turnCount == self.turn_limit:
         #parking = True
-        if turnCount == turn_limit and cur_time - last_turn_detection > 5:
+        if turnCount == self.turn_limit and cur_time - last_turn_detection > 5:
           stopped.value = True
 
     roi_queue.cancel_join_thread()
