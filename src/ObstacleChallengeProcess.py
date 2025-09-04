@@ -25,7 +25,7 @@ class ObstacleChallengeProcess():
     parking = False
     parking_side = 0
     parking_detected = 0
-    Kp = 0.8
+    Kp = 0.9
     Kd = 0.5
     last_error = 0
     last_time = -1
@@ -82,7 +82,7 @@ class ObstacleChallengeProcess():
               detected_turn = False
               turnCount += 1
               last_turn_detection = cur_time
-      
+
       # Calculate error and send it back to the main thread
       current_error = 0
       distance = 0
@@ -103,16 +103,16 @@ class ObstacleChallengeProcess():
           obs_y = green_y
           offset = -1
 
-        distance = math.dist(robot_pos_relative, (x_relative, obs_y))
-        K_max = 2.5
+        distance = math.dist(robot_pos_relative, (x_relative * (1 + obs_y / rh), obs_y))
+        K_max = 3
         d_min = 120               # math.dist((0, 480 - 140), (0, 220))
         d_max = 422.0189569201839 # math.dist((0, 480 - 140), (250, 0))
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
-
-        offset *= 750
-        offset *= (K_obs / K_max) ** 2.1
+ 
+        offset *= 700
+        offset *= K_obs
 
         current_error = x_relative * K_obs
         current_error += offset

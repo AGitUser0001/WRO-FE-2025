@@ -196,6 +196,8 @@ class LiDAR:
       if not display_queue.full():
         display_queue.put_nowait(image.copy())
     lidar_shm.close()
+    lidar_roi_queue.cancel_join_thread()
+    print("LiDAR Visualizer Stopped")
 
 MIN_DIST = 50
 MAX_DIST = 4200

@@ -31,7 +31,7 @@ picam2.configure(
 picam2.start()
 board = rrc.Board()
 motorPW = 1620
-servoStraight = 1825
+servoStraight = 1800
 servoPW = servoStraight
 steer = 0
 rate_limit = 1/60

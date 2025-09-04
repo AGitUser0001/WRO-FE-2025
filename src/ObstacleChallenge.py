@@ -63,7 +63,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   board = rrc.Board()
   motorPW = 1615
   parkMotorPW = 1625
-  servoStraight = 1825
+  servoStraight = 1800
   servoPW = servoStraight
   steer = 0
   rate_limit = 1/60
@@ -91,6 +91,11 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       setServo(IN)
       setMotor(1500 + (1500 - parkMotorPW))
       time.sleep(0.3)
+      setServo(servoStraight)
+      if direction > 0:
+        time.sleep(0.4)
+      else:
+        time.sleep(0.05)
       if i == n - 1: break
     return direction
 
@@ -110,6 +115,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   wall_detect_timer = {}
 
   parking_detect_line_left = ((190, 190), (0, 320))
+  parking_detect_line_front = ((320, 190), (320, 320))
   parking_detect_line_right = ((450, 190), (640, 320))
 
   lower_magenta = np.array([35, 110, 0])
@@ -126,7 +132,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   setServo(servoPW)
   time.sleep(1)
 
-  setMotor(motorPW)
+  setMotor(1500)
   
   try:
     while not stopped.value:
@@ -155,20 +161,30 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
 
       if first_frame:
         mask_magenta = cv2.inRange(cv2.cvtColor(img, cv2.COLOR_BGR2LAB), lower_magenta, upper_magenta)
-        num_collisions_left= getCollisions(mask_magenta, *parking_detect_line_left)
+        num_collisions_front = getCollisions(mask_magenta, *parking_detect_line_front)
+        num_collisions_left = getCollisions(mask_magenta, *parking_detect_line_left)
         num_collisions_right = getCollisions(mask_magenta, *parking_detect_line_right)
+        in_front = False
+        if num_collisions_front > 30:
+          cv2.line(img, *parking_detect_line_front, (0, 255, 0), thickness=1)
+          in_front = True
+        else:
+          cv2.line(img, *parking_detect_line_front, (255, 0, 0), thickness=1)
+  
         if num_collisions_left > 17 and num_collisions_left >= num_collisions_right:
           cv2.line(img, *parking_detect_line_left, (0, 255, 0), thickness=1)
-          direction = -1
-          setMotor(motorPW)
-          first_frame = False
+          if not in_front:
+            direction = -1
+            setMotor(motorPW)
+            first_frame = False
         else:
           cv2.line(img, *parking_detect_line_left, (255, 0, 0), thickness=1)
         if num_collisions_right > 17 and num_collisions_right >= num_collisions_left:
           cv2.line(img, *parking_detect_line_right, (0, 255, 0), thickness=1)
-          direction = 1
-          setMotor(motorPW)
-          first_frame = False
+          if not in_front:
+            direction = 1
+            setMotor(motorPW)
+            first_frame = False
         else:
           cv2.line(img, *parking_detect_line_right, (255, 0, 0), thickness=1)
         cv2.imwrite("/home/pi/Desktop/parking_detect.png", img)
