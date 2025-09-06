@@ -215,8 +215,8 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
 </table>
 
 ### Potential Improvements
-Right now, the Raspi is mounted to the back piece with extra long screws and, for the future if we we're to try with this design again we would defiently like it to be closer as with the Raspi being farther out not only does it make our robot bigger, but as well it shifts the center of gravity and overall makes it harder to steer. With a combination of better wheels and a tighter place for the Raspi the robot could definetly perform better.
-Another note to add for the future was that we should've definetly found more uses for the GPIO pins such as with an ultrasonic sensor.
+Right now, the Raspberry Pi is mounted to the back piece with extra long screws and, for the future if we we're to try with this design again we would definitely like it to be closer as with the Raspberry Pi being farther out not only does it make our robot bigger, but as well it shifts the center of gravity and overall makes it harder to steer. With a combination of better wheels and a tighter place for the Raspberry Pi the robot could definitely perform better.
+Another note to add for the future was that we should've definitely found more uses for the GPIO pins such as with an ultrasonic sensor.
 
 ### Our Expansion Board <a class="anchor" id="expansion-board"></a>
 <table>
@@ -236,7 +236,7 @@ Another note to add for the future was that we should've definetly found more us
 </table>
 
 ### Potential Improvements
-With our design as is, our expansion board is quite cluttered and the wires aren't properly managed very well. Next time we attempt something like this we would defiently aim to keep the wires short and make sure they aren't crossing into anything they shouldn't.
+With our design as is, our expansion board is quite cluttered and the wires aren't properly managed very well. Next time we attempt something like this we would definitely aim to keep the wires short and make sure they aren't crossing into anything they shouldn't.
 ### Our circuit schematic [here](#diagram)
 
 
@@ -262,7 +262,7 @@ Our DC brushless motor drives the back wheels thanks to the differential gear wh
 </table>
 
 ### Potential Improvements
-Our BLDC motor is connected to a standard gear but, the gears we are using are made out of plastic and are easily brocken, as this has happened if the past and it caused our robot to stutter or stop moving completly. We definetly coudl've found an alternative to plastic gears such as a lightweight metal or even just a stronger plastic alternative as in nylon.
+Our BLDC motor is connected to a standard gear but, the gears we are using are made out of plastic and are easily broken, as this has happened if the past and it caused our robot to stutter or stop moving completely. We could've found an alternative to plastic gears such as a lightweight metal or even just a stronger plastic alternative as in nylon.
 
 ### Our Servo Motor <a class="anchor" id="servo-motor"></a>
 
@@ -282,7 +282,7 @@ Our BLDC motor is connected to a standard gear but, the gears we are using are m
 </table>
 
 ### Potential Improvements
-Our servo motor is slighty prone to moving from a lot of wear. This can offset the servo arm and make our steering slanted. In the future if we we're to attempt the sae thing we would definetly find a way to secure the servo in place such as, with super glue or zipties.
+Our servo motor is slightly prone to moving from a lot of wear. This can offset the servo arm and make our steering slanted. In the future if we were to attempt the same thing we would 100% find a way to secure the servo in place such as, with super glue or zip ties.
 
 ### Our Wheels <a class="anchor" id="wheels"></a>
 <table>
@@ -327,7 +327,7 @@ Our wheels are small and it causes our chassis to be lower to the ground causing
 | Total Price   | $685.53  |
 
 ## Potential Future Improvements <a class="anchor" id="potential-improvements"></a>
-We should have added an automatic color correction calibration, as our camera has some problem adapting to different environments. Sometimes we would have to manually fine-tune the color correction for different lighting environments. Sometimes our environments would be too dark, leading the robot to wrongly detect certain things such as missing some green or red pillars. We could callibrate the color correction by holding up the red and green pillars, and recording and automatically adjusting the CIELAB values. 
+We should have added an automatic color correction calibration, as our camera has some problem adapting to different environments. Sometimes we would have to manually fine-tune the color correction for different lighting environments. Sometimes our environments would be too dark, leading the robot to wrongly detect certain things such as missing some green or red pillars. We could calibrate the color correction by holding up the red and green pillars, and recording and automatically adjusting the CIELAB values. 
 
 We could add a voltage regulator to see when our robot is at low battery. Many of the problems in our obstacle and open challenge is caused by low battery and the readings from our sensors are less reliable when we have low battery. With this voltage regulator, we could avoid spending too much time trying to fix problems when instead they could be fixed by using a battery with full power. 
 
