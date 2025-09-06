@@ -15,18 +15,14 @@ class ObstacleChallengeProcess():
   lower_magenta = np.array([0, 155, 63])
   upper_magenta = np.array([140, 255, 130])
   turn_limit = 12
-  def __init__(self, stopped, error_pillar, roi_queue, obstacle_display_queue, status):
+  def __init__(self, stopped, enter_parking, error_pillar, roi_queue, obstacle_display_queue, status):
     turnCount = 0
     last_turn_detection = -1
-    last_parking_detect = -1
     obs_timer = {}
     obs_collision_timer = {}
     detected_turn = False
-    parking = False
-    parking_side = 0
-    parking_detected = 0
-    Kp = 0.9
-    Kd = 0.5
+    Kp = 0.8
+    Kd = 0.6
     last_error = 0
     last_time = -1
     avg_dt = 1/30
@@ -111,16 +107,12 @@ class ObstacleChallengeProcess():
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
  
-        offset *= 700
+        offset *= 350
         offset *= K_obs
 
         current_error = x_relative * K_obs
         current_error += offset
 
-      derivative = current_error - last_error
-      last_error = current_error
-      
-      current_error = Kp * current_error + Kd * derivative if abs(current_error) > 0 else 0
       target_pos = (int(current_error + rw / 2), obs_y)
       num_collisions = getCollisions(cv2.threshold(ROI_front_grey, 60, 255, cv2.THRESH_BINARY_INV)[1], robot_pos_absolute, target_pos, 2)
       if num_collisions > 35:
@@ -128,7 +120,12 @@ class ObstacleChallengeProcess():
       
       if current_error != 0:
         cv2.line(display_ROI_front, robot_pos_absolute, target_pos, (255, 0, 0), thickness=2)
-        cv2.circle(display_ROI_front, target_pos, radius=3, color=(255, 0, 0), thickness=-1)
+        cv2.circle(display_ROI_front, target_pos, radius=3, color=(255, 0, 0), thickness=-1)  
+
+      derivative = current_error - last_error
+      last_error = current_error
+      
+      current_error = Kp * current_error + Kd * derivative if abs(current_error) > 0 else 0
 
       obs_detect_line = (robot_pos_absolute, (int(rw / 2), rh - 100))
       num_obs_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), *obs_detect_line)
@@ -145,9 +142,6 @@ class ObstacleChallengeProcess():
         status.value = b"FORWARD"
         cv2.line(display_ROI_front, *obs_detect_line, (200, 200, 200) if will_collide_with_obs else (255, 255, 255), thickness=1)
 
-      if parking:
-        parking_detected, current_error, parking_side, last_parking_detect = self.parking(ROI_front_LAB, display_ROI_front, rw, rh, status, error_pillar, stopped, parking_detected, parking_side, last_parking_detect)
-        
       error_pillar.value = current_error
       # Send display information back to main thread
       display_data = {
@@ -161,18 +155,17 @@ class ObstacleChallengeProcess():
         "steerCount": turnCount,
         "distance": distance,
         "offset": offset,
-        "parking_detected": parking_detected,
-        "parking": parking,
         "avg_dt": avg_dt
       }
 
       if not obstacle_display_queue.full():
         obstacle_display_queue.put(display_data)
-      
+  
       if turnCount == self.turn_limit:
-        #parking = True
-        if turnCount == self.turn_limit and cur_time - last_turn_detection > 5:
-          stopped.value = True
+        if turnCount == self.turn_limit and cur_time - last_turn_detection > 3:
+          status.value = b'FORWARD'
+          enter_parking.value = True
+          break
 
     roi_queue.cancel_join_thread()
     obstacle_display_queue.cancel_join_thread()

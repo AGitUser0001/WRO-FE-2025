@@ -9,8 +9,9 @@ import ctypes
 import queue
 from lidar import LiDAR
 from ObstacleChallengeProcess import ObstacleChallengeProcess
-from utils import processContours, getCollisions, get_timer, set_timer, sign, imshow, waitKey, destroyAllWindows
+from utils import processContours, getCollisions, get_timer, set_timer, imshow, waitKey, destroyAllWindows
 from imu_scan import imu_value
+from Parking import Parking
 #pylint: disable=redefined-outer-name
 # --- Thread 1: Camera Capture ---
 def cameraThread(stopped, roi_queue):
@@ -41,7 +42,7 @@ def cameraThread(stopped, roi_queue):
 
 
 # --- Thread 2: Wall Following and Motor Control ---
-def wallFollowThread(stopped, error_pillar, obstacle_status):
+def wallFollowThread(stopped, enter_parking, error_pillar, status):
   global wallFollow_display
 
   ServoChannel = 4
@@ -51,7 +52,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
   MaxRightArea = 0
   MaxLeftArea = 0
   Kp = 0.1
-  Kd = 0.03
+  Kd = 0.04
   Ki = 0
   i_error = 0
   stMode = False
@@ -76,40 +77,14 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
 
   def setServo(servoPos):
     board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPos]])
-
-  def parking(n = 4):
-    direction = sign(last_error)
-    OUT = servoStraight + (400 * direction)
-    IN = servoStraight - (400 * direction)
-    setServo(servoStraight)
-    setMotor(1500)
-    time.sleep(0.15)
-    for i in range(n):
-      setServo(OUT)
-      setMotor(parkMotorPW)
-      time.sleep(0.4)
-      setServo(IN)
-      setMotor(1500 + (1500 - parkMotorPW))
-      time.sleep(0.3)
-      setServo(servoStraight)
-      if direction > 0:
-        time.sleep(0.4)
-      else:
-        time.sleep(0.05)
-      if i == n - 1: break
-    return direction
+    
+  parking = Parking()
+  parking_stage = None
 
   direction = 0
   was_obstacle = False
   first_frame = True
   last_status = b"FORWARD"
-
-  lidar_array, lidar_shm = lidar.get_array_copy()
-  lidar_roi_left = ((-750, -25), (-100, 25))
-  lidar_roi_right = ((100, -25), (750, 25))
-  _, lidar_roi_queue = lidar.get_visualizer()
-  lidar.add_roi(lidar_roi_queue, (0, 255, 0), *lidar_roi_left)
-  lidar.add_roi(lidar_roi_queue, (0, 255, 0), *lidar_roi_right)
   
   wall_detect_line = ((int(640 / 2), 220), (int(640 / 2), 360))
   wall_detect_timer = {}
@@ -120,8 +95,6 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
 
   lower_magenta = np.array([35, 110, 0])
   upper_magenta = np.array([160, 255, 108])
-  #lower_magenta = np.array([0, 155, 63])
-  #upper_magenta = np.array([140, 255, 130])
 
   def findContours(image, draw_image=None, *, draw=1, c_colour=None, b_colour=None):
     contours, _hierarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -194,10 +167,6 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
 
       #imshow("threshold", ROI_right_thresh)
       _rightCntList, _MaxRightCnt, MaxRightArea = findContours(ROI_right_thresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
-        
-      _LeftDist = -LiDAR.get_angle_median(lidar_array, 270 - 4, 270 + 5)[3]
-      _RightDist = LiDAR.get_angle_median(lidar_array, 90 - 5, 90 + 4)[3]
-      _FrontDist = LiDAR.get_angle_median(lidar_array, 0 - 5, 0 + 5)[4]
 
       current_error_pillar = -error_pillar.value
       if current_error_pillar != 0:
@@ -230,7 +199,7 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       cv2.putText(img, f"Right area: {MaxRightArea}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
       cv2.putText(img, f"Error (-left +right): {error:.2f}", (10, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
       
-      if obstacle_status.value.startswith(b"FORWARD"):
+      if status.value.startswith(b"FORWARD"):
         error = -error
 
       if not stMode:
@@ -250,32 +219,15 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       else:
         steer = current_error_pillar
 
-      imu_turn_threshold = 30
-      base_correction_strength = 2
-      max_correction_strength = 5
+      cv2.putText(img, f"Heading: {imu_value.value}", (450, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+      cv2.putText(img, f"Direction: {direction}", (450, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-      heading = imu_value.value
-      heading_straight = round(heading / 90) * 90
-      deviation = heading - heading_straight
-      current_direction = sign(deviation)
-      imu_correction_enabled = abs(deviation) > imu_turn_threshold
-      if abs(error) > 1000 and current_direction == direction: imu_correction_enabled = False
-      imu_correction_enabled = False
-
-      excess_deviation = abs(deviation) - imu_turn_threshold
-      correction_strength = base_correction_strength + (excess_deviation / 10)
-      correction_strength = min(max_correction_strength, correction_strength)
-
-      cv2.putText(img, f"Heading: {heading}", (450, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-      cv2.putText(img, f"Deviation: {deviation}", (450, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-      cv2.putText(img, f"Straight: {heading_straight}", (450, 75), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (210, 200, 200), 2)
-      cv2.putText(img, f"Direction: {direction}", (450, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-      cv2.putText(img, f"Current direction: {current_direction}", (450, 125), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-      cv2.putText(img, f"IMU Correction: {int(imu_correction_enabled)}", (450, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 127, 255), 2)
-      cv2.putText(img, f"Correction Strengh: {correction_strength}", (450, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-
-      if imu_correction_enabled:
-        steer = (imu_turn_threshold * current_direction - deviation) * correction_strength
+      if parking_stage is not None:
+        parking_stage, parking_steer = parking_stage()
+        if parking_steer is not None:
+          steer = parking_steer
+      elif enter_parking.value:
+        parking_stage, _ = parking.enter_parking_lot(lidar, stopped, status, direction)
 
       steer = min(300, max(-300, steer))
       cv2.putText(img, f"Steer: {steer:.2f}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
@@ -301,17 +253,17 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
         print("Steering Mode Off")
       #print("error:", error)
 
-      status = obstacle_status.value
+      cur_status = status.value
       if last_status != status:
-        if status == b'BACKWARD':
+        if cur_status == b'BACKWARD':
           setMotor(1500)
           time.sleep(0.05)
           setMotor(1500 + (1500 - motorPW))
-        elif status == b'FORWARD':
+        elif cur_status == b'FORWARD':
           setMotor(motorPW)
-        elif status == b'FORWARD_SLOW':
+        elif cur_status == b'FORWARD_SLOW':
           setMotor(motorPW - 5)
-        elif status == b'BACKWARD_SLOW':
+        elif cur_status == b'BACKWARD_SLOW':
           setMotor(1500)
           time.sleep(0.05)
           setMotor(1500 + (1500 - motorPW) + 5)
@@ -320,12 +272,11 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
       with frame_lock:
         wallFollow_display = img
       if first_frame:
-        direction = parking()
+        direction = parking.exit_parking_lot(servoStraight, parkMotorPW, last_error, setServo, setMotor)
         setMotor(motorPW)
         first_frame = False
 
   finally:
-    lidar_shm.close()
     # Graceful shutdown of motors
     setMotor(1500)
     print("WallFollow Thread Stopped")
@@ -333,8 +284,9 @@ def wallFollowThread(stopped, error_pillar, obstacle_status):
 # --- Shared Memory and Flags ---
 # For communication between processes
 stopped = multiprocessing.Value("b", False)
+enter_parking = multiprocessing.Value("b", False)
 error_pillar = multiprocessing.Value("d", 0.0)
-obstacle_status = multiprocessing.Value(ctypes.c_char_p, b"FORWARD")
+status = multiprocessing.Value(ctypes.c_char_p, b"FORWARD")
 roi_queue = multiprocessing.Queue(maxsize=1)  # Queue to send ROI
 obstacle_display_queue = multiprocessing.Queue(maxsize=1)  # Queue to receive display data
 
@@ -349,13 +301,13 @@ lidar = LiDAR()
 # --- Create and Start Threads and Processes ---
 p_obstacle = multiprocessing.Process(
   target=ObstacleChallengeProcess,
-  args=(stopped, error_pillar, roi_queue, obstacle_display_queue, obstacle_status),
+  args=(stopped, enter_parking, error_pillar, roi_queue, obstacle_display_queue, status),
   daemon=True
 )
 t_camera = threading.Thread(target=cameraThread, args=(stopped, roi_queue))
 t_wallFollow = threading.Thread(
   target=wallFollowThread,
-  args=(stopped, error_pillar, obstacle_status),
+  args=(stopped, enter_parking, error_pillar, status),
 )
 
 print("Starting Process and Threads...")
@@ -471,17 +423,6 @@ try:
           (0, 127, 255),
           2,
         )
-
-        if display_data['parking']:
-          cv2.putText(
-            oc_image,
-            f"Parking State: {display_data['parking_detected']:.1f}",
-            (10, 420),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.6,
-            (255, 0, 255),
-            2,
-          )
 
         cv2.rectangle(
           oc_image,
