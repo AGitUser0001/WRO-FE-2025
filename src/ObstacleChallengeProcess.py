@@ -107,13 +107,13 @@ class ObstacleChallengeProcess():
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
  
-        offset *= 350
+        offset *= 400
         offset *= K_obs
 
         current_error = x_relative * K_obs
         current_error += offset
 
-      target_pos = (int(current_error + rw / 2), obs_y)
+      target_pos = (int(current_error * 0.5 + rw / 2), obs_y)
       num_collisions = getCollisions(cv2.threshold(ROI_front_grey, 60, 255, cv2.THRESH_BINARY_INV)[1], robot_pos_absolute, target_pos, 2)
       if num_collisions > 35:
         current_error = 0

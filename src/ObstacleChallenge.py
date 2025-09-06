@@ -279,6 +279,7 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
   finally:
     # Graceful shutdown of motors
     setMotor(1500)
+    parking.last_stage()
     print("WallFollow Thread Stopped")
 
 # --- Shared Memory and Flags ---
