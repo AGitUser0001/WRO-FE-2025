@@ -39,34 +39,16 @@ This repository contains information about our robot and the building process.
 ## Team Members <a class="anchor" id="team"></a>
 
 ### Lucas Zheng
-
-
-
-
-
-
 **Age:** 14
 
 **Introduction:**
-
+Hello, I'm Lucas, and this is my first time competing in WRO. I'm from Canada and 14 years old. I'm interested in coding and mathematics. It is my first year of high school at Donald A. Wilson Secondary School. I was interested in WRO Future Engineers because it has hardware and software aspects.
 ### Walter Wu
-
-
-
-
-
-
 **Age:** 14
 
 **Introduction:**
 Hi, my name is Walter and I'm from Canada, this is my second WRO season, two years ago I participated in WRO Robo mission and ended up on the international stage in Panama. This year since I was old enough for future engineers I decided to sign up for a completely different challenge, I am currently 14 years old and I have many interests from coding to a variety of video games and sports, I will be attending All saints catholic secondary school for their AMP program.
 ### Eric Huang
-
-
-
-
-
-
 **Age:** 15
 
 **Introduction:**
