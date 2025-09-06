@@ -190,7 +190,9 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
     </td>
   </tr>
 </table>
-
+### Potential Improvements
+- We could have swapped the camera lens with a higher quality lens to increase detection of pillars and to prevent colors getting mixed up.
+- We could have adjusted our fish-eye lens so that it does not warp the shape of some objects.
 ### Our LiDAR <a class="anchor" id="lidar"></a>
 <table>
   <tr>
@@ -207,7 +209,9 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
     </td>
   </tr>
 </table>
-
+### Potential Improvements
+- We could have bought a LiDAR with a higher Hz/RPM so that it updates the scan faster.
+- We could have bought a solid-state LiDAR. These have much higher frame rates and are more accurate. However, many of these are costly and they cannot see 360 degrees.
 ### Our Raspberry Pi 5 <a class="anchor" id="pi"></a>
 <table>
   <tr>
