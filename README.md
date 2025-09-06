@@ -94,7 +94,6 @@ Hello, I'm Eric, and I have already participated in two WRO competitions so far.
 ## Group photo
 <img src="/images/IMG_5017.jpeg" width="300" height="400">
 
-## Video of Lucas explaining our 3D printings
 
 ## The Open Challenge <a class="anchor" id="challenge"></a>
 The robot must complete three laps on the track after being placed randomly inside the walls of the track. The robot must have one button pressed to turn on the robot and one button pressed to run the program. After this, **no further interactions** with the robot are allowed.
