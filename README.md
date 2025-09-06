@@ -174,6 +174,7 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
 ### Potential Improvements
 - We could have bought a battery with higher density energy cells to extend the operating time while generally having the same weight. 
 - We could have made a special compartment to mount the battery instead of it hanging on the bottom of the baseplate. This would reduce the stress on the robot and prevent the battery from falling down.
+
 ### Our Camera <a class="anchor" id="camera"></a>
 <table>
   <tr>
@@ -190,9 +191,11 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
     </td>
   </tr>
 </table>
+
 ### Potential Improvements
 - We could have swapped the camera lens with a higher quality lens to increase detection of pillars and to prevent colors getting mixed up.
 - We could have adjusted our fish-eye lens so that it does not warp the shape of some objects.
+  
 ### Our LiDAR <a class="anchor" id="lidar"></a>
 <table>
   <tr>
@@ -209,6 +212,7 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
     </td>
   </tr>
 </table>
+
 ### Potential Improvements
 - We could have bought a LiDAR with a higher Hz/RPM so that it updates the scan faster.
 - We could have bought a solid-state LiDAR. These have much higher frame rates and are more accurate. However, many of these are costly and they cannot see 360 degrees.
@@ -229,6 +233,9 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
   </tr>
 </table>
 
+### Potential Improvements
+Right now, the Raspi is mounted to the back piece with extra long screws and, for the future if we we're to try with this design again we would defiently like it to be closer as with the Raspi being farther out not only does it make our robot bigger, but as well it shifts the center of gravity and overall makes it harder to steer. With a combination of better wheels and a tighter place for the Raspi the robot could definetly perform better.
+Another note to add for the future was that we should've definetly found more uses for the GPIO pins such as with an ultrasonic sensor.
 
 ### Our Expansion Board <a class="anchor" id="expansion-board"></a>
 <table>
@@ -247,7 +254,8 @@ Our power and sense management is made up of our battery, our camera, our LiDAR,
   </tr>
 </table>
 
-
+### Potential Improvements
+With our design as is, our expansion board is quite cluttered and the wires aren't properly managed very well. Next time we attempt something like this we would defiently aim to keep the wires short and make sure they aren't crossing into anything they shouldn't.
 ### Our circuit schematic [here](#diagram)
 
 
