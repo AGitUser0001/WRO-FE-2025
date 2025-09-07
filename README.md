@@ -100,7 +100,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 
 ### Our video of the open challenge on [Youtube](https://youtu.be/A2_c18GIqZw)  <a class="anchor" id="OpenChallengeVid"></a>
 
-### Our video of the obstacle challenge on [Youtube](https)     <a class="anchor" id="ObstacleChallengeVid"></a>
+### Our video of the obstacle challenge on [Youtube](https)   <a class="anchor" id="ObstacleChallengeVid"></a>
 
 ## First design <a class="anchor" id="first"></a>
 <img src="/images/first1.png" width="350" height="350"> <img src="/images/first2.png" width="350" height="350"> <img src="/images/IMG_5116.jpeg" width="350" height="350"> 
