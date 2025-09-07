@@ -20,7 +20,9 @@ This repository contains information about our robot and the building process.
 * [The Robot](#robot-image)
   * [First Design](#first)
   * [Final Design](#final)
-* [Performance Video](#video)
+* [Performance Videos](#video)
+  * [Open challenge](#OpenChallengeVid)
+  * [Obstacle Challenge](#ObstacleChallengeVid)  
 * [Management](#management)
   * [Mobility Management](#mobility-management)
       * [Motor](#motor)
@@ -94,7 +96,11 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 | <img src="./images/robottop.jpg" width="60%" height="50%" /> | <img src="./images/robotbottom.jpg" width="55%" height="50%" /> | 
 | *Top* | *Bottom* |
 
-## Our video of the open challenge on [Youtube](https://youtu.be/A2_c18GIqZw)  <a class="anchor" id="video"></a>
+## Our videos <a class="anchor" id="video"></a>
+
+### Our video of the open challenge on [Youtube](https://youtu.be/A2_c18GIqZw)  <a class="anchor" id="OpenChallengeVid"></a>
+
+### Our video of the obstacle challenge on [Youtube](https)     <a class="anchor" id="ObstacleChallengeVid"></a>
 
 ## First design <a class="anchor" id="first"></a>
 <img src="/images/first1.png" width="350" height="350"> <img src="/images/first2.png" width="350" height="350"> <img src="/images/IMG_5116.jpeg" width="350" height="350"> 
