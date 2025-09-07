@@ -144,6 +144,45 @@ class LiDAR:
 
 
 ### Camera
+1. Camera Initialization and Configuration:
+The camera is initialized and configured in the cameraThread function. The Picamera2 library is used to interact with the camera.
+
+```py
+picam2 = Picamera2()
+picam2.configure(
+  picam2.create_video_configuration(
+    main={"size": (640, 480), "format": "RGB888"},
+    sensor={"output_size": (1640, 1232)}
+  )
+)
+picam2.start()
+```
+
+This part of the code configures our video stream with a main output resolution of 640x480 pixels and a sensor output of 1640x1232 pixels. Next, picam2.start() begins the camera's video capture.
+
+2. Image Capture and Processing
+Within the main loop of the cameraThread, the camera continuously captures images resulting in our video.
+
+```py
+while not stopped.value:
+  frame = picam2.capture_array("main")
+  with frame_lock:
+    global_frame = frame
+```
+
+The picam2.capture_array("main") function captures a single frame from the camera's main stream and stores it in the frame variable. This frame is then copied to the global_frame variable, which is shared with other parts of the code for further processing.
+
+3. Sending Data
+A specific region of interest is also extracted from the captured frame and sent to another process via a multiprocessing queue.
+
+```py
+roi_for_process = frame[front_coords[1] : front_coords[3], front_coords[0] : front_coords[2]]
+if not roi_queue.full():
+  roi_queue.put(roi_for_process)
+```
+
+This section of code takes a subsection of the captured video, the roi, and places it into the roi_queue. This allows another process (ObstacleChallengeProcess) to access this specific part of the image for its own analysis without needing access to the entire frame.
+
 ### Steering
 ### Moving
 
