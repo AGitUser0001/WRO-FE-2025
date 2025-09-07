@@ -318,9 +318,13 @@ The error variable is calculated as MaxLeftArea - MaxRightArea. If there's an ob
 The robot's forward and backward movement is controlled by the setMotor function, which sets the pulse width for the motor channel.
 
 board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPos]]): This command is used to set the speed of the robot.
+
 motorPW = 1615: This variable sets the standard pulse width for forward movement.
+
 parkMotorPW = 1625: This variable sets the pulse width for forward movement during the parking sequence.
+
 setMotor(1500): A pulse width of 1500 is used to stop the motor.
+
 The if last_status != status: block controls the robot's direction and speed based on the status multiprocessing value (e.g., "FORWARD", "BACKWARD", "FORWARD_SLOW").
 
 ```py
