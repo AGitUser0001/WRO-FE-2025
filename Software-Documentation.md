@@ -18,10 +18,8 @@ class ObstacleChallengeProcess():
   upper_green = np.array([190, 107, 255])
 ```
 ```py
-      # Red Detection
       _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
-      
-      # Green Detection
+      =
       _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, draw_image=display_ROI_front, c_colour=(0, 255, 0))
 ```
 
@@ -184,10 +182,169 @@ if not roi_queue.full():
 This section of code takes a subsection of the captured video, the roi, and places it into the roi_queue. This allows another process (ObstacleChallengeProcess) to access this specific part of the image for its own analysis without needing access to the entire frame.
 
 ### Steering
+The core of the steering control is in the main loop of the wallFollowThread. The code first processes images to determine a steering error and then uses a PID controller to calculate the steering value for the servo motor.
+
+```py
+def wallFollowThread(stopped, enter_parking, error_pillar, status):
+  global wallFollow_display
+
+  ServoChannel = 4
+  MotorChannel = 1
+  ServoSpeed = 0.01
+  MotorTransitionSpeed = 0.1
+  MaxRightArea = 0
+  MaxLeftArea = 0
+  Kp = 0.1
+  Kd = 0.04
+  Ki = 0
+  i_error = 0
+  stMode = False
+  stMode_time = -1
+  error = 0
+  last_error = 0
+  threshold = 60
+
+  board = rrc.Board()
+  motorPW = 1615
+  parkMotorPW = 1625
+  servoStraight = 1800
+  servoPW = servoStraight
+  steer = 0
+  rate_limit = 1/60
+  avg_dt = rate_limit
+  last_time = -1
+  last_servoPW = -1
+
+  def setMotor(motorPos):
+    board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPos]])
+
+  def setServo(servoPos):
+    board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPos]])
+    
+  parking = Parking()
+  parking_stage = None
+
+  direction = 0
+  was_obstacle = False
+  first_frame = True
+  last_status = b"FORWARD"
+
+  wall_detect_line = ((int(640 / 2), 220), (int(640 / 2), 360))
+  wall_detect_timer = {}
+
+  parking_detect_line_left = ((190, 190), (0, 320))
+  parking_detect_line_front = ((320, 190), (320, 320))
+  parking_detect_line_right = ((450, 190), (640, 320))
+
+  lower_magenta = np.array([35, 110, 0])
+  upper_magenta = np.array([160, 255, 108])
+
+  def findContours(image, draw_image=None, *, draw=1, c_colour=None, b_colour=None):
+    contours, _hierarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cntList, MaxCnt, MaxCntArea, _approx, _bounding_box = processContours(contours, 200, draw_image, draw=draw, c_colour=c_colour, b_colour=b_colour)
+    return cntList, MaxCnt, MaxCntArea
+
+  setServo(servoPW)
+  time.sleep(1)
+
+  setMotor(1500)
+
+  try:
+    while not stopped.value:
+      
+      cur_time = time.time()
+      if cur_time - last_time < rate_limit:
+        time.sleep((last_time + rate_limit) - cur_time)
+      cur_time = time.time()
+      dt = cur_time - last_time
+      if global_frame is None:
+        continue
+      last_time = cur_time
+      avg_dt = (avg_dt * 0.95) + (dt * 0.05)
+
+      with frame_lock:
+        img = global_frame.copy()
+
+      ROI_left = img[230:250, 0:300]
+      ROI_right = img[230:250, 340:640]
+
+      img_grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+      _, img_grey_thresh = cv2.threshold(img_grey, threshold, 255, cv2.THRESH_BINARY_INV)
+      ROI_left_thresh = img_grey_thresh[230:250, 0:300]
+      ROI_right_thresh = img_grey_thresh[230:250, 340:640]
+      cv2.rectangle(img, (0, 230), (300, 250), (255, 0, 0), 2)
+      cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
+
+
+      _leftCntList, _MaxLeftCnt, MaxLeftArea = findContours(ROI_left_thresh, ROI_left, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
+
+      _rightCntList, _MaxRightCnt, MaxRightArea = findContours(ROI_right_thresh, ROI_right, c_colour=(255, 0, 0), b_colour=(0, 0, 255))
+
+      current_error_pillar = -error_pillar.value
+      if current_error_pillar != 0:
+        if not was_obstacle:
+          was_obstacle = True
+        error = current_error_pillar
+      else:
+        if was_obstacle:
+          was_obstacle = False
+        error = MaxLeftArea - MaxRightArea
+
+  
+      if current_error_pillar == 0:
+        steer = Kp * error + Kd * derivative + Ki * i_error if abs(error) > 0 else 0
+        if stMode:
+          steer = 200 * direction
+      else:
+        steer = current_error_pillar
+
+      steer = min(300, max(-300, steer))
+      servoPW = servoStraight + int(steer)
+      
+      if servoPW != last_servoPW:
+        setServo(servoPW)
+      last_servoPW = servoPW
+      
+  finally:
+
+    setMotor(1500)
+    parking.last_stage()
+    print("WallFollow Thread Stopped")
+```
+The error variable is calculated as MaxLeftArea - MaxRightArea. If there's an obstacle, this value is overridden by error_pillar.value, which comes from the ObstacleChallengeProcess. This calculated error is then fed into a PD controller using the proportional gain Kp = 0.1 and derivative gain Kd = 0.04. The output of this controller is the steer value, which is then used to set the servo's pulse width. The setServo() function sends the final command to the physical servo, moving the wheels to steer the robot.
+
+
 ### Moving
+The robot's forward and backward movement is controlled by the setMotor function, which sets the pulse width for the motor channel.
+
+board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPos]]): This command is used to set the speed of the robot.
+motorPW = 1615: This variable sets the standard pulse width for forward movement.
+parkMotorPW = 1625: This variable sets the pulse width for forward movement during the parking sequence.
+setMotor(1500): A pulse width of 1500 is used to stop the motor.
+The if last_status != status: block controls the robot's direction and speed based on the status multiprocessing value (e.g., "FORWARD", "BACKWARD", "FORWARD_SLOW").
+
+```py
+def setMotor(motorPos):
+    board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPos]])
 
 
-
+cur_status = status.value
+if last_status != status:
+    if cur_status == b'BACKWARD':
+        setMotor(1500)
+        time.sleep(0.05)
+        setMotor(1500 + (1500 - motorPW))
+    elif cur_status == b'FORWARD':
+        setMotor(motorPW)
+    elif cur_status == b'FORWARD_SLOW':
+        setMotor(motorPW - 5)
+    elif cur_status == b'BACKWARD_SLOW':
+        setMotor(1500)
+        time.sleep(0.05)
+        setMotor(1500 + (1500 - motorPW) + 5)
+    last_status = status
+```
+This code block shows how the motor's position is adjusted to achieve forward, backward, and slow movement by changing the motorPos value passed to the setMotor function.
 
 
 
