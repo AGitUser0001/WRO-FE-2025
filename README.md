@@ -96,16 +96,14 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 | <img src="./images/robottop.jpg" width="60%" height="50%" /> | <img src="./images/robotbottom.jpg" width="55%" height="50%" /> | 
 | *Top* | *Bottom* |
 
-## Our videos <a class="anchor" id="video"></a>
+## Our videos <a class="anchor" id="video"></a>   <a class="anchor" id="OPCV"></a>   <a class="anchor" id="OBCV"></a>
 
 
-
-### Our video of the open challenge on [Youtube](https://youtu.be/A2_c18GIqZw)  <a class="anchor" id="OBCV"></a>
-
+### Our video of the open challenge on [Youtube](https://youtu.be/A2_c18GIqZw) 
 
 
-### Our video of the obstacle challenge on [Youtube](https)   <a class="anchor" id="OPCV"></a>
-
+ 
+### Our video of the obstacle challenge on [Youtube](https)   
 
 
 ## First design <a class="anchor" id="first"></a>
