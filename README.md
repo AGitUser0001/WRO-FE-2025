@@ -103,7 +103,7 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 
 
  
-### Our video of the obstacle challenge on [Youtube](https)   
+### Our video of the obstacle challenge on [Youtube](https://youtu.be/azQxvRrqnGA)
 
 
 ## First design <a class="anchor" id="first"></a>
