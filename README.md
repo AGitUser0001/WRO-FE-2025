@@ -88,13 +88,13 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 
 ## Photos of Our Completed Robot: <a class="anchor" id="robot-image"></a>
 
-| <img src="./images/robotfront.jpg" width="60%" height="10%" /> | <img src="./images/robotback.jpg" width="55%" height="50%" /> | 
-| :--: | :--: | 
 | *Front* | *Back* |
-| <img src="./images/robotleft.jpg" width="60%" height="50%" /> | <img src="./images/robotright.jpg" width="55%" height="50%" /> | 
+| :--: | :--: | 
+| <img src="./images/robotfront.jpg" width="50%" height="50%" /> | <img src="./images/robotback.jpg" width="50%" height="50%" /> | 
 | *Left* | *Right* |
-| <img src="./images/robottop.jpg" width="60%" height="50%" /> | <img src="./images/robotbottom.jpg" width="55%" height="50%" /> | 
+| <img src="./images/robotleft.jpg" width="50%" height="50%" /> | <img src="./images/robotright.jpg" width="50%" height="50%" /> | 
 | *Top* | *Bottom* |
+| <img src="./images/robottop.jpg" width="50%" height="50%" /> | <img src="./images/robotbottom.jpg" width="50%" height="50%" /> | 
 
 ## Our videos <a class="anchor" id="video"></a>   <a class="anchor" id="OPCV"></a>   <a class="anchor" id="OBCV"></a>
 
