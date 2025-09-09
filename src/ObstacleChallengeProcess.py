@@ -16,13 +16,13 @@ class ObstacleChallengeProcess():
   upper_magenta = np.array([140, 255, 130])
   turn_limit = 12
   def __init__(self, stopped, enter_parking, error_pillar, roi_queue, obstacle_display_queue, status):
-    turnCount = 0
+    turnCount = -1
     last_turn_detection = -1
     obs_timer = {}
     obs_collision_timer = {}
     detected_turn = False
-    Kp = 0.8
-    Kd = 0.6
+    Kp = 0.9
+    Kd = 0.45
     last_error = 0
     last_time = -1
     avg_dt = 1/30
@@ -53,16 +53,16 @@ class ObstacleChallengeProcess():
       # Green Detection
       green_mask, _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, 400, draw_image=display_ROI_front, c_colour=(0, 255, 0))
       
-      obs_timer_res, obs_timer_high = get_timer(obs_timer, 0.15, 0.1)
-      if max(MaxGreenArea, MaxRedArea) > 0 and obs_timer_res and not obs_timer_high:
-        set_timer(obs_timer, True)
-      if obs_timer_res and obs_timer_high:
-        set_timer(obs_timer, False, max(MaxGreenArea, MaxRedArea) > 0)
-        MaxGreenArea = 0
-        MaxRedArea = 0
-      elif not obs_timer_res and not obs_timer_high:
-        MaxGreenArea = 0
-        MaxRedArea = 0
+      # obs_timer_res, obs_timer_high = get_timer(obs_timer, 0.15, 0.1)
+      # if max(MaxGreenArea, MaxRedArea) > 0 and obs_timer_res and not obs_timer_high:
+      #   set_timer(obs_timer, True)
+      # if obs_timer_res and obs_timer_high:
+      #   set_timer(obs_timer, False, max(MaxGreenArea, MaxRedArea) > 0)
+      #   MaxGreenArea = 0
+      #   MaxRedArea = 0
+      # elif not obs_timer_res and not obs_timer_high:
+      #   MaxGreenArea = 0
+      #   MaxRedArea = 0
 
       _, _, _, MaxOrangeArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_orange, self.upper_orange, draw_image=display_ROI_front, conditional=ROI_front_LAB[:, :, 2] >= ROI_front_LAB[:, :, 1])
       # Orange Line Detection
@@ -86,8 +86,9 @@ class ObstacleChallengeProcess():
       red_x_relative = red_x - (rw / 2)
       green_x_relative = green_x - (rw / 2)
       obs_y = rh - 1
-      robot_pos_absolute = (int(rw / 2), 480 - 140)
+      robot_pos_absolute = (int(rw / 2), 480 - 140 + 25)
       robot_pos_relative = (0, robot_pos_absolute[1])
+      dx = 0
       if MaxRedArea > 0 or MaxGreenArea > 0:
         x_relative = 0
         if MaxRedArea > MaxGreenArea:
@@ -100,28 +101,38 @@ class ObstacleChallengeProcess():
           offset = -1
 
         distance = math.dist(robot_pos_relative, (x_relative * (1 + obs_y / rh), obs_y))
-        K_max = 3
-        d_min = 120               # math.dist((0, 480 - 140), (0, 220))
-        d_max = 422.0189569201839 # math.dist((0, 480 - 140), (250, 0))
+        K_max = 1.55
+        d_min = 127               # math.dist((0, 480 - 140 + 25), (0, 220)) - 20
+        d_max = 442.4081825644729 # math.dist((0, 480 - 140 + 25), (250, 0))
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
  
-        offset *= 400
+        offset *= 295
         offset *= K_obs
+        offset *= max(1, ((rh * -0.6) + obs_y) / 10)
+        (dx, _dy), (ox, oy) = self.offset_point((x_relative, obs_y), robot_pos_relative, offset)
+        o_target = (int(ox + rw / 2), int(oy))
+        cv2.circle(display_ROI_front, o_target, radius=3, color=(255, 0, 0), thickness=-1)  
 
-        current_error = x_relative * K_obs
-        current_error += offset
+        current_error = x_relative + dx
 
-      target_pos = (int(current_error * 0.5 + rw / 2), obs_y)
+        if (o_target[0] < 0 or o_target[0] >= rw or o_target[1] < 0 or o_target[1] >= (rh - 5)):
+          current_error = 0
+        else:
+          t_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), o_target, o_target, 3)
+          if t_collisions >= 8:
+            current_error = 0
+      target_pos = (int(current_error + rw / 2), obs_y)
       num_collisions = getCollisions(cv2.threshold(ROI_front_grey, 60, 255, cv2.THRESH_BINARY_INV)[1], robot_pos_absolute, target_pos, 2)
-      if num_collisions > 35:
+      if num_collisions > 150:
         current_error = 0
       
       if current_error != 0:
         cv2.line(display_ROI_front, robot_pos_absolute, target_pos, (255, 0, 0), thickness=2)
         cv2.circle(display_ROI_front, target_pos, radius=3, color=(255, 0, 0), thickness=-1)  
 
+      current_error *= 4.5
       derivative = current_error - last_error
       last_error = current_error
       
@@ -152,9 +163,9 @@ class ObstacleChallengeProcess():
         "redcenter_x": red_x,
         "greencenter_x": green_x,
         "error_pillar": current_error,
-        "steerCount": turnCount,
+        "steerCount": max(0, turnCount),
         "distance": distance,
-        "offset": offset,
+        "offset": dx,
         "avg_dt": avg_dt
       }
 
@@ -162,10 +173,11 @@ class ObstacleChallengeProcess():
         obstacle_display_queue.put(display_data)
   
       if turnCount == self.turn_limit:
-        if turnCount == self.turn_limit and cur_time - last_turn_detection > 3:
-          status.value = b'FORWARD'
-          enter_parking.value = True
-          break
+        if turnCount == self.turn_limit and cur_time - last_turn_detection > 5:
+          #status.value = b'FORWARD'
+          #enter_parking.value = True
+          #break
+          stopped.value = True
 
     roi_queue.cancel_join_thread()
     obstacle_display_queue.cancel_join_thread()
@@ -174,7 +186,8 @@ class ObstacleChallengeProcess():
   def filterSolids(self, contour):
     contourArea = cv2.contourArea(contour)
     convexHullArea = cv2.contourArea(cv2.convexHull(contour))
-    _x, _y, w, h = cv2.boundingRect(contour)
+    _x, y, w, h = cv2.boundingRect(contour)
+    if y + (h / 2) > 205: return False
     rectangularity = float(contourArea) / (w * h + 1e-8)
     solidity = float(contourArea) / (convexHullArea + 1e-8)
     if contourArea < 1000:
@@ -183,6 +196,23 @@ class ObstacleChallengeProcess():
       return solidity > 0.4 and rectangularity > 0.3
     else:
       return True
+    
+  def offset_point(self, r_pos, s_pos, O):
+    r_pos, s_pos = np.array(r_pos), np.array(s_pos)
+    if np.allclose(r_pos, s_pos):
+      return (0, 0), r_pos
+    dx, dy = s_pos - r_pos
+    angle = math.atan2(dy, dx)
+
+    if O > 0:
+      perp_angle = angle - math.pi/2
+    else:
+      perp_angle = angle + math.pi/2
+
+    distance = abs(O)
+    delta = (distance * math.cos(perp_angle), distance * math.sin(perp_angle))
+    
+    return delta, r_pos + delta
 
   def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)

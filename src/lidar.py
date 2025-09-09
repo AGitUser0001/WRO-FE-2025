@@ -260,7 +260,11 @@ class LiDARProcess:
     return (start + np.arange(count) * (angle_range / (count - 1))) % 360
 
   def read_lidar(self):
-    data = self.serial.read(256)
+    data = None
+    try:
+      data = self.serial.read(256)
+    except serial.SerialException:
+      pass
     if data:
       self.buffer += data
       while True:
