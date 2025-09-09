@@ -51,8 +51,8 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
   MotorTransitionSpeed = 0.1
   MaxRightArea = 0
   MaxLeftArea = 0
-  Kp = 0.1
-  Kd = 0.04
+  Kp = 0.12
+  Kd = 0.03
   Ki = 0
   i_error = 0
   stMode = False
@@ -62,7 +62,7 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
   threshold = 60
 
   board = rrc.Board()
-  motorPW = 1615
+  motorPW = 1610
   parkMotorPW = 1625
   servoStraight = 1800
   servoPW = servoStraight
@@ -122,13 +122,13 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
       with frame_lock:
         img = global_frame.copy()
 
-      ROI_left = img[230:250, 0:300]
-      ROI_right = img[230:250, 340:640]
+      ROI_left = img[230:250, 0:300] if not first_frame else img[200:300, 0:310]
+      ROI_right = img[230:250, 340:640] if not first_frame else img[200:300, 330:640]
 
       img_grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
       _, img_grey_thresh = cv2.threshold(img_grey, threshold, 255, cv2.THRESH_BINARY_INV)
-      ROI_left_thresh = img_grey_thresh[230:250, 0:300]
-      ROI_right_thresh = img_grey_thresh[230:250, 340:640]
+      ROI_left_thresh = img_grey_thresh[230:250, 0:300] if not first_frame else img_grey_thresh[200:300, 0:310]
+      ROI_right_thresh = img_grey_thresh[230:250, 340:640] if not first_frame else img_grey_thresh[200:300, 330:640]
       cv2.rectangle(img, (0, 230), (300, 250), (255, 0, 0), 2)
       cv2.rectangle(img, (340, 230), (640, 250), (255, 0, 0), 2)
 

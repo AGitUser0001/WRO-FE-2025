@@ -22,12 +22,13 @@ class Parking:
       time.sleep(0.4)
       setServo(IN)
       setMotor(1500 + (1500 - parkMotorPW))
-      time.sleep(0.3)
-      setServo(servoStraight)
-      if direction > 0:
-        time.sleep(0.4)
-      else:
-        time.sleep(0.05)
+      #time.sleep(0.3)
+      time.sleep(0.4)
+      #setServo(servoStraight)
+      #if direction > 0:
+      #  time.sleep(0.35)
+      #else:
+      #  time.sleep(0.05)
       if i == n - 1: break
     return direction
   
@@ -63,4 +64,5 @@ class Parking:
     return self.stage1, error
   
   def last_stage(self):
-    self.lidar_shm.close()
+    if hasattr(self, 'lidar_shm'):
+      self.lidar_shm.close()
