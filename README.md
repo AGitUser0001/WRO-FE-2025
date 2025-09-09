@@ -20,7 +20,9 @@ This repository contains information about our robot and the building process.
 * [The Robot](#robot-image)
   * [First Design](#first)
   * [Final Design](#final)
-* [Performance Video](#video)
+* [Performance Videos](#video)
+  * [Open challenge](#OPCV)
+  * [Obstacle Challenge](#OBCV)  
 * [Management](#management)
   * [Mobility Management](#mobility-management)
       * [Motor](#motor)
@@ -86,15 +88,23 @@ Learn about the challenges as well as the rules [here](https://wro-association.o
 
 ## Photos of Our Completed Robot: <a class="anchor" id="robot-image"></a>
 
-| <img src="./images/robotfront.jpg" width="60%" height="10%" /> | <img src="./images/robotback.jpg" width="55%" height="50%" /> | 
-| :--: | :--: | 
 | *Front* | *Back* |
-| <img src="./images/robotleft.jpg" width="60%" height="50%" /> | <img src="./images/robotright.jpg" width="55%" height="50%" /> | 
+| :--: | :--: | 
+| <img src="./images/robotfront.jpg" width="50%" height="50%" /> | <img src="./images/robotback.jpg" width="50%" height="50%" /> | 
 | *Left* | *Right* |
-| <img src="./images/robottop.jpg" width="60%" height="50%" /> | <img src="./images/robotbottom.jpg" width="55%" height="50%" /> | 
+| <img src="./images/robotleft.jpg" width="50%" height="50%" /> | <img src="./images/robotright.jpg" width="50%" height="50%" /> | 
 | *Top* | *Bottom* |
+| <img src="./images/robottop.jpg" width="50%" height="50%" /> | <img src="./images/robotbottom.jpg" width="50%" height="50%" /> | 
 
-## Our video of the open challenge on [Youtube](https://youtu.be/EdWDk1boRc8)  <a class="anchor" id="video"></a>
+## Our videos <a class="anchor" id="video"></a>   <a class="anchor" id="OPCV"></a>   <a class="anchor" id="OBCV"></a>
+
+
+### Our video of the open challenge on [Youtube](https://youtu.be/A2_c18GIqZw) 
+
+
+ 
+### Our video of the obstacle challenge on [Youtube](https://youtu.be/azQxvRrqnGA)
+
 
 ## First design <a class="anchor" id="first"></a>
 <img src="/images/first1.png" width="350" height="350"> <img src="/images/first2.png" width="350" height="350"> <img src="/images/IMG_5116.jpeg" width="350" height="350"> 
@@ -120,8 +130,9 @@ A new problem came up. It was hard to fully secure the servo motor in place.
 ### Processing Too Slow
 We overcame the problem of our program running too slowly by switching to a combination of multiprocessing and threading. Initially, our single-threaded approach caused delays, especially when handling tasks like image processing, motor control, and sensor feedback all at once. To solve this, we implemented multiprocessing to separate heavy tasks, such as camera frame processing, into their own processes, allowing them to run in parallel without blocking the main loop. At the same time, we used threading for lighter background tasks like logging data or checking sensors continuously. This made our program significantly faster and more responsive, allowing our robot to perform in real time without lag or missed inputs.
 ### LiDAR Was Unreliable
-At first, we used our mounted camera to follow walls. This worked out great for the open challenge and seemed to work well for our obstacle challenge at first, but we soon found some cases in which the robot would completely go the wrong way with our camera wall following and pillar detection. Take this case for example.
-
+At first, we used our mounted camera to follow walls. This worked out great for the open challenge and seemed to work well for our obstacle challenge at first, but we soon found some cases in which the robot would completely go the wrong way with our camera wall following and pillar detection.
+### Unreliable Orange Line Detection
+We switched to orange line detection from blue line detection because it was more reliable. However, when we tested it in a different lighting environment, it would sometimes find too many orange lines (it would detect red pillars as orange lines), or it would detect too little orange lines. This is still a problem, so in new environments our first thing to do will be to adjust the LAB values for the orange line and the two colors of the pillars.
 <img src="/images/ObstacleChallengeProblem.png" width="400" height="500">
 
 The robot sees this red pillar and tries to turn left, but as soon as it stops seeing it, the robot turns right. We thought using LiDAR for wall following would be a good solution since it can "see" very far. However, LiDAR was very unreliable, especially when the robot was in motion. This led to the robot wobbling around and sometimes just crashing into a wall. We went back to using our camera for wall following. 
