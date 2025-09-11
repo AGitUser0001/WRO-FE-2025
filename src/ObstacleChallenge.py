@@ -227,7 +227,7 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
         if parking_steer is not None:
           steer = parking_steer
       elif enter_parking.value:
-        parking_stage, _ = parking.enter_parking_lot(lidar, stopped, status, direction)
+        parking_stage, _ = parking.enter_parking_lot(stopped, status, direction)
 
       steer = min(300, max(-300, steer))
       cv2.putText(img, f"Steer: {steer:.2f}", (10, 175), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
@@ -252,27 +252,28 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
         last_error = 0
         print("Steering Mode Off")
       #print("error:", error)
-
-      cur_status = status.value
-      if last_status != status:
-        if cur_status == b'BACKWARD':
-          setMotor(1500)
-          time.sleep(0.05)
-          setMotor(1500 + (1500 - motorPW))
-        elif cur_status == b'FORWARD':
-          setMotor(motorPW)
-        elif cur_status == b'FORWARD_SLOW':
-          setMotor(motorPW - 5)
-        elif cur_status == b'BACKWARD_SLOW':
-          setMotor(1500)
-          time.sleep(0.05)
-          setMotor(1500 + (1500 - motorPW) + 5)
-        last_status = status
+      
+      if not first_frame:
+        cur_status = status.value
+        if last_status != status:
+          if cur_status == b'BACKWARD':
+            setMotor(1500)
+            time.sleep(0.05)
+            setMotor(1500 + (1500 - motorPW))
+          elif cur_status == b'FORWARD':
+            setMotor(motorPW)
+          elif cur_status == b'FORWARD_SLOW':
+            setMotor(motorPW - 5)
+          elif cur_status == b'BACKWARD_SLOW':
+            setMotor(1500)
+            time.sleep(0.05)
+            setMotor(1500 + (1500 - motorPW) + 5)
+          last_status = status
 
       with frame_lock:
         wallFollow_display = img
       if first_frame:
-        direction = parking.exit_parking_lot(servoStraight, parkMotorPW, last_error, setServo, setMotor)
+        direction = parking.exit_parking_lot(lidar, servoStraight, parkMotorPW, last_error, setServo, setMotor)
         setMotor(motorPW)
         first_frame = False
 
@@ -408,8 +409,26 @@ try:
         )
         cv2.putText(
           oc_image,
-          f"FPS: {1/display_data['avg_dt']:.2f}",
+          f"dx: {display_data['dx']:.2f}",
           (480, 120),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (0, 0, 0),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"Factor: {display_data['factor']:.2f}",
+          (480, 150),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (255, 0, 255),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"FPS: {1/display_data['avg_dt']:.2f}",
+          (480, 180),
           cv2.FONT_HERSHEY_SIMPLEX,
           0.6,
           (255, 255, 255),
@@ -418,7 +437,7 @@ try:
         cv2.putText(
           oc_image,
           f"Orange: {display_data['MaxOrangeArea']:.0f}",
-          (480, 150),
+          (480, 210),
           cv2.FONT_HERSHEY_SIMPLEX,
           0.6,
           (0, 127, 255),

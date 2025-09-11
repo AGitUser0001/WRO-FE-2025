@@ -18,11 +18,11 @@ class ObstacleChallengeProcess():
   def __init__(self, stopped, enter_parking, error_pillar, roi_queue, obstacle_display_queue, status):
     turnCount = -1
     last_turn_detection = -1
-    obs_timer = {}
+    # obs_timer = {}
     obs_collision_timer = {}
     detected_turn = False
-    Kp = 0.9
-    Kd = 0.45
+    Kp = 1
+    Kd = 0.4
     last_error = 0
     last_time = -1
     avg_dt = 1/30
@@ -30,7 +30,7 @@ class ObstacleChallengeProcess():
     while not stopped.value:
       try:
         # Block and wait for the ROI from the wall-following thread
-        ROI_front = roi_queue.get(timeout=1)
+        ROI_front = roi_queue.get_nowait()
       except queue.Empty:
         continue
       
@@ -83,10 +83,11 @@ class ObstacleChallengeProcess():
       current_error = 0
       distance = 0
       offset = 0
+      factor = 0.5
       red_x_relative = red_x - (rw / 2)
       green_x_relative = green_x - (rw / 2)
       obs_y = rh - 1
-      robot_pos_absolute = (int(rw / 2), 480 - 140 + 25)
+      robot_pos_absolute = (int(rw / 2), 480 - 140 + 50)
       robot_pos_relative = (0, robot_pos_absolute[1])
       dx = 0
       if MaxRedArea > 0 or MaxGreenArea > 0:
@@ -101,23 +102,24 @@ class ObstacleChallengeProcess():
           offset = -1
 
         distance = math.dist(robot_pos_relative, (x_relative * (1 + obs_y / rh), obs_y))
-        K_max = 1.55
-        d_min = 127               # math.dist((0, 480 - 140 + 25), (0, 220)) - 20
+        K_max = 1.6
+        d_min = 147               # math.dist((0, 480 - 140 + 25), (0, 220))
         d_max = 442.4081825644729 # math.dist((0, 480 - 140 + 25), (250, 0))
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
  
-        offset *= 295
+        offset *= 175
         offset *= K_obs
-        offset *= max(1, ((rh * -0.6) + obs_y) / 10)
-        (dx, _dy), (ox, oy) = self.offset_point((x_relative, obs_y), robot_pos_relative, offset)
+        if obs_y > 170:
+          factor *= 1 - (obs_y - 170) / 220
+        (dx, _dy), (ox, oy) = self.offset_point((x_relative, obs_y), robot_pos_relative, offset, factor=0.5)
         o_target = (int(ox + rw / 2), int(oy))
         cv2.circle(display_ROI_front, o_target, radius=3, color=(255, 0, 0), thickness=-1)  
 
         current_error = x_relative + dx
 
-        if (o_target[0] < 0 or o_target[0] >= rw or o_target[1] < 0 or o_target[1] >= (rh - 5)):
+        if (o_target[0] < 0 or o_target[0] >= rw or o_target[1] < 0 or o_target[1] >= rh):
           current_error = 0
         else:
           t_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), o_target, o_target, 3)
@@ -165,7 +167,9 @@ class ObstacleChallengeProcess():
         "error_pillar": current_error,
         "steerCount": max(0, turnCount),
         "distance": distance,
-        "offset": dx,
+        "offset": offset,
+        "dx": dx,
+        "factor": factor,
         "avg_dt": avg_dt
       }
 
@@ -197,20 +201,23 @@ class ObstacleChallengeProcess():
     else:
       return True
     
-  def offset_point(self, r_pos, s_pos, O):
+  def offset_point(self, r_pos, s_pos, O, factor = 1):
     r_pos, s_pos = np.array(r_pos), np.array(s_pos)
     if np.allclose(r_pos, s_pos):
       return (0, 0), r_pos
     dx, dy = s_pos - r_pos
-    angle = math.atan2(dy, dx)
+    angle = np.atan2(dy, dx)
+    perp_angle = angle + np.pi/2 if O > 0 else angle - np.pi/2
 
-    if O > 0:
-      perp_angle = angle - math.pi/2
-    else:
-      perp_angle = angle + math.pi/2
-
+    sin, cos = np.sin(perp_angle), np.cos(perp_angle)
+    perp_angle = np.atan2(sin, cos)
+    # calc_factor = (abs(perp_angle) / math.pi) * factor + (1 - abs(perp_angle) / math.pi)
+    # perp_angle =  perp_angle * calc_factor
+    # distance = abs(O) * calc_factor
+    perp_angle *= factor
+    sin, cos = np.sin(perp_angle), np.cos(perp_angle)
     distance = abs(O)
-    delta = (distance * math.cos(perp_angle), distance * math.sin(perp_angle))
+    delta = (distance * cos, distance * sin)
     
     return delta, r_pos + delta
 
