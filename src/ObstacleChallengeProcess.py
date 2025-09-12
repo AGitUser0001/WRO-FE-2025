@@ -16,7 +16,7 @@ class ObstacleChallengeProcess():
   upper_magenta = np.array([140, 255, 130])
   turn_limit = 12
   def __init__(self, stopped, enter_parking, error_pillar, roi_queue, obstacle_display_queue, status):
-    turnCount = -1
+    turnCount = 0
     last_turn_detection = -1
     # obs_timer = {}
     obs_collision_timer = {}
@@ -67,14 +67,14 @@ class ObstacleChallengeProcess():
       _, _, _, MaxOrangeArea, _, _, _, _, _ =self.detect_contours(ROI_front_LAB, self.lower_orange, self.upper_orange, draw_image=display_ROI_front, conditional=ROI_front_LAB[:, :, 2] >= ROI_front_LAB[:, :, 1])
       # Orange Line Detection
       cur_time = time.time()
-      if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.2 if detected_turn else 5):
+      if turnCount < self.turn_limit and cur_time - last_turn_detection > (0.2 if detected_turn else 6):
         if MaxOrangeArea != 0:
           if not detected_turn:
-            if MaxOrangeArea > 450:
+            if MaxOrangeArea > 400:
               detected_turn = True
               last_turn_detection = cur_time
           else:
-            if (MaxOrangeArea < 450 and MaxOrangeArea > 200) or (MaxOrangeArea > 600):
+            if MaxOrangeArea > 250:
               detected_turn = False
               turnCount += 1
               last_turn_detection = cur_time
@@ -184,7 +184,7 @@ class ObstacleChallengeProcess():
         obstacle_display_queue.put(display_data)
   
       if turnCount == self.turn_limit:
-        if turnCount == self.turn_limit and cur_time - last_turn_detection > 5:
+        if turnCount == self.turn_limit and cur_time - last_turn_detection > 7:
           #status.value = b'FORWARD'
           #enter_parking.value = True
           #break
