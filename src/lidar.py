@@ -224,6 +224,7 @@ class LiDARProcess:
       self.read_lidar()
     self.shared_memory.close()
     self.shared_memory.unlink()
+    print("LiDAR Process Stopped", flush=True)
 
   def find_packet_start(self, buffer):
     for i in range(len(buffer) - 1):

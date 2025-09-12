@@ -18,11 +18,11 @@ class ObstacleChallengeProcess():
   def __init__(self, stopped, enter_parking, error_pillar, roi_queue, obstacle_display_queue, status):
     turnCount = -1
     last_turn_detection = -1
-    obs_timer = {}
+    # obs_timer = {}
     obs_collision_timer = {}
     detected_turn = False
-    Kp = 0.9
-    Kd = 0.45
+    Kp = 1
+    Kd = 0.4
     last_error = 0
     last_time = -1
     avg_dt = 1/30
@@ -30,7 +30,7 @@ class ObstacleChallengeProcess():
     while not stopped.value:
       try:
         # Block and wait for the ROI from the wall-following thread
-        ROI_front = roi_queue.get(timeout=1)
+        ROI_front = roi_queue.get_nowait()
       except queue.Empty:
         continue
       
@@ -83,12 +83,14 @@ class ObstacleChallengeProcess():
       current_error = 0
       distance = 0
       offset = 0
+      factor = 0.55
       red_x_relative = red_x - (rw / 2)
       green_x_relative = green_x - (rw / 2)
       obs_y = rh - 1
-      robot_pos_absolute = (int(rw / 2), 480 - 140 + 25)
+      robot_pos_absolute = (int(rw / 2), 480 - 140 + 50)
       robot_pos_relative = (0, robot_pos_absolute[1])
       dx = 0
+      o_angle = 0
       if MaxRedArea > 0 or MaxGreenArea > 0:
         x_relative = 0
         if MaxRedArea > MaxGreenArea:
@@ -100,25 +102,31 @@ class ObstacleChallengeProcess():
           obs_y = green_y
           offset = -1
 
-        distance = math.dist(robot_pos_relative, (x_relative * (1 + obs_y / rh), obs_y))
-        K_max = 1.55
-        d_min = 127               # math.dist((0, 480 - 140 + 25), (0, 220)) - 20
+        distance = math.dist(robot_pos_relative, (x_relative * max(0.66, min(1, -((obs_y - rh) / 100))), obs_y))
+        K_max = 1.6
+        d_min = 147               # math.dist((0, 480 - 140 + 25), (0, 220))
         d_max = 442.4081825644729 # math.dist((0, 480 - 140 + 25), (250, 0))
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
  
-        offset *= 295
+        offset *= 125
+        print(1, offset, flush=True)
         offset *= K_obs
-        offset *= max(1, ((rh * -0.6) + obs_y) / 10)
-        (dx, _dy), (ox, oy) = self.offset_point((x_relative, obs_y), robot_pos_relative, offset)
-        o_target = (int(ox + rw / 2), int(oy))
+        print(2, offset, flush=True)
+        if obs_y > 150:
+         offset *= 1.5 + (obs_y - 150) / 220
+         factor = 0
+        print(3, offset, flush=True)
+        (dx, _dy), (ox, oy), o_angle = self.offset_point((int(x_relative + rw / 2), obs_y), robot_pos_absolute, offset, factor)
+        o_target = (int(ox), int(oy))
         cv2.circle(display_ROI_front, o_target, radius=3, color=(255, 0, 0), thickness=-1)  
 
         current_error = x_relative + dx
 
-        if (o_target[0] < 0 or o_target[0] >= rw or o_target[1] < 0 or o_target[1] >= (rh - 5)):
-          current_error = 0
+        if (o_target[0] < 0 or o_target[0] >= rw or o_target[1] < 0 or o_target[1] >= rh):
+          #current_error = 0
+          pass
         else:
           t_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), o_target, o_target, 3)
           if t_collisions >= 8:
@@ -165,7 +173,10 @@ class ObstacleChallengeProcess():
         "error_pillar": current_error,
         "steerCount": max(0, turnCount),
         "distance": distance,
-        "offset": dx,
+        "offset": offset,
+        "dx": dx,
+        "o_angle": o_angle,
+        "factor": factor,
         "avg_dt": avg_dt
       }
 
@@ -197,22 +208,25 @@ class ObstacleChallengeProcess():
     else:
       return True
     
-  def offset_point(self, r_pos, s_pos, O):
+  def offset_point(self, r_pos, s_pos, O, factor = 1):
     r_pos, s_pos = np.array(r_pos), np.array(s_pos)
-    if np.allclose(r_pos, s_pos):
-      return (0, 0), r_pos
-    dx, dy = s_pos - r_pos
-    angle = math.atan2(dy, dx)
-
-    if O > 0:
-      perp_angle = angle - math.pi/2
-    else:
-      perp_angle = angle + math.pi/2
-
-    distance = abs(O)
-    delta = (distance * math.cos(perp_angle), distance * math.sin(perp_angle))
+    if np.allclose(r_pos, s_pos) or O == 0:
+      return (0, 0), r_pos, 0
+    dx, dy = r_pos - s_pos
+    angle = np.atan2(dy, dx)
     
-    return delta, r_pos + delta
+    deg = np.degrees(angle)
+    deg = (deg + 90) % 360 # offset by 90 and normalize to create: 0 = straight, 90 = right, 180 = down, 270 = left
+    deg = (deg + 180) % 360 - 180 # convert to 0 = straight, 179 = right, -180 = left
+    perp_angle = deg
+    perp_angle *= factor
+    perp_angle += 90 * np.sign(O)
+    
+    rad = np.radians(perp_angle - 90)
+    offset = abs(O)
+    delta = (offset * np.cos(rad), offset * np.sin(rad))
+    
+    return delta, r_pos + delta, perp_angle
 
   def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)
