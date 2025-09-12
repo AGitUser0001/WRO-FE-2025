@@ -427,7 +427,7 @@ try:
         )
         cv2.putText(
           oc_image,
-          f"FPS: {1/display_data['avg_dt']:.2f}",
+          f"Angle: {display_data['o_angle']:.2f}",
           (480, 180),
           cv2.FONT_HERSHEY_SIMPLEX,
           0.6,
@@ -436,8 +436,17 @@ try:
         )
         cv2.putText(
           oc_image,
-          f"Orange: {display_data['MaxOrangeArea']:.0f}",
+          f"FPS: {1/display_data['avg_dt']:.2f}",
           (480, 210),
+          cv2.FONT_HERSHEY_SIMPLEX,
+          0.6,
+          (255, 255, 255),
+          2,
+        )
+        cv2.putText(
+          oc_image,
+          f"Orange: {display_data['MaxOrangeArea']:.0f}",
+          (480, 240),
           cv2.FONT_HERSHEY_SIMPLEX,
           0.6,
           (0, 127, 255),

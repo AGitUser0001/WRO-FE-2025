@@ -83,13 +83,14 @@ class ObstacleChallengeProcess():
       current_error = 0
       distance = 0
       offset = 0
-      factor = 0.5
+      factor = 0.55
       red_x_relative = red_x - (rw / 2)
       green_x_relative = green_x - (rw / 2)
       obs_y = rh - 1
       robot_pos_absolute = (int(rw / 2), 480 - 140 + 50)
       robot_pos_relative = (0, robot_pos_absolute[1])
       dx = 0
+      o_angle = 0
       if MaxRedArea > 0 or MaxGreenArea > 0:
         x_relative = 0
         if MaxRedArea > MaxGreenArea:
@@ -101,7 +102,7 @@ class ObstacleChallengeProcess():
           obs_y = green_y
           offset = -1
 
-        distance = math.dist(robot_pos_relative, (x_relative * (1 + obs_y / rh), obs_y))
+        distance = math.dist(robot_pos_relative, (x_relative * max(0.66, min(1, -((obs_y - rh) / 100))), obs_y))
         K_max = 1.6
         d_min = 147               # math.dist((0, 480 - 140 + 25), (0, 220))
         d_max = 442.4081825644729 # math.dist((0, 480 - 140 + 25), (250, 0))
@@ -109,18 +110,23 @@ class ObstacleChallengeProcess():
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
  
-        offset *= 175
+        offset *= 125
+        print(1, offset, flush=True)
         offset *= K_obs
-        if obs_y > 170:
-          factor *= 1 - (obs_y - 170) / 220
-        (dx, _dy), (ox, oy) = self.offset_point((x_relative, obs_y), robot_pos_relative, offset, factor=0.5)
-        o_target = (int(ox + rw / 2), int(oy))
+        print(2, offset, flush=True)
+        if obs_y > 150:
+         offset *= 1.5 + (obs_y - 150) / 220
+         factor = 0
+        print(3, offset, flush=True)
+        (dx, _dy), (ox, oy), o_angle = self.offset_point((int(x_relative + rw / 2), obs_y), robot_pos_absolute, offset, factor)
+        o_target = (int(ox), int(oy))
         cv2.circle(display_ROI_front, o_target, radius=3, color=(255, 0, 0), thickness=-1)  
 
         current_error = x_relative + dx
 
         if (o_target[0] < 0 or o_target[0] >= rw or o_target[1] < 0 or o_target[1] >= rh):
-          current_error = 0
+          #current_error = 0
+          pass
         else:
           t_collisions = getCollisions(cv2.bitwise_or(red_mask, green_mask), o_target, o_target, 3)
           if t_collisions >= 8:
@@ -169,6 +175,7 @@ class ObstacleChallengeProcess():
         "distance": distance,
         "offset": offset,
         "dx": dx,
+        "o_angle": o_angle,
         "factor": factor,
         "avg_dt": avg_dt
       }
@@ -203,23 +210,23 @@ class ObstacleChallengeProcess():
     
   def offset_point(self, r_pos, s_pos, O, factor = 1):
     r_pos, s_pos = np.array(r_pos), np.array(s_pos)
-    if np.allclose(r_pos, s_pos):
-      return (0, 0), r_pos
-    dx, dy = s_pos - r_pos
+    if np.allclose(r_pos, s_pos) or O == 0:
+      return (0, 0), r_pos, 0
+    dx, dy = r_pos - s_pos
     angle = np.atan2(dy, dx)
-    perp_angle = angle + np.pi/2 if O > 0 else angle - np.pi/2
-
-    sin, cos = np.sin(perp_angle), np.cos(perp_angle)
-    perp_angle = np.atan2(sin, cos)
-    # calc_factor = (abs(perp_angle) / math.pi) * factor + (1 - abs(perp_angle) / math.pi)
-    # perp_angle =  perp_angle * calc_factor
-    # distance = abs(O) * calc_factor
-    perp_angle *= factor
-    sin, cos = np.sin(perp_angle), np.cos(perp_angle)
-    distance = abs(O)
-    delta = (distance * cos, distance * sin)
     
-    return delta, r_pos + delta
+    deg = np.degrees(angle)
+    deg = (deg + 90) % 360 # offset by 90 and normalize to create: 0 = straight, 90 = right, 180 = down, 270 = left
+    deg = (deg + 180) % 360 - 180 # convert to 0 = straight, 179 = right, -180 = left
+    perp_angle = deg
+    perp_angle *= factor
+    perp_angle += 90 * np.sign(O)
+    
+    rad = np.radians(perp_angle - 90)
+    offset = abs(O)
+    delta = (offset * np.cos(rad), offset * np.sin(rad))
+    
+    return delta, r_pos + delta, perp_angle
 
   def detect_contours(self, img_lab, lower_lab, upper_lab, threshold = 200, draw_image = None, *, conditional=None, filterSolids=True, draw_bounding_box=True, draw=1, c_colour=None, b_colour=None):
     mask = cv2.inRange(img_lab, lower_lab, upper_lab)

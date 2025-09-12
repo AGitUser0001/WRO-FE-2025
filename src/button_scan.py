@@ -2,6 +2,7 @@
 import subprocess
 import threading
 import queue
+import time
 
 button_queue = queue.Queue(1)
 
@@ -34,7 +35,17 @@ def check_node_status():
   res = result.stdout
   return '/ros_robot_controller/button' in res
 
-if check_node_status():
-  print("ROS2 node detected")
-  listener_thread = threading.Thread(target=listen_to_button_events, daemon=True)
-  listener_thread.start()
+def wait_for_node(limit=5):
+  global listener_thread
+  while limit != 0:
+    limit -= 1
+    if check_node_status():
+      print("ROS2 node detected")
+      listener_thread = threading.Thread(target=listen_to_button_events, daemon=True)
+      listener_thread.start()
+      break
+    if limit != 0:
+      time.sleep(0.5)
+    
+listener_thread = None
+wait_for_node(1)
