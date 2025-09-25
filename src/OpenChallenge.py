@@ -54,8 +54,9 @@ def findContours(image, draw_image=None, *, draw=1, c_colour=None, b_colour=None
 #Arm the Servo
 board.pwm_servo_set_position(ServoSpeed, [[ServoChannel, servoPW]])
 time.sleep(1)
+start_time = time.time() + 6.28
+avg_str = []
 
-board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPW]])                                  
 while True:
   cur_time = time.time()
   if cur_time - last_time < rate_limit:
@@ -133,6 +134,9 @@ while True:
     stMode = True
     stMode_time = time.time()
     stMode_dir = -1 if MaxRightArea == 0 else 1
+    if (len(avg_str) < 5):
+      avg_str.append(stMode_dir)
+    stMode_dir = int(np.sign(np.average(avg_str)))
     print("Steering Mode ON")
   if stMode and time.time() > stMode_time + 0.5 and \
      MaxLeftArea > 0 and MaxRightArea > 0 and (abs(error) < 500 or (abs(error) * -stMode_dir == error and abs(error) > 500)):
@@ -145,6 +149,9 @@ while True:
     motorPW = 1500
     board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPW]])
     break
-     
+  
+  if start_time > 0 and time.time() > start_time:
+    board.pwm_servo_set_position(MotorTransitionSpeed, [[MotorChannel, motorPW]])
+    start_time = -1
 destroyAllWindows()
 

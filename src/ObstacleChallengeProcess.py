@@ -12,8 +12,8 @@ class ObstacleChallengeProcess():
   upper_green = np.array([190, 107, 255])
   lower_orange = np.array([50, 140, 130])
   upper_orange = np.array([200, 255, 255])
-  lower_magenta = np.array([0, 155, 63])
-  upper_magenta = np.array([140, 255, 130])
+  lower_magenta = np.array([0, 110, 0])
+  upper_magenta = np.array([170, 255, 104])
   turn_limit = 12
   def __init__(self, stopped, enter_parking, error_pillar, roi_queue, obstacle_display_queue, status):
     turnCount = 0
@@ -48,7 +48,7 @@ class ObstacleChallengeProcess():
       ROI_front_grey = cv2.cvtColor(ROI_front, cv2.COLOR_BGR2GRAY)
 
       # Red Detection
-      red_mask, _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, 400, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > ROI_front_LAB[:, :, 2])
+      red_mask, _, _, MaxRedArea, _, _, red_x, _, red_y =self.detect_contours(ROI_front_LAB, self.lower_red, self.upper_red, 400, draw_image=display_ROI_front, c_colour=(0, 0, 255), conditional=ROI_front_LAB[:, :, 1] > (ROI_front_LAB[:, :, 2] + 3))
       
       # Green Detection
       green_mask, _, _, MaxGreenArea, _, _, green_x, _, green_y =self.detect_contours(ROI_front_LAB, self.lower_green, self.upper_green, 400, draw_image=display_ROI_front, c_colour=(0, 255, 0))
@@ -103,18 +103,18 @@ class ObstacleChallengeProcess():
           offset = -1
 
         distance = math.dist(robot_pos_relative, (x_relative * max(0.66, min(1, -((obs_y - rh) / 100))), obs_y))
-        K_max = 1.6
+        K_max = 1.65
         d_min = 147               # math.dist((0, 480 - 140 + 25), (0, 220))
         d_max = 442.4081825644729 # math.dist((0, 480 - 140 + 25), (250, 0))
 
         K_obs = K_max * (d_max - distance) / (d_max - d_min)
         K_obs = max(0, min(K_max, K_obs))
  
-        offset *= 125
+        offset *= 110
         print(1, offset, flush=True)
         offset *= K_obs
         print(2, offset, flush=True)
-        if obs_y > 150:
+        if obs_y > 145:
          offset *= 1.5 + (obs_y - 150) / 220
          factor = 0
         print(3, offset, flush=True)

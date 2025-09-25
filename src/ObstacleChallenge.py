@@ -51,8 +51,8 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
   MotorTransitionSpeed = 0.1
   MaxRightArea = 0
   MaxLeftArea = 0
-  Kp = 0.12
-  Kd = 0.03
+  Kp = 0.1
+  Kd = 0.05
   Ki = 0
   i_error = 0
   stMode = False
@@ -93,8 +93,8 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
   parking_detect_line_front = ((320, 190), (320, 320))
   parking_detect_line_right = ((450, 190), (640, 320))
 
-  lower_magenta = np.array([35, 110, 0])
-  upper_magenta = np.array([160, 255, 108])
+  lower_magenta = np.array([0, 140, 0])
+  upper_magenta = np.array([170, 255, 115])
 
   def findContours(image, draw_image=None, *, draw=1, c_colour=None, b_colour=None):
     contours, _hierarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -144,7 +144,7 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
         else:
           cv2.line(img, *parking_detect_line_front, (255, 0, 0), thickness=1)
   
-        if num_collisions_left > 17 and num_collisions_left >= num_collisions_right:
+        if num_collisions_left > 15 and num_collisions_left >= num_collisions_right:
           cv2.line(img, *parking_detect_line_left, (0, 255, 0), thickness=1)
           if not in_front:
             direction = -1
@@ -152,7 +152,7 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
             first_frame = False
         else:
           cv2.line(img, *parking_detect_line_left, (255, 0, 0), thickness=1)
-        if num_collisions_right > 17 and num_collisions_right >= num_collisions_left:
+        if num_collisions_right > 15 and num_collisions_right >= num_collisions_left:
           cv2.line(img, *parking_detect_line_right, (0, 255, 0), thickness=1)
           if not in_front:
             direction = 1
@@ -272,10 +272,10 @@ def wallFollowThread(stopped, enter_parking, error_pillar, status):
 
       with frame_lock:
         wallFollow_display = img
-      if first_frame:
-        direction = parking.exit_parking_lot(lidar, servoStraight, parkMotorPW, last_error, setServo, setMotor)
-        setMotor(motorPW)
-        first_frame = False
+      #if first_frame:
+      #  direction = parking.exit_parking_lot(lidar, servoStraight, parkMotorPW, last_error, setServo, setMotor)
+      #  setMotor(motorPW)
+      #  first_frame = False
 
   finally:
     # Graceful shutdown of motors

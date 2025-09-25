@@ -3,7 +3,7 @@ from multiprocessing import sharedctypes
 from lidar import LiDAR
 from types import FunctionType
 from utils import sign
-from imu_scan import imu_value
+from imu_scan import imu_value, reset_imu_v
 
 class Parking:
   def exit_parking_lot(self, lidar: LiDAR, servoStraight: int, parkMotorPW: int, last_error: float,
@@ -23,6 +23,8 @@ class Parking:
       if leftDist > 0 and rightDist > 0 and leftDist < 2000 and rightDist < 2000 and imu_value.value != 0:
         break
       time.sleep(0.01)
+    time.sleep(1)
+    reset_imu_v()
     last_error = rightDist - leftDist
     direction = sign(last_error)
     self.direction = direction
@@ -34,12 +36,12 @@ class Parking:
     for i in range(max_cycles):
       frontDist = self.getLiDARValue(0, 3, 'xy')
       yaw = (imu_value.value + 180) % 360 - 180
-      abs_yaw = abs(yaw)
-      print(yaw, abs_yaw)
-      if 59 < abs_yaw <= 67 and (frontDist == 0 or frontDist > 100):
+      dir_yaw = yaw * self.direction
+      print(yaw, dir_yaw)
+      if 59 < dir_yaw <= 65 and (frontDist == 0 or frontDist > 100):
         break
 
-      if abs_yaw < 63:
+      if dir_yaw < 62:
         self.turnInPlace(servoStraight, OUT, IN, parkMotorPW, setServo, setMotor, 0.5)
       else:
         self.turnInPlace(servoStraight, IN, OUT, parkMotorPW, setServo, setMotor, 0.5)
@@ -49,14 +51,15 @@ class Parking:
     time.sleep(0.8)
     for i in range(max_cycles):
       yaw = (imu_value.value + 180) % 360 - 180
-      print(yaw)
-      if -4 <= yaw <= 4:
+      dir_yaw = yaw * -self.direction
+      print(yaw, dir_yaw)
+      if -4 <= dir_yaw <= 4:
         break
 
-      if yaw > 0 or yaw < -160:
-        self.turnInPlace(servoStraight, IN, OUT, parkMotorPW, setServo, setMotor, 0.5)
-      else:
+      if dir_yaw > 0 or dir_yaw < -160:
         self.turnInPlace(servoStraight, OUT, IN, parkMotorPW, setServo, setMotor, 0.5)
+      else:
+        self.turnInPlace(servoStraight, IN, OUT, parkMotorPW, setServo, setMotor, 0.5)
     setMotor(1500 + (1500 - parkMotorPW))
     time.sleep(0.4)
 
